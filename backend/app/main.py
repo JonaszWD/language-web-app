@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
 from app.routers import auth, stats, study, words
 
 app = FastAPI(title="Spanish Learning API", version="1.0.0")
