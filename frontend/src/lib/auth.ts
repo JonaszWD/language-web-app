@@ -5,7 +5,7 @@ import type { User } from "@/types";
 const BACKEND_INTERNAL = process.env.BACKEND_URL ?? "http://backend:8000";
 
 export async function getMe(): Promise<User | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
   if (!token) return null;
 
