@@ -24,15 +24,13 @@ jobs:
           version: "latest"
 
       - name: Install runtime + dev deps
-        run: |
-          uv pip install --system -r requirements.txt
-          uv pip install --system ruff mypy
+        run: uv sync --group dev
 
       - name: Lint (ruff)
-        run: ruff check .
+        run: uv run ruff check .
 
       - name: Type check (mypy)
-        run: mypy app/
+        run: uv run mypy app/
 
   # ── Frontend ───────────────────────────────────────────────────────
   frontend:
