@@ -1,3 +1,4 @@
+import uuid
 from typing import Generator
 
 from fastapi import Cookie, Depends, HTTPException, status
@@ -29,10 +30,13 @@ def get_current_user(
         raise credentials_exc
     try:
         payload = decode_token(access_token)
-        user_id: str = payload.get("sub")
-        if not user_id:
+        user_id_raw = payload.get("sub")
+        if not isinstance(user_id_raw, str):
             raise credentials_exc
+        user_id = uuid.UUID(user_id_raw)
     except JWTError:
+        raise credentials_exc
+    except (TypeError, ValueError):
         raise credentials_exc
 
     user = db.query(User).filter(User.id == user_id).first()
