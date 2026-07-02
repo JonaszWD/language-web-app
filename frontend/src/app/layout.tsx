@@ -8,6 +8,7 @@ const archivo = Archivo({
 });
 
 const dmSerifDisplay = DM_Serif_Display({
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
