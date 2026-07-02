@@ -1,11 +1,13 @@
-from pydantic import field_validator
+import os
+
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str
+    database_url: str = Field(default_factory=lambda: os.environ["DATABASE_URL"])
     redis_url: str = "redis://redis:6379/0"
-    jwt_secret: str
+    jwt_secret: str = Field(default_factory=lambda: os.environ["JWT_SECRET"])
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 10080
     # DeepL API key for word translation (free keys end with ":fx"). Optional —

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.dependencies import get_db
 from app.models.word import Word
-from app.schemas.word import WordsPage
+from app.schemas.word import WordResponse, WordsPage
 
 router = APIRouter(prefix="/words", tags=["words"])
 
@@ -28,4 +28,9 @@ def list_words(
 
     total = query.count()
     items = query.offset((page - 1) * size).limit(size).all()
-    return WordsPage(items=items, total=total, page=page, size=size)
+    return WordsPage(
+        items=[WordResponse.model_validate(item) for item in items],
+        total=total,
+        page=page,
+        size=size,
+    )
