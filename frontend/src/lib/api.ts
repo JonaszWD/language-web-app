@@ -1,11 +1,25 @@
 import type {
   DashboardStats,
+  PodcastEpisode,
+  PodcastFeed,
+  PodcastSettings,
   Rating,
+  SavedWord,
+  GrammarCheck,
+  RewriteStyle,
   StudySession,
   User,
   UserCard,
+  VocabAnswer,
+  VocabCard,
+  VocabDetail,
+  VocabListItem,
+  VocabRating,
   Word,
   WordsPage,
+  WritingCoach,
+  WritingFeedback,
+  WritingRewrite,
 } from "@/types";
 
 const BASE = "/api";
@@ -98,9 +112,93 @@ export const studyApi = {
     }),
 };
 
+// Vocabulary — translate/save + the 5-level training flow
+export const vocabApi = {
+  save: (spanish: string, context?: string) =>
+    request<SavedWord>("/vocab/save", {
+      method: "POST",
+      body: JSON.stringify({ spanish, context }),
+    }),
+
+  // The saved-word collection with each card's training level.
+  cards: () => request<VocabListItem[]>("/vocab/cards"),
+
+  // Read-only detail (full enrichment) for one saved word.
+  cardDetail: (cardId: string) => request<VocabDetail>(`/vocab/cards/${cardId}`),
+
+  // Next training item (null when nothing is due).
+  next: () => request<VocabCard | null>("/vocab/next"),
+
+  answer: (card_id: string, payload: { rating?: VocabRating; answer?: string }) =>
+    request<VocabAnswer>("/vocab/answer", {
+      method: "POST",
+      body: JSON.stringify({ card_id, ...payload }),
+    }),
+};
+
+// Grammar — AI check for the "Produce" stage
+export const grammarApi = {
+  check: (topic: string, instructions: string, text: string) =>
+    request<GrammarCheck>("/grammar/check", {
+      method: "POST",
+      body: JSON.stringify({ topic, instructions, text }),
+    }),
+};
+
+// Writing — AI feedback + style rewrites
+export const writingApi = {
+  feedback: (mode: string, instructions: string, text: string) =>
+    request<WritingFeedback>("/writing/feedback", {
+      method: "POST",
+      body: JSON.stringify({ mode, instructions, text }),
+    }),
+  rewrite: (text: string, style: RewriteStyle) =>
+    request<WritingRewrite>("/writing/rewrite", {
+      method: "POST",
+      body: JSON.stringify({ text, style }),
+    }),
+  coach: (prompt_en: string, target_es: string, answer: string) =>
+    request<WritingCoach>("/writing/coach", {
+      method: "POST",
+      body: JSON.stringify({ prompt_en, target_es, answer }),
+    }),
+};
+
 // Stats
 export const statsApi = {
   dashboard: () => request<DashboardStats>("/stats/dashboard"),
+};
+
+// Podcasts
+export const podcastsApi = {
+  feeds: () => request<PodcastFeed[]>("/podcasts/feeds"),
+
+  addFeed: (feed_url: string) =>
+    request<PodcastFeed>("/podcasts/feed", {
+      method: "POST",
+      body: JSON.stringify({ feed_url }),
+    }),
+
+  removeFeed: (id: string) =>
+    request<void>(`/podcasts/feed/${id}`, { method: "DELETE" }),
+
+  refresh: () => request<PodcastFeed[]>("/podcasts/refresh", { method: "POST" }),
+
+  episode: (id: string) => request<PodcastEpisode>(`/podcasts/episodes/${id}`),
+
+  transcribe: (id: string) =>
+    request<PodcastEpisode>(`/podcasts/episodes/${id}/transcribe`, { method: "POST" }),
+
+  redownload: (id: string) =>
+    request<PodcastEpisode>(`/podcasts/episodes/${id}/download`, { method: "POST" }),
+
+  getSettings: () => request<PodcastSettings>("/podcasts/settings"),
+
+  setSettings: (auto_transcribe: boolean) =>
+    request<PodcastSettings>("/podcasts/settings", {
+      method: "PUT",
+      body: JSON.stringify({ auto_transcribe }),
+    }),
 };
 
 export { ApiError };

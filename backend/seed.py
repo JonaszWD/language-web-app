@@ -1,6 +1,5 @@
 """Seed the Word table with 500 Spanish vocabulary words (A1/A2)."""
 import os
-import sys
 
 os.environ.setdefault("DATABASE_URL", os.getenv("DATABASE_URL", ""))
 

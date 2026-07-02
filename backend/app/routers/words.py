@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.dependencies import get_db
 from app.models.word import Word
-from app.schemas.word import WordResponse, WordsPage
+from app.schemas.word import WordsPage
 
 router = APIRouter(prefix="/words", tags=["words"])
 

@@ -19,3 +19,6 @@ class UserCard(Base):
     reps: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     lapses: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     state: Mapped[str] = mapped_column(String(20), default="new", nullable=False)
+    # Vocabulary-training level 1-5 (see services/vocab). Advances on a correct
+    # answer at the current level; 5 = mastered (word then rides normal FSRS review).
+    level: Mapped[int] = mapped_column(Integer, default=1, nullable=False)

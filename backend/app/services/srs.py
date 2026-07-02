@@ -3,8 +3,8 @@
 Ratings: 1=Again, 2=Hard, 3=Good, 4=Easy
 States:  new → learning → review (→ relearning on lapse)
 """
-from datetime import date, timedelta
 import math
+from datetime import date, timedelta
 
 # FSRS-4.5 default weights
 W = [

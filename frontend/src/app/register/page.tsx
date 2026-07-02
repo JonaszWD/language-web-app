@@ -158,7 +158,7 @@ function TestScreen({ onFinish }: { onFinish: (correct: number) => void }) {
     setAnswers(next);
     setTimeout(() => {
       if (isLast) {
-        const correct = next.reduce((n, a, qi) => n + (a === QUESTIONS[qi].ans ? 1 : 0), 0);
+        const correct = next.reduce<number>((n, a, qi) => n + (a === QUESTIONS[qi].ans ? 1 : 0), 0);
         onFinish(correct);
       } else {
         setIdx((v) => v + 1);

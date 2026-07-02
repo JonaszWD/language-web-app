@@ -17,8 +17,8 @@ export default function StudyPage() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   const sessionId = useRef<string | null>(null);
-  const reviewed = useRef(0);
-  const correct = useRef(0);
+  const [reviewed, setReviewed] = useState(0);
+  const [correct, setCorrect] = useState(0);
 
   useEffect(() => {
     async function load() {
@@ -46,13 +46,15 @@ export default function StudyPage() {
     setSubmitting(true);
     try {
       await studyApi.review(card.id, rating);
-      reviewed.current += 1;
-      if (rating >= 3) correct.current += 1;
+      const nextReviewed = reviewed + 1;
+      const nextCorrect = correct + (rating >= 3 ? 1 : 0);
+      setReviewed(nextReviewed);
+      setCorrect(nextCorrect);
 
       const next = current + 1;
       if (next >= queue.length) {
         if (sessionId.current) {
-          await studyApi.endSession(sessionId.current, reviewed.current, correct.current);
+          await studyApi.endSession(sessionId.current, nextReviewed, nextCorrect);
         }
         setDone(true);
       } else {
@@ -86,7 +88,7 @@ export default function StudyPage() {
           <div className="text-5xl mb-4">🎉</div>
           <h2 className="text-2xl font-bold mb-2">All caught up!</h2>
           <p className="text-gray-500 mb-6">
-            You reviewed {reviewed.current} card{reviewed.current !== 1 ? "s" : ""} today.
+            You reviewed {reviewed} card{reviewed !== 1 ? "s" : ""} today.
             Come back tomorrow for more.
           </p>
           <Link
