@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import String, Text
+from sqlalchemy import JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -16,3 +16,9 @@ class Word(Base):
     category: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     cefr_level: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
     audio_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    # Cached Gemini enrichment (gender, synonyms, antonyms, collocations, chunks,
+    # frequency, pronunciation, common mistakes, example sentences). Generated
+    # lazily on first vocab interaction; see services.enrich.
+    enrichment: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    # Cached Pexels image for the level-2 picture exercise.
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

@@ -8,6 +8,14 @@ class Settings(BaseSettings):
     jwt_secret: str
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 10080
+    # DeepL API key for word translation (free keys end with ":fx"). Optional —
+    # when unset, the /vocab translate+save endpoint returns a clear 502.
+    deepl_api_key: str | None = None
+    # Google Gemini — word enrichment (chunks, synonyms, gender...) and the
+    # level-5 sentence evaluation. Env var: GEMINI_KEY.
+    gemini_key: str | None = None
+    # Pexels image search for the level-2 picture exercise. Env var: PEXELS_API_KEY.
+    pexels_api_key: str | None = None
     # Comma-separated list: http://localhost:3000,https://app.vercel.app
     cors_origins: list[str] = ["http://localhost:3000"]
 

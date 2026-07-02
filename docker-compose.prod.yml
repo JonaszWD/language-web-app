@@ -1,0 +1,83 @@
+# ── Production stack — self-hosted with Docker (no Railway) ─────────────────
+# Run:  docker compose -f docker-compose.prod.yml up -d --build
+#
+# Only the frontend is published (port 3000). It proxies /api → backend over
+# the internal network, so backend/db/redis are not exposed to the host.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [app-net]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks: [app-net]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    # Migrate → seed (idempotent) → serve. Single worker keeps the 30-min
+    # scheduler and the transcription queue running once per process.
+    command: sh -c "alembic upgrade head && python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      # Persist the downloaded faster-whisper model across restarts.
+      - whisper-cache:/root/.cache/huggingface
+      # Persist downloaded podcast audio (yt-dlp writes to /data/podcasts).
+      - podcast-audio:/data/podcasts
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)\""]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
+    networks: [app-net]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      # Server-side proxy + data fetching target (internal network name).
+      BACKEND_URL: http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [app-net]
+
+volumes:
+  pgdata:
+  whisper-cache:
+  podcast-audio:
+
+networks:
+  app-net:
+    driver: bridge

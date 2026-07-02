@@ -16,8 +16,8 @@ if database_url:
     config.set_main_option("sqlalchemy.url", database_url)
 
 # Import all models so Alembic sees them
-from app.database import Base  # noqa: E402
 import app.models  # noqa: E402, F401
+from app.database import Base  # noqa: E402
 
 target_metadata = Base.metadata
 

@@ -46,6 +46,7 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
+      - podcastdata:/data/podcasts
     networks:
       - app-net
 
@@ -67,6 +68,7 @@ services:
 
 volumes:
   pgdata:
+  podcastdata:
 
 networks:
   app-net:
