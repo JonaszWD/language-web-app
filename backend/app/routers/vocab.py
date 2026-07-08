@@ -11,6 +11,7 @@ from app.models.user import User
 from app.models.user_card import UserCard
 from app.models.word import Word
 from app.schemas.vocab import (
+    CardStats,
     SavedWordResponse,
     SaveWordRequest,
     VocabAnswerRequest,
@@ -163,7 +164,7 @@ def vocab_card_detail(
         cefr_level=word.cefr_level,
         level=card.level,
         tips=_tips(word),
-        stats=vocab_service.card_stats(card),
+        stats=CardStats(**vocab_service.card_stats(card)),
     )
 
 

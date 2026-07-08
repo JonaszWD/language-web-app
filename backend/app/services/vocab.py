@@ -20,9 +20,11 @@ import logging
 import random
 import unicodedata
 import uuid
+from collections.abc import Sequence
 from datetime import date, datetime, time, timedelta, timezone
 
 from sqlalchemy import func
+from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 
 from app.models.mission import MissionVocab
@@ -198,10 +200,11 @@ def _distractor_options(db: Session, word: Word, mission_id: str | None, n: int 
     seen = {word.english.strip().lower()}
     picks: list[str] = []
 
-    def _add(rows: list[tuple[str]]) -> None:
+    def _add(rows: Sequence[Row[tuple[str]] | tuple[str]]) -> None:
         pool = list(rows)
         random.shuffle(pool)
-        for (en,) in pool:
+        for row in pool:
+            en = row[0]
             if len(picks) >= n:
                 break
             key = (en or "").strip().lower()

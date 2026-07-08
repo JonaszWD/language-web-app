@@ -11,7 +11,7 @@ from app.models.skill_stats import UserSkillStats
 from app.models.study_session import StudySession
 from app.models.user import User
 from app.models.user_card import UserCard
-from app.schemas.stats import DashboardResponse
+from app.schemas.stats import DashboardResponse, SkillSummary
 
 router = APIRouter(prefix="/stats", tags=["stats"])
 
@@ -88,22 +88,22 @@ def dashboard(
     )
 
     skill_rows = db.query(UserSkillStats).filter(UserSkillStats.user_id == current_user.id).all()
-    skills = {
-        row.skill: {
-            "attempts": row.attempts,
-            "accuracy": row.correct_count / row.attempts if row.attempts else 0.0,
-            "avg_score": row.score_sum / row.scored_attempts if row.scored_attempts else None,
-            "last_practiced_at": row.last_practiced_at.isoformat() if row.last_practiced_at else None,
-        }
+    skills: dict[str, SkillSummary] = {
+        row.skill: SkillSummary(
+            attempts=row.attempts,
+            accuracy=row.correct_count / row.attempts if row.attempts else 0.0,
+            avg_score=row.score_sum / row.scored_attempts if row.scored_attempts else None,
+            last_practiced_at=row.last_practiced_at,
+        )
         for row in skill_rows
     }
 
-    result = {
-        "streak": current_user.streak_count,
-        "total_learned": total_learned,
-        "due_today": due_today,
-        "weekly_xp": int(weekly_xp) * 10,
-        "skills": skills,
-    }
-    _cache_set(cache_key, result)
-    return DashboardResponse(**result)
+    result: DashboardResponse = DashboardResponse(
+        streak=current_user.streak_count,
+        total_learned=total_learned,
+        due_today=due_today,
+        weekly_xp=int(weekly_xp) * 10,
+        skills=skills,
+    )
+    _cache_set(cache_key, result.model_dump(mode="json"))
+    return result

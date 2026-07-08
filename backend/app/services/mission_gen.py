@@ -414,23 +414,30 @@ def _norm_cards(cards: list[dict]) -> list[dict]:
         elif k == "learn":
             card = {"kind": "learn", "pattern": c.get("pattern", ""), "gloss": c.get("gloss", ""),
                     "examples": c.get("examples", [])}
-            if c.get("notice"): card["notice"] = c["notice"]
+            if c.get("notice"):
+                card["notice"] = c["notice"]
             out.append(card)
         elif k == "recognition":
             card = {"kind": "recognition", "question": c.get("question", ""),
                     "options": c.get("options", []), "answer": c.get("answer_index", 0)}
-            if c.get("stage"): card["stage"] = c["stage"]
-            if c.get("audio"): card.update(audio=c["audio"], speed=c.get("speed", 0.8))
-            if c.get("transcriptEn"): card["transcriptEn"] = c["transcriptEn"]
+            if c.get("stage"):
+                card["stage"] = c["stage"]
+            if c.get("audio"):
+                card.update(audio=c["audio"], speed=c.get("speed", 0.8))
+            if c.get("transcriptEn"):
+                card["transcriptEn"] = c["transcriptEn"]
             out.append(card)
         elif k == "production":
             card = {"kind": "production", "prompts": c.get("prompts", [])}
-            if c.get("instruction"): card["instruction"] = c["instruction"]
-            if c.get("stage"): card["stage"] = c["stage"]
+            if c.get("instruction"):
+                card["instruction"] = c["instruction"]
+            if c.get("stage"):
+                card["stage"] = c["stage"]
             out.append(card)
         elif k == "build":
             card = {"kind": "build", "cue": c.get("cue", ""), "answer": c.get("answer_tokens", [])}
-            if c.get("instruction"): card["instruction"] = c["instruction"]
+            if c.get("instruction"):
+                card["instruction"] = c["instruction"]
             if c.get("stage"):  # writing build: bank + string answer
                 card = {"kind": "build", "stage": c["stage"], "prompt": c.get("cue", ""),
                         "bank": c.get("answer_tokens", []), "answer": " ".join(c.get("answer_tokens", []))}
@@ -453,11 +460,13 @@ def _norm_cards(cards: list[dict]) -> list[dict]:
         elif k == "copy":
             card = {"kind": "copy", "stage": 1, "prompt": c.get("question") or c.get("cue", ""),
                     "model": c.get("answer_text", "")}
-            if c.get("notice"): card["note"] = c["notice"]
+            if c.get("notice"):
+                card["note"] = c["notice"]
             out.append(card)
         elif k == "prompt":
             card = {"kind": "prompt", "stage": 3, "prompt": c.get("cue", ""), "answer": c.get("answer_text", "")}
-            if c.get("notice"): card["hint"] = c["notice"]
+            if c.get("notice"):
+                card["hint"] = c["notice"]
             out.append(card)
         elif k == "message":
             out.append({"kind": "message", "stage": 6, "prompt": c.get("cue", ""),
