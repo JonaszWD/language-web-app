@@ -29,6 +29,17 @@ class VocabListItem(BaseModel):
     due: bool           # due for training today
 
 
+class CardStats(BaseModel):
+    """Per-user performance for one word. Ratios are derived from raw counters;
+    None where there are no attempts yet."""
+    attempts: int
+    accuracy: Optional[float] = None                    # correct / attempts, 0-1
+    avg_response_ms: Optional[float] = None             # mean answer time (ms)
+    avg_confidence: Optional[float] = None              # mean self-reported confidence, 0-100
+    hints: int                                          # total hints revealed
+    seconds_since_last_success: Optional[float] = None  # None if never answered correctly
+
+
 class VocabDetailResponse(BaseModel):
     """Read-only detail for one saved word: identity + full enrichment tips."""
     card_id: uuid.UUID
@@ -38,6 +49,7 @@ class VocabDetailResponse(BaseModel):
     cefr_level: str
     level: int
     tips: dict[str, Any]
+    stats: CardStats
 
 
 class VocabCardResponse(BaseModel):
@@ -53,10 +65,14 @@ class VocabCardResponse(BaseModel):
 
 class VocabAnswerRequest(BaseModel):
     card_id: uuid.UUID
-    # Level 1 self-rating: "know" | "shaky" | "no_idea".
-    rating: Optional[str] = None
-    # Typed answer for levels 2-5.
+    # The submitted answer: level-1 is the picked MCQ option text, levels 2-5
+    # are typed Spanish.
     answer: Optional[str] = None
+    # Per-attempt telemetry (all optional). Time from prompt shown to answer (ms),
+    # self-reported confidence 0-100, and hints revealed on this attempt.
+    response_ms: Optional[int] = None
+    confidence: Optional[float] = None
+    hints: Optional[int] = None
 
 
 class VocabAnswerResponse(BaseModel):
@@ -66,4 +82,6 @@ class VocabAnswerResponse(BaseModel):
     spanish: str
     # Present only for level-5 Gemini grading: score, correct_usage, feedback, correction.
     feedback: Optional[dict[str, Any]] = None
+    # Updated per-user performance for this word after recording the attempt.
+    stats: Optional[CardStats] = None
 

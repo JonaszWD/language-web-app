@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Conventions
+
+- Do not use emojis in code, UI, or copy. Use symbols/icons instead (e.g. the existing `Icon` component, unicode glyphs, or SVGs).
+
 ## Overview
 
 SpanishUp — full-stack Spanish-learning web app. Users import a YouTube podcast (channel/playlist/video), episodes are auto-downloaded and transcribed, and tapped words flow into an FSRS-scheduled flashcard deck.
@@ -56,7 +60,6 @@ Tapping a transcript word calls DeepL (`DEEPL_API_KEY`) to translate and save it
 
 - **Local:** `docker-compose.yml` — exposes db/redis/backend/frontend ports for dev.
 - **Self-hosted prod:** `docker-compose.prod.yml` — only frontend `:3000` is published; it proxies `/api` to the backend over the internal network. Backend command does `alembic upgrade head && python seed.py && uvicorn ... --workers 1`. Persists whisper model cache and podcast audio in named volumes.
-- **Railway/Vercel:** backend on Railway (set `CORS_ORIGINS`), frontend on Vercel (set `BACKEND_URL`).
 
 ## Gotchas
 
@@ -64,3 +67,17 @@ Tapping a transcript word calls DeepL (`DEEPL_API_KEY`) to translate and save it
 - Backend Dockerfile installs deps with `uv pip install --system` and needs `ffmpeg` (yt-dlp/whisper).
 - Frontend Dockerfile uses `npm install` (no lockfile committed), not `npm ci`.
 - `CORS_ORIGINS` is comma-separated in env, parsed to a list in [config.py](backend/app/config.py).
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs live as markdown files under `.scratch/<feature-slug>/` (local-markdown tracker; no external issue system). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five canonical triage roles use their default strings: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root (created lazily by `/domain-modeling`). See `docs/agents/domain.md`.

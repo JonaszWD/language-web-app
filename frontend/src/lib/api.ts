@@ -1,5 +1,12 @@
 import type {
+  ApiMission,
+  ApiMissionSummary,
+  MissionEnrichStatus,
+  SpeakingScene,
+  SpeakingTurnResult,
   DashboardStats,
+  GrammarReviewCard,
+  GrammarReviewResult,
   PodcastEpisode,
   PodcastFeed,
   PodcastSettings,
@@ -14,7 +21,6 @@ import type {
   VocabCard,
   VocabDetail,
   VocabListItem,
-  VocabRating,
   Word,
   WordsPage,
   WritingCoach,
@@ -96,10 +102,12 @@ export const wordsApi = {
 export const studyApi = {
   due: () => request<UserCard[]>("/study/due"),
 
-  review: (card_id: string, rating: Rating) =>
+  // meta carries background performance telemetry (answer time / hints revealed);
+  // all optional — the backend derives confidence from the rating.
+  review: (card_id: string, rating: Rating, meta?: { response_ms?: number; hints?: number }) =>
     request<UserCard>("/study/review", {
       method: "POST",
-      body: JSON.stringify({ card_id, rating }),
+      body: JSON.stringify({ card_id, rating, ...meta }),
     }),
 
   startSession: () =>
@@ -109,6 +117,23 @@ export const studyApi = {
     request<StudySession>(`/study/session/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ cards_reviewed, cards_correct }),
+    }),
+
+  // Grammar-pattern spaced review — same due-queue idea as words, for patterns.
+  dueGrammar: () => request<GrammarReviewCard[]>("/study/due-grammar"),
+
+  reviewGrammar: (pattern_id: string, answer: string) =>
+    request<GrammarReviewResult>("/study/review-grammar", {
+      method: "POST",
+      body: JSON.stringify({ pattern_id, answer }),
+    }),
+
+  // Logs one listening-comprehension outcome for the skills dashboard.
+  // Listening isn't FSRS-scheduled, so this is a bare rollup counter — no card.
+  listeningResult: (correct: boolean) =>
+    request<void>("/study/listening-result", {
+      method: "POST",
+      body: JSON.stringify({ correct }),
     }),
 };
 
@@ -126,10 +151,24 @@ export const vocabApi = {
   // Read-only detail (full enrichment) for one saved word.
   cardDetail: (cardId: string) => request<VocabDetail>(`/vocab/cards/${cardId}`),
 
-  // Next training item (null when nothing is due).
-  next: () => request<VocabCard | null>("/vocab/next"),
+  // Next training item (null when nothing is due). Pass a missionId to restrict
+  // the pool to that mission's words (mission Vocabulary step); pass `words` to
+  // narrow further to an explicit subset (one burst of a mission's vocab).
+  next: (missionId?: string, words?: string[]) => {
+    const params = new URLSearchParams();
+    if (missionId) params.set("mission_id", missionId);
+    if (words && words.length) params.set("words", words.join(","));
+    const qs = params.toString();
+    return request<VocabCard | null>(`/vocab/next${qs ? `?${qs}` : ""}`);
+  },
 
-  answer: (card_id: string, payload: { rating?: VocabRating; answer?: string }) =>
+  // response_ms / hints are background telemetry (silent); confidence is derived
+  // server-side from correctness, so it isn't sent here. `answer` is the typed
+  // Spanish word (levels 2-5) or the picked MCQ option text (level 1).
+  answer: (
+    card_id: string,
+    payload: { answer?: string; response_ms?: number; hints?: number },
+  ) =>
     request<VocabAnswer>("/vocab/answer", {
       method: "POST",
       body: JSON.stringify({ card_id, ...payload }),
@@ -198,6 +237,57 @@ export const podcastsApi = {
     request<PodcastSettings>("/podcasts/settings", {
       method: "PUT",
       body: JSON.stringify({ auto_transcribe }),
+    }),
+};
+
+// Missions
+export const missionsApi = {
+  list: () => request<ApiMissionSummary[]>("/missions"),
+  get: (id: string) => request<ApiMission>(`/missions/${id}`),
+  // Enrichment progress for the 'preparing mission' window. No side effects.
+  status: (id: string) => request<MissionEnrichStatus>(`/missions/${id}/status`),
+  // Make a mission available for the user and push its vocab into the deck.
+  start: (id: string) =>
+    request<{ mission_id: string; status: string; vocab_added: number }>(
+      `/missions/${id}/start`,
+      { method: "POST" },
+    ),
+  // Mark a mission completed (Final Challenge finished). Idempotent.
+  complete: (id: string) =>
+    request<{ mission_id: string; status: string; completed_at: string | null }>(
+      `/missions/${id}/complete`,
+      { method: "POST" },
+    ),
+  // Final Challenge scene — role/setting/goal + the NPC's cold-open line.
+  speakingScene: (id: string) =>
+    request<SpeakingScene>(`/missions/${id}/speaking/scene`),
+  // Evaluate one learner utterance in a free-conversation speaking stage (5-7).
+  speakingTurn: (
+    id: string,
+    body: {
+      role: string;
+      setting: string;
+      goal: string;
+      history: { speaker: string; text: string }[];
+      utterance: string;
+      // Browser ASR's own confidence (0-1) for this utterance, when available —
+      // a rough proxy for pronunciation clarity, fed into the skills dashboard.
+      confidence?: number;
+    },
+  ) =>
+    request<SpeakingTurnResult>(`/missions/${id}/speaking/turn`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+};
+
+// Text-to-speech (listening step). prewarm generates + caches a mission's audio
+// on the backend ahead of time so playback is instant.
+export const ttsApi = {
+  prewarm: (texts: string[]) =>
+    request<{ queued: number }>("/tts/prewarm", {
+      method: "POST",
+      body: JSON.stringify({ texts }),
     }),
 };
 

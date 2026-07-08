@@ -105,6 +105,8 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 
-# ───────────────────────────── Claude Code ───────────────────────────────
-# Keep shared project memory & config; ignore local-only settings
-.claude/settings.local.json
+# ───────────────────────────── Claude Code / Agents  ───────────────────────────────
+.claude/
+.agent/
+docs/
+.idea/

@@ -49,6 +49,9 @@ export default function FlashCard({ card, onFlipped }: FlashCardProps) {
           </p>
           <p className="text-4xl font-bold text-gray-900">{word?.spanish ?? "…"}</p>
           <p className="text-xs text-gray-400">{word?.cefr_level}</p>
+          {card.mission_title && (
+            <p className="text-xs text-gray-400">From: {card.mission_title}</p>
+          )}
           <button
             className="mt-2 flex items-center gap-1 text-sm text-gray-500 hover:text-brand-pink-text transition-colors"
             onClick={(e) => {
@@ -57,7 +60,7 @@ export default function FlashCard({ card, onFlipped }: FlashCardProps) {
             }}
             aria-label="Play pronunciation"
           >
-            🔊 Listen
+            ♪ Listen
           </button>
           <p className="text-xs text-gray-400 mt-1">Tap to reveal</p>
         </div>

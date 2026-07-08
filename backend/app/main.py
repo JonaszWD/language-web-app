@@ -7,13 +7,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import SessionLocal
+from app.models.mission import ENRICH_PENDING, ENRICH_PROCESSING, Mission
 from app.models.podcast import (
     DOWNLOAD_PENDING,
     TRANSCRIPT_NONE,
     TRANSCRIPT_PENDING,
     PodcastEpisode,
 )
-from app.routers import auth, grammar, podcasts, stats, study, vocab, words, writing
+from app.routers import auth, grammar, missions, podcasts, stats, study, tts, vocab, words, writing
 from app.services.podcast import audio_path, queue_download, start_scheduler, stop_scheduler
 
 logger = logging.getLogger("startup")
@@ -36,6 +37,12 @@ def _recover_jobs() -> None:
                 ep.download_status = DOWNLOAD_PENDING
                 db.commit()
                 queue_download(ep.id)
+
+        # Reset missions whose enrichment was interrupted mid-run so the next
+        # open can retry (the pipeline is otherwise gated to first open only).
+        db.query(Mission).filter(Mission.enrichment_status == ENRICH_PROCESSING).update(
+            {Mission.enrichment_status: ENRICH_PENDING}
+        )
 
         db.commit()
     finally:
@@ -75,6 +82,8 @@ app.include_router(podcasts.router)
 app.include_router(vocab.router)
 app.include_router(grammar.router)
 app.include_router(writing.router)
+app.include_router(missions.router)
+app.include_router(tts.router)
 
 
 @app.get("/health")
