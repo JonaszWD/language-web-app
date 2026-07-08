@@ -1,0 +1,97 @@
+{
+  "id": "m003-meeting-someone",
+  "order_index": 3,
+  "title": "Meeting Someone",
+  "description": "Say hello, introduce yourself and ask someone's name and where they're from. The first words you need to start any conversation in Spanish.",
+  "vocab": [
+    {
+      "spanish": "hola",
+      "english": "hello",
+      "part_of_speech": "phrase",
+      "example_sentence": "¡Hola! ¿Qué tal?"
+    },
+    {
+      "spanish": "buenos días",
+      "english": "good morning",
+      "part_of_speech": "phrase",
+      "example_sentence": "Buenos días, señora."
+    },
+    {
+      "spanish": "me llamo",
+      "english": "my name is",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me llamo Ana."
+    },
+    {
+      "spanish": "¿cómo te llamas?",
+      "english": "what's your name?",
+      "part_of_speech": "phrase",
+      "example_sentence": "Hola, ¿cómo te llamas?"
+    },
+    {
+      "spanish": "mucho gusto",
+      "english": "nice to meet you",
+      "part_of_speech": "phrase",
+      "example_sentence": "Mucho gusto, soy Carlos."
+    },
+    {
+      "spanish": "¿cómo estás?",
+      "english": "how are you?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¡Hola! ¿Cómo estás?"
+    },
+    {
+      "spanish": "bien",
+      "english": "well / fine",
+      "part_of_speech": "adverb",
+      "example_sentence": "Estoy bien, gracias."
+    },
+    {
+      "spanish": "gracias",
+      "english": "thank you",
+      "part_of_speech": "phrase",
+      "example_sentence": "Muchas gracias."
+    },
+    {
+      "spanish": "soy",
+      "english": "I am",
+      "part_of_speech": "verb",
+      "example_sentence": "Soy de México."
+    },
+    {
+      "spanish": "¿de dónde eres?",
+      "english": "where are you from?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿De dónde eres tú?"
+    },
+    {
+      "spanish": "adiós",
+      "english": "goodbye",
+      "part_of_speech": "phrase",
+      "example_sentence": "Adiós, hasta luego."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Me llamo…",
+      "gloss": "“My name is…” — give your name.",
+      "example_es": "Me llamo Ana.",
+      "cloze_template": "______ Ana.",
+      "cloze_answer": "Me llamo"
+    },
+    {
+      "pattern": "Soy de…",
+      "gloss": "“I'm from…” — say where you're from.",
+      "example_es": "Soy de México.",
+      "cloze_template": "Soy de ______.",
+      "cloze_answer": "Colombia"
+    },
+    {
+      "pattern": "¿Cómo te llamas? / ¿De dónde eres?",
+      "gloss": "Ask “What's your name?” / “Where are you from?”.",
+      "example_es": "¿Cómo te llamas?",
+      "cloze_template": "______",
+      "cloze_answer": "¿Cómo te llamas?"
+    }
+  ]
+}

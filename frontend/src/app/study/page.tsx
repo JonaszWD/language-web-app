@@ -3,14 +3,32 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Rating, UserCard } from "@/types";
+import type { GrammarReviewCard, Rating, UserCard } from "@/types";
 import { ApiError, studyApi } from "@/lib/api";
 import FlashCard from "@/components/FlashCard";
 import RatingButtons from "@/components/RatingButtons";
+import GrammarClozeCard from "@/components/GrammarClozeCard";
+
+// A single interleaved review queue mixing words and grammar patterns —
+// same "mixed, not separated" interleaving the rest of the app already does
+// for cross-mission vocab, now extended to grammar so patterns don't decay
+// once a GrammarLesson ends.
+type ReviewItem =
+  | { kind: "word"; card: UserCard }
+  | { kind: "grammar"; card: GrammarReviewCard };
+
+function shuffled<T>(items: T[]): T[] {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 export default function StudyPage() {
   const router = useRouter();
-  const [queue, setQueue] = useState<UserCard[]>([]);
+  const [queue, setQueue] = useState<ReviewItem[]>([]);
   const [current, setCurrent] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -19,17 +37,32 @@ export default function StudyPage() {
   const sessionId = useRef<string | null>(null);
   const [reviewed, setReviewed] = useState(0);
   const [correct, setCorrect] = useState(0);
+  // Background telemetry (silent): time the current card was shown and whether
+  // the answer was revealed (flip = 1 hint). Reset per card below.
+  const startedAt = useRef(0);
+  const hintCount = useRef(0);
+
+  useEffect(() => {
+    if (queue.length === 0) return;
+    startedAt.current = performance.now();
+    hintCount.current = 0;
+  }, [current, queue.length]);
 
   useEffect(() => {
     async function load() {
       try {
-        const [cards, session] = await Promise.all([
+        const [words, grammar, session] = await Promise.all([
           studyApi.due(),
+          studyApi.dueGrammar(),
           studyApi.startSession(),
         ]);
-        setQueue(cards);
+        const merged = shuffled<ReviewItem>([
+          ...words.map((card) => ({ kind: "word" as const, card })),
+          ...grammar.map((card) => ({ kind: "grammar" as const, card })),
+        ]);
+        setQueue(merged);
         sessionId.current = session.id;
-        if (cards.length === 0) setDone(true);
+        if (merged.length === 0) setDone(true);
       } catch (err) {
         if (err instanceof ApiError && err.status === 401) {
           router.push("/login");
@@ -41,31 +74,40 @@ export default function StudyPage() {
     load();
   }, [router]);
 
+  function advance(nextReviewed: number, nextCorrect: number) {
+    setReviewed(nextReviewed);
+    setCorrect(nextCorrect);
+    const next = current + 1;
+    if (next >= queue.length) {
+      if (sessionId.current) {
+        void studyApi.endSession(sessionId.current, nextReviewed, nextCorrect);
+      }
+      setDone(true);
+    } else {
+      setCurrent(next);
+      setFlipped(false);
+    }
+  }
+
   async function handleRate(rating: Rating) {
-    const card = queue[current];
+    const item = queue[current];
+    if (item.kind !== "word") return;
     setSubmitting(true);
     try {
-      await studyApi.review(card.id, rating);
-      const nextReviewed = reviewed + 1;
-      const nextCorrect = correct + (rating >= 3 ? 1 : 0);
-      setReviewed(nextReviewed);
-      setCorrect(nextCorrect);
-
-      const next = current + 1;
-      if (next >= queue.length) {
-        if (sessionId.current) {
-          await studyApi.endSession(sessionId.current, nextReviewed, nextCorrect);
-        }
-        setDone(true);
-      } else {
-        setCurrent(next);
-        setFlipped(false);
-      }
+      await studyApi.review(item.card.id, rating, {
+        response_ms: Math.round(performance.now() - startedAt.current),
+        hints: hintCount.current,
+      });
+      advance(reviewed + 1, correct + (rating >= 3 ? 1 : 0));
     } catch {
       setError("Failed to submit rating");
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function handleGrammarResult(wasCorrect: boolean) {
+    advance(reviewed + 1, correct + (wasCorrect ? 1 : 0));
   }
 
   if (error) {
@@ -85,7 +127,7 @@ export default function StudyPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-sm">
-          <div className="text-5xl mb-4">🎉</div>
+          <div className="text-5xl mb-4">✦</div>
           <h2 className="text-2xl font-bold mb-2">All caught up!</h2>
           <p className="text-gray-500 mb-6">
             You reviewed {reviewed} card{reviewed !== 1 ? "s" : ""} today.
@@ -110,7 +152,7 @@ export default function StudyPage() {
     );
   }
 
-  const card = queue[current];
+  const item = queue[current];
   const progress = `${current + 1} / ${queue.length}`;
 
   return (
@@ -124,16 +166,22 @@ export default function StudyPage() {
       </nav>
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-8 gap-8">
-        <FlashCard card={card} onFlipped={() => setFlipped(true)} />
+        {item.kind === "grammar" ? (
+          <GrammarClozeCard card={item.card} onResult={handleGrammarResult} />
+        ) : (
+          <>
+            <FlashCard card={item.card} onFlipped={() => { hintCount.current = 1; setFlipped(true); }} />
 
-        {flipped && (
-          <div className="w-full animate-in fade-in duration-300">
-            <RatingButtons onRate={handleRate} disabled={submitting} />
-          </div>
-        )}
+            {flipped && (
+              <div className="w-full animate-in fade-in duration-300">
+                <RatingButtons onRate={handleRate} disabled={submitting} />
+              </div>
+            )}
 
-        {!flipped && (
-          <p className="text-sm text-gray-400">Tap the card to reveal the answer</p>
+            {!flipped && (
+              <p className="text-sm text-gray-400">Tap the card to reveal the answer</p>
+            )}
+          </>
         )}
       </main>
     </div>

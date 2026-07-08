@@ -1,0 +1,103 @@
+{
+  "id": "m002-airport",
+  "order_index": 2,
+  "title": "At the Airport",
+  "description": "Check in, find your gate and board your flight. The essential Spanish for getting through an airport without missing your plane.",
+  "vocab": [
+    {
+      "spanish": "el aeropuerto",
+      "english": "airport",
+      "part_of_speech": "noun",
+      "example_sentence": "El avión sale del aeropuerto."
+    },
+    {
+      "spanish": "el avión",
+      "english": "aeroplane",
+      "part_of_speech": "noun",
+      "example_sentence": "El avión llega a las doce."
+    },
+    {
+      "spanish": "el vuelo",
+      "english": "flight",
+      "part_of_speech": "noun",
+      "example_sentence": "El vuelo dura dos horas."
+    },
+    {
+      "spanish": "el billete",
+      "english": "ticket",
+      "part_of_speech": "noun",
+      "example_sentence": "Un billete de ida y vuelta."
+    },
+    {
+      "spanish": "el pasaporte",
+      "english": "passport",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Tienes el pasaporte?"
+    },
+    {
+      "spanish": "la maleta",
+      "english": "suitcase",
+      "part_of_speech": "noun",
+      "example_sentence": "Hago la maleta."
+    },
+    {
+      "spanish": "la facturación",
+      "english": "check-in",
+      "part_of_speech": "noun",
+      "example_sentence": "El mostrador de facturación."
+    },
+    {
+      "spanish": "la tarjeta de embarque",
+      "english": "boarding pass",
+      "part_of_speech": "noun",
+      "example_sentence": "Enseña la tarjeta de embarque."
+    },
+    {
+      "spanish": "la puerta de embarque",
+      "english": "boarding gate",
+      "part_of_speech": "noun",
+      "example_sentence": "La puerta de embarque es la B12."
+    },
+    {
+      "spanish": "el asiento",
+      "english": "seat",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi asiento es de ventanilla."
+    },
+    {
+      "spanish": "la salida",
+      "english": "departure / exit",
+      "part_of_speech": "noun",
+      "example_sentence": "La salida es por aquí."
+    },
+    {
+      "spanish": "embarcar",
+      "english": "to board",
+      "part_of_speech": "verb",
+      "example_sentence": "Vamos a embarcar ahora."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "¿Dónde está…?",
+      "gloss": "“Where is…?” — ask for a location.",
+      "example_es": "¿Dónde está la puerta seis?",
+      "cloze_template": "______ la puerta doce?",
+      "cloze_answer": "¿Dónde está"
+    },
+    {
+      "pattern": "¿A qué hora sale…?",
+      "gloss": "“What time does… leave?” — ask about departure.",
+      "example_es": "¿A qué hora sale el vuelo?",
+      "cloze_template": "¿A qué hora sale ______?",
+      "cloze_answer": "el avión"
+    },
+    {
+      "pattern": "Vamos a embarcar",
+      "gloss": "“Let's board” / “We're about to board” — announce readiness.",
+      "example_es": "Vamos a embarcar ahora.",
+      "cloze_template": "______ ahora.",
+      "cloze_answer": "Vamos a embarcar"
+    }
+  ]
+}

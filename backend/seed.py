@@ -1,12 +1,20 @@
 """Seed the Word table with 500 Spanish vocabulary words (A1/A2)."""
+import json
 import os
+from pathlib import Path
 
 os.environ.setdefault("DATABASE_URL", os.getenv("DATABASE_URL", ""))
 
 from sqlalchemy.orm import Session
 
 from app.database import engine
+from app.models.grammar_pattern import GrammarPattern
+from app.models.mission import ENRICH_PENDING, Mission, MissionVocab
 from app.models.word import Word
+
+# Canonical mission content lives as version-controlled JSON here, one file per
+# mission. Same files seed local and prod, so the two never drift.
+MISSIONS_DIR = Path(__file__).parent / "content" / "missions"
 
 WORDS = [
     # ── Greetings (30) ──────────────────────────────────────────────────────
@@ -517,8 +525,74 @@ WORDS = [
 ]
 
 
+def seed_missions(session: Session) -> None:
+    """Upsert every mission JSON into the DB, keyed by its stable slug.
+
+    Idempotent: re-running updates the mission fields in place and fully
+    replaces its vocab, so it is safe to run on every boot (prod does).
+    """
+    files = sorted(MISSIONS_DIR.glob("*.json"))
+    for path in files:
+        data = json.loads(path.read_text(encoding="utf-8"))
+
+        mission = session.get(Mission, data["id"])
+        if mission is None:
+            mission = Mission(id=data["id"])
+            session.add(mission)
+        mission.order_index = data["order_index"]
+        mission.title = data["title"]
+        mission.description = data.get("description")
+
+        # Replace vocab wholesale. delete-orphan removes the old rows on flush,
+        # before the new ones insert, so the (mission_id, order_index) unique
+        # constraint never collides. Reset enrichment so the new word set is
+        # re-run through the Gemini pipeline on next open (it's gated on status).
+        mission.vocab.clear()
+        mission.enrichment_status = ENRICH_PENDING
+        session.flush()
+        for i, item in enumerate(data.get("vocab", []), start=1):
+            mission.vocab.append(
+                MissionVocab(
+                    order_index=item.get("order_index", i),
+                    spanish=item["spanish"],
+                    english=item["english"],
+                    example_sentence=item.get("example_sentence"),
+                    part_of_speech=item.get("part_of_speech"),
+                )
+            )
+
+        # Same wholesale-replace for grammar patterns. UserGrammarCard rows
+        # cascade-delete with their pattern, so a user restarts that pattern's
+        # review history if the content changes — acceptable for hand-authored
+        # content that rarely changes shape.
+        mission.grammar.clear()
+        session.flush()
+        for i, item in enumerate(data.get("grammar", []), start=1):
+            mission.grammar.append(
+                GrammarPattern(
+                    order_index=item.get("order_index", i),
+                    pattern=item["pattern"],
+                    gloss=item["gloss"],
+                    example_es=item["example_es"],
+                    cloze_template=item["cloze_template"],
+                    cloze_answer=item["cloze_answer"],
+                )
+            )
+
+    session.commit()
+    print(f"Seeded {len(files)} missions from {MISSIONS_DIR}.")
+
+
 def main() -> None:
     with Session(engine) as session:
+        seed_missions(session)
+
+    # Word seeding is disabled — the Word table is intentionally kept empty.
+    # Remove this early return (and the guard below) to re-enable seeding.
+    print("Word seeding disabled — leaving the words table empty.")
+    return
+
+    with Session(engine) as session:  # noqa: unreachable  (kept for re-enabling)
         existing = session.query(Word).count()
         if existing > 0:
             print(f"Words table already has {existing} rows — skipping seed.")

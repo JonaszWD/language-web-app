@@ -1,10 +1,20 @@
 "use client";
 
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { grammarApi, vocabApi, writingApi } from "@/lib/api";
-import type { RewriteStyle, VocabDetail, VocabListItem, WritingFeedback } from "@/types";
+
+// The little building-covered planet — WebGL, browser-only.
+const PlanetScene = dynamic(() => import("../planet/PlanetScene"), { ssr: false });
+import { grammarApi, missionsApi, statsApi, studyApi, ttsApi, vocabApi, writingApi } from "@/lib/api";
+import MissionGlobe from "./MissionGlobe";
+import VocabTrainer from "@/components/VocabTrainer";
+import GrammarLesson, { GRAMMAR_LESSONS as MISSION_GRAMMAR_LESSONS } from "@/components/GrammarLesson";
+import ListeningLesson, { LISTENING_LESSONS as MISSION_LISTENING_LESSONS, audioTextsForScript } from "@/components/ListeningLesson";
+import WritingLesson, { WRITING_LESSONS as MISSION_WRITING_LESSONS } from "@/components/WritingLesson";
+import SpeakingTrainer from "@/components/SpeakingTrainer";
+import type { ApiMission, DashboardStats, MissionSpeaking, RewriteStyle, SpeakingScene, VocabDetail, VocabListItem, WritingFeedback } from "@/types";
 import "./spanishup-app.css";
 
 /* ════════════════════════ Icons ════════════════════════ */
@@ -96,6 +106,14 @@ function Icon({ name, size = 24, style }: { name: string; size?: number; style?:
       return <svg {...p}><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" /></svg>;
     case "sun":
       return <svg {...p} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4.5" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>;
+    case "coffee":
+      return <svg {...p}><path d="M4 8h13v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z" /><path d="M17 9h1.5a2.5 2.5 0 0 1 0 5H17" fill="none" stroke="currentColor" strokeWidth="2" /><rect x="4" y="19" width="12" height="1.8" rx="0.9" /></svg>;
+    case "plane":
+      return <svg {...p}><path d="M21 14.5 13 12V5.5a1.5 1.5 0 0 0-3 0V12l-8 2.5v2l8-2v3.5l-2 1.3V21l3.5-1 3.5 1v-1.7l-2-1.3V14.5l8 2v-2Z" /></svg>;
+    case "people":
+      return <svg {...p}><circle cx="9" cy="8" r="3" /><circle cx="16.5" cy="9" r="2.4" /><path d="M3 19a6 6 0 0 1 12 0v1H3v-1Z" /><path d="M15 20v-1a7 7 0 0 0-1.2-3.9A4.5 4.5 0 0 1 21 19v1h-6Z" /></svg>;
+    case "globe":
+      return <svg {...p} fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" /></svg>;
     default:
       return <svg {...p}><circle cx="12" cy="12" r="9" /></svg>;
   }
@@ -140,30 +158,42 @@ const STUDY_TABS: { key: TabKey; label: string }[] = [
   { key: "writing", label: "Writing" },
 ];
 
+// Tab is mirrored into the URL (?tab=) so browser Back from a real route
+// (/vocab, /study) restores the tab the user left, not the default Home.
+const ALL_TAB_KEYS: TabKey[] = [...MAIN_TABS, ...STUDY_TABS].map((t) => t.key);
+function readTabFromUrl(): TabKey {
+  if (typeof window === "undefined") return "home";
+  const v = new URLSearchParams(window.location.search).get("tab") as TabKey | null;
+  return v && ALL_TAB_KEYS.includes(v) ? v : "home";
+}
+
 function WordNav({ tab, setTab }: { tab: TabKey; setTab: (k: TabKey) => void }) {
   const inStudy = STUDY_TABS.some((t) => t.key === tab);
   const [open, setOpen] = useState(inStudy);
   const current = STUDY_TABS.find((t) => t.key === tab);
   return (
-    <nav className="word-nav">
-      {MAIN_TABS.map((tb) => (
-        <button key={tb.key} className={"wn-item" + (tab === tb.key ? " is-active" : "")} onClick={() => { setTab(tb.key); setOpen(false); }}>
-          {tb.label}
+    <nav className="word-nav" onMouseLeave={() => setOpen(false)}>
+      <span className="wn-handle" aria-hidden="true" />
+      <div className="wn-body">
+        {MAIN_TABS.map((tb) => (
+          <button key={tb.key} className={"wn-item" + (tab === tb.key ? " is-active" : "")} onClick={() => { setTab(tb.key); setOpen(false); }}>
+            {tb.label}
+          </button>
+        ))}
+        <button className={"wn-item wn-group" + (inStudy ? " is-active" : "")} onClick={() => setOpen((o) => !o)}>
+          Studying{inStudy && current ? <span className="wn-sub-current"> · {current.label}</span> : ""}
+          <span className={"wn-caret" + (open ? " up" : "")}><Icon name="chevron" size={14} /></span>
         </button>
-      ))}
-      <button className={"wn-item wn-group" + (inStudy ? " is-active" : "")} onClick={() => setOpen((o) => !o)}>
-        Studying{inStudy && current ? <span className="wn-sub-current"> · {current.label}</span> : ""}
-        <span className={"wn-caret" + (open ? " up" : "")}><Icon name="chevron" size={14} /></span>
-      </button>
-      {open && (
-        <div className="wn-submenu">
-          {STUDY_TABS.map((tb) => (
-            <button key={tb.key} className={"wn-subitem" + (tab === tb.key ? " is-active" : "")} onClick={() => setTab(tb.key)}>
-              {tb.label}
-            </button>
-          ))}
-        </div>
-      )}
+        {open && (
+          <div className="wn-submenu">
+            {STUDY_TABS.map((tb) => (
+              <button key={tb.key} className={"wn-subitem" + (tab === tb.key ? " is-active" : "")} onClick={() => setTab(tb.key)}>
+                {tb.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </nav>
   );
 }
@@ -171,7 +201,46 @@ function WordNav({ tab, setTab }: { tab: TabKey; setTab: (k: TabKey) => void }) 
 /* ════════════════════════ HOME ════════════════════════
    Not navigation — a coach. Answers "what should I practice now?":
    headline metrics, due-by-skill, and a ready-made timed session. */
+// The 7 tracked skill dimensions, in the order they're shown on the home
+// screen's breakdown card. Keys must match the backend's UserSkillStats.skill.
+const SKILL_ROWS: { key: string; label: string; ic: string }[] = [
+  { key: "recognition", label: "Recognition", ic: "target" },
+  { key: "recall", label: "Recall", ic: "vocabulary" },
+  { key: "pronunciation", label: "Pronunciation", ic: "speaker" },
+  { key: "listening", label: "Listening", ic: "headphones" },
+  { key: "grammar", label: "Grammar", ic: "grammar" },
+  { key: "writing", label: "Writing", ic: "writing" },
+  { key: "conversation", label: "Conversation", ic: "people" },
+];
+
+function SkillsBreakdown({ stats }: { stats: DashboardStats | null }) {
+  return (
+    <div className="sp-card hm-skills">
+      <div className="sp-section-label" style={{ margin: "0 0 6px" }}><h2 className="sp-h2">Skills breakdown</h2></div>
+      {SKILL_ROWS.map((s) => {
+        const row = stats?.skills?.[s.key];
+        const attempts = row?.attempts ?? 0;
+        const pct = attempts ? Math.round(row!.accuracy * 100) : 0;
+        return (
+          <div className="hm-skill-row" key={s.key}>
+            <span className="hm-due-ico"><Icon name={s.ic} size={18} /></span>
+            <span className="hm-due-lbl">{s.label}</span>
+            <div className="hm-skill-bar sp-progress"><i style={{ width: `${pct}%` }} /></div>
+            <span className={"hm-skill-pct" + (attempts === 0 ? " zero" : "")}>
+              {attempts ? `${pct}%` : "—"}
+            </span>
+            <span className="hm-skill-attempts">{attempts} {attempts === 1 ? "attempt" : "attempts"}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function HomeScreen({ go, onReview }: { go: (k: TabKey) => void; onReview: () => void }) {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  useEffect(() => { statsApi.dashboard().then(setStats).catch(() => {}); }, []);
+
   // Fresh account — everything starts at zero until the first session.
   const due: { label: string; count: number; ic: string; act: () => void }[] = [
     { label: "Words", count: 0, ic: "vocabulary", act: onReview },
@@ -215,7 +284,7 @@ function HomeScreen({ go, onReview }: { go: (k: TabKey) => void; onReview: () =>
         </div>
         <div className="sp-card hm-metric ret">
           <div className="hm-m-ico"><Icon name="target" size={20} /></div>
-          <div className="hm-m-num">—</div>
+          <div className="hm-m-num"><span className="hm-m-empty">Not yet</span></div>
           <div className="hm-m-lbl">Retention</div>
           <div className="hm-m-meta">No reviews yet</div>
         </div>
@@ -265,6 +334,8 @@ function HomeScreen({ go, onReview }: { go: (k: TabKey) => void; onReview: () =>
           <p className="hm-session-foot">Auto-built from what&apos;s due. You never have to decide.</p>
         </div>
       </div>
+
+      <SkillsBreakdown stats={stats} />
     </div>
   );
 }
@@ -941,7 +1012,7 @@ function GrProduceStage({ lesson }: { lesson: GrLesson }) {
         </button>
       </div>
 
-      {err && <p className="gr-fix" style={{ color: "#b5354f" }}>{err}</p>}
+      {err && <p className="gr-fix" style={{ color: "var(--negative)" }}>{err}</p>}
 
       {res && (
         <div className="gr-result">
@@ -1245,7 +1316,7 @@ function WrFeedbackStage({ mode, instructions, prompt, en, tag, placeholder, con
           <Icon name="check" size={16} /> {busy ? "Checking…" : "Get feedback"}
         </button>
       </div>
-      {err && <p className="gr-fix" style={{ color: "#b5354f" }}>{err}</p>}
+      {err && <p className="gr-fix" style={{ color: "var(--negative)" }}>{err}</p>}
       {fb && <WritingFeedbackPanel fb={fb} />}
     </div>
   );
@@ -1311,7 +1382,7 @@ function WrRewriteStage() {
           </button>
         ))}
       </div>
-      {err && <p className="gr-fix" style={{ color: "#b5354f" }}>{err}</p>}
+      {err && <p className="gr-fix" style={{ color: "var(--negative)" }}>{err}</p>}
       {out && (
         <div className="wr-rewrite-out">
           <div className="wr-rewrite-text">{out.rewritten}<button className="vo-speak" onClick={() => speakEs(out.rewritten)} title="Listen"><Icon name="speaker" size={18} /></button></div>
@@ -1601,7 +1672,7 @@ function ShadowingLevel() {
         <div className="ls-shadow-en">{t.en}</div>
       </div>
       {!supported ? (
-        <p className="gr-fix" style={{ color: "#b5354f" }}>Speech recognition needs Chrome/Edge. Try there to use shadowing.</p>
+        <p className="gr-fix" style={{ color: "var(--negative)" }}>Speech recognition needs Chrome/Edge. Try there to use shadowing.</p>
       ) : (
         <button className={"sp-btn sp-btn-primary ls-rec" + (listening ? " is-rec" : "")} style={{ minHeight: 48 }} disabled={listening} onClick={record}>
           <Icon name="podcast" size={18} /> {listening ? "Listening…" : "Record yourself"}
@@ -1837,7 +1908,7 @@ function RvItemView({ item, onResult }: { item: RvItem; onResult: (ok: boolean) 
           <div className="wr-prompt-en" style={{ marginBottom: 12 }}>{item.en}</div>
           {!getSR() ? (
             <>
-              <p className="gr-fix" style={{ color: "#b5354f" }}>Speech recognition needs Chrome/Edge.</p>
+              <p className="gr-fix" style={{ color: "var(--negative)" }}>Speech recognition needs Chrome/Edge.</p>
               <div className="gr-foot"><span /><button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} onClick={() => onResult(true)}>Skip <Icon name="chevron" size={16} /></button></div>
             </>
           ) : (
@@ -1910,20 +1981,39 @@ function SelfNext({ show, reveal, canReveal, revealLabel = "Reveal", onResult }:
 /* ════════════════════════ MISSION ════════════════════════
    Scenario missions that chain every skill into one goal.
    Vocabulary → Grammar → Listening → Speaking → Writing → complete. */
+// A mission's Vocabulary step advances past a word once it hits this level —
+// not full mastery (5). Mirrors backend MISSION_ADVANCE_LEVEL in services/vocab.py.
+const MISSION_ADVANCE_LEVEL = 2;
+// Which vocab burst (0-indexed) a step drills, for the generated Vocabulary
+// I/II/III steps — undefined for every other step (Listening, Grammar, ...).
+type MissionLevel = { name: string; learn: string; minutes: number; vocabBurst?: number };
 type Mission = {
-  id: string; emoji: string; title: string; blurb: string; tag: string;
-  vocab: { es: string; en: string }[];
+  id: string; icon: string; title: string; blurb: string; tag: string;
+  lat: number; lon: number;
+  vocab: { es: string; en: string; level?: number | null }[];
   grammar: { es: string; en: string }[];
   listening: { es: string; en: string; q: { question: string; options: string[]; answer: number } };
   speaking: { es: string; en: string };
   writing: { promptEn: string; targetEs: string };
+  levels?: MissionLevel[]; // the step-by-step levels shown on the planet
+  // The LLM-generated 7-stage speaking role-play, loaded from the API on open.
+  speakingScript?: MissionSpeaking | null;
+  // The current user's progress: null/undefined if never started, else
+  // "available" or "completed". Drives guided-flow vs free-practice-menu.
+  status?: string | null;
+  // The mission's backend GrammarPattern rows (id + cloze_template), loaded
+  // from the API — lets GrammarLesson's hardcoded review cards post an FSRS
+  // review for the matching pattern.
+  grammarPatterns?: { id: string; cloze_template: string }[];
 };
 const MISSIONS: Mission[] = [
   {
-    id: "coffee", emoji: "☕", title: "Ordering Coffee", blurb: "Walk into a café and order like a local.", tag: "A1 · Café",
+    id: "m001-coffee-shop", icon: "coffee", title: "Ordering Coffee", blurb: "Walk into a café and order like a local.", tag: "A1 · Café", lat: 40.4, lon: -3.7,
     vocab: [
-      { es: "el café", en: "coffee" }, { es: "la leche", en: "milk" },
-      { es: "el azúcar", en: "sugar" }, { es: "la cuenta", en: "the bill" },
+      { es: "el café", en: "coffee" }, { es: "el té", en: "tea" },
+      { es: "la leche", en: "milk" }, { es: "el azúcar", en: "sugar" },
+      { es: "el agua", en: "water" }, { es: "la cuenta", en: "the bill" },
+      { es: "el vaso", en: "glass" }, { es: "la taza", en: "cup" },
     ],
     grammar: [
       { es: "Quisiera un café.", en: "I would like a coffee. (polite)" },
@@ -1933,9 +2023,16 @@ const MISSIONS: Mission[] = [
       q: { question: "What is the waiter asking?", options: ["What you'd like to order", "Where you live", "The time"], answer: 0 } },
     speaking: { es: "Quisiera un café con leche, por favor.", en: "I'd like a coffee with milk, please." },
     writing: { promptEn: "Order a coffee with milk and sugar, then ask for the bill.", targetEs: "Quisiera un café con leche y azúcar, y la cuenta, por favor." },
+    levels: [
+      { name: "Listening", learn: "“Buenos días.” · “¿Algo más?” — hear the words in context before drilling them.", minutes: 4 },
+      { name: "Grammar", learn: "Quisiera… · Me gustaría… · ¿Me puede dar…? — pulled from the same conversation, short explanation then practice.", minutes: 5 },
+      { name: "Speaking", learn: "Talk with an AI waiter — order and complete the interaction naturally.", minutes: 6 },
+      { name: "Writing", learn: "Write your order, what your friend orders, and a polite request.", minutes: 5 },
+      { name: "Final Challenge", learn: "A real café conversation — no hints, native speed, multiple responses.", minutes: 7 },
+    ],
   },
   {
-    id: "airport", emoji: "✈️", title: "At the Airport", blurb: "Check in and find your gate.", tag: "A2 · Travel",
+    id: "m002-airport", icon: "plane", title: "At the Airport", blurb: "Check in and find your gate.", tag: "A2 · Travel", lat: 19.4, lon: -99.1,
     vocab: [
       { es: "el vuelo", en: "flight" }, { es: "la maleta", en: "suitcase" },
       { es: "la puerta", en: "gate" }, { es: "el billete", en: "ticket" },
@@ -1948,197 +2045,729 @@ const MISSIONS: Mission[] = [
       q: { question: "Which gate is the flight?", options: ["Gate two", "Gate twelve", "Gate twenty"], answer: 1 } },
     speaking: { es: "¿Dónde está la puerta de embarque, por favor?", en: "Where is the boarding gate, please?" },
     writing: { promptEn: "Ask where gate twelve is and what time the flight leaves.", targetEs: "¿Dónde está la puerta doce y a qué hora sale el vuelo?" },
+    levels: [
+      { name: "Listening", learn: "“Su billete y pasaporte.” · “Puerta doce.” — hear the words in context before drilling them.", minutes: 4 },
+      { name: "Grammar", learn: "¿Dónde está…? · ¿A qué hora sale…? · Vamos a embarcar — pulled from the same conversation, short explanation then practice.", minutes: 5 },
+      { name: "Speaking", learn: "Talk with an AI check-in agent — check in and find your gate naturally.", minutes: 6 },
+      { name: "Writing", learn: "Write your gate question, departure time question and a thank-you.", minutes: 5 },
+      { name: "Final Challenge", learn: "A real check-in desk conversation — no hints, native speed, multiple responses.", minutes: 7 },
+    ],
+  },
+  {
+    id: "m003-meeting-someone", icon: "people", title: "Meeting Someone", blurb: "Say hi and introduce yourself.", tag: "A1 · Social", lat: 4.7, lon: -74.1,
+    vocab: [
+      { es: "hola", en: "hello" }, { es: "me llamo", en: "my name is" },
+      { es: "soy", en: "I am" }, { es: "gracias", en: "thank you" },
+    ],
+    grammar: [
+      { es: "Me llamo Carlos.", en: "My name is Carlos." },
+      { es: "Soy de México.", en: "I'm from Mexico." },
+    ],
+    listening: { es: "Hola, me llamo Ana. ¿Y tú?", en: "Hi, my name is Ana. And you?",
+      q: { question: "What is she telling you?", options: ["Her name", "The time", "Where she lives"], answer: 0 } },
+    speaking: { es: "Hola, me llamo Carlos. Mucho gusto.", en: "Hi, my name is Carlos. Nice to meet you." },
+    writing: { promptEn: "Greet someone, give your name and say where you're from.", targetEs: "Hola, me llamo Carlos y soy de México." },
+    levels: [
+      { name: "Listening", learn: "“¡Hola!” · “¿Cómo estás?” — hear the words in context before drilling them.", minutes: 4 },
+      { name: "Grammar", learn: "Me llamo… · Soy de… · ¿Cómo te llamas? · ¿De dónde eres? — pulled from the same conversation, short explanation then practice.", minutes: 5 },
+      { name: "Speaking", learn: "Introduce yourself to an AI partner — name, where you're from, greetings.", minutes: 6 },
+      { name: "Writing", learn: "Write a greeting, your name and where you're from.", minutes: 5 },
+      { name: "Final Challenge", learn: "A real introduction — no hints, native speed, back and forth.", minutes: 7 },
+    ],
   },
 ];
 
-const MISSION_STEPS = ["Vocabulary", "Grammar", "Listening", "Speaking", "Writing"] as const;
+// Upcoming missions — shown as locked pointers on the globe, not yet playable.
+type LockedMission = { id: string; title: string; blurb: string; tag: string; lat: number; lon: number };
+const LOCKED_MISSIONS: LockedMission[] = [
+  { id: "market", title: "At the Market", blurb: "Haggle for fruit and veg like a local.", tag: "A2 · Market", lat: -12.0, lon: -77.0 },
+  { id: "hotel", title: "Hotel Check-in", blurb: "Get your room and the wifi code.", tag: "B1 · Travel", lat: 48.9, lon: 2.3 },
+  { id: "interview", title: "Job Interview", blurb: "Sell yourself in Spanish.", tag: "B2 · Work", lat: 41.4, lon: 2.2 },
+];
 
-function CoachCard({ promptEn, targetEs, placeholder, onDone }: { promptEn: string; targetEs: string; placeholder: string; onDone: () => void }) {
-  const [val, setVal] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [res, setRes] = useState<import("@/types").WritingCoach | null>(null);
-  const [err, setErr] = useState("");
-  const submit = async () => {
-    if (!val.trim()) return;
-    setBusy(true); setErr(""); setRes(null);
-    try { setRes(await writingApi.coach(promptEn, targetEs, val)); }
-    catch { setErr("Could not grade — check Gemini config."); }
-    finally { setBusy(false); }
+// The mission LIST is loaded from the API (missionsApi) so seeded missions —
+// and every future one — appear automatically. The hardcoded MISSIONS above act
+// as a per-id "overlay" of rich playable content (grammar/listening/speaking/
+// writing/levels/emoji/coords) for missions that have it authored. A DB mission
+// with no overlay still shows, driven by its title + vocab.
+const MISSION_OVERLAY: Record<string, Mission> = Object.fromEntries(
+  MISSIONS.map((m) => [m.id, m]),
+);
+
+// Globe coordinates for missions with no authored overlay, so they still pin.
+const FALLBACK_COORDS: [number, number][] = [
+  [40.4, -3.7], [19.4, -99.1], [-12.0, -77.0], [48.9, 2.3],
+  [-34.6, -58.4], [41.4, 2.2], [35.7, 139.7], [-33.9, 151.2],
+];
+
+// Build a Mission from its DB fields. Vocab is passed separately: the list
+// renders with an empty vocab (loaded lazily per mission on open), the detail
+// fetch passes the real vocab.
+// Balanced [start, end) ranges splitting `total` words into bursts of ~4-5 —
+// a working-memory-sized chunk for items being newly encoded (smaller than
+// the ~4-7 often cited for *held* items, since new encoding tolerates less).
+// A 12-word mission gets 3 bursts of 4, never one burst of 6+6.
+function vocabBurstRanges(total: number): [number, number][] {
+  if (total <= 0) return [];
+  const burstCount = Math.max(1, Math.ceil(total / 5));
+  const size = Math.ceil(total / burstCount);
+  const ranges: [number, number][] = [];
+  for (let start = 0; start < total; start += size) {
+    ranges.push([start, Math.min(total, start + size)]);
+  }
+  return ranges;
+}
+
+const VOCAB_BURST_LABEL = ["I", "II", "III", "IV", "V", "VI"];
+
+// Splices generated Vocabulary I/II/III… steps into a mission's authored
+// non-vocab steps (Listening, Grammar, Speaking, Writing, Final Challenge):
+// burst 1 after Listening, burst 2 after Grammar (interleaved, per the
+// revised mission flow), any further bursts right before Speaking.
+function buildMissionSteps(base: MissionLevel[], vocabCount: number): MissionLevel[] {
+  const ranges = vocabBurstRanges(vocabCount);
+  const vocabSteps: MissionLevel[] = ranges.map(([start, end], i) => ({
+    name: ranges.length === 1 ? "Vocabulary" : `Vocabulary ${VOCAB_BURST_LABEL[i] ?? i + 1}`,
+    learn: `${end - start} new word${end - start === 1 ? "" : "s"} — image recognition, active recall, pronunciation.`,
+    minutes: Math.max(3, end - start),
+    vocabBurst: i,
+  }));
+  const listening = base.find((s) => s.name === "Listening");
+  const grammar = base.find((s) => s.name === "Grammar");
+  const rest = base.filter((s) => s !== listening && s !== grammar);
+  const steps: MissionLevel[] = [];
+  if (listening) steps.push(listening);
+  if (vocabSteps[0]) steps.push(vocabSteps[0]);
+  if (grammar) steps.push(grammar);
+  if (vocabSteps[1]) steps.push(vocabSteps[1]);
+  steps.push(...vocabSteps.slice(2)); // any 3rd+ burst spills in, still before Speaking
+  steps.push(...rest); // Speaking, Writing, Final Challenge, in authored order
+  return steps;
+}
+
+function buildMission(
+  id: string,
+  title: string,
+  description: string | null,
+  vocab: { es: string; en: string }[],
+  i: number,
+  speakingScript?: MissionSpeaking | null,
+  status?: string | null,
+  grammarPatterns?: { id: string; cloze_template: string }[],
+): Mission {
+  const base = MISSION_OVERLAY[id];
+  if (base) {
+    // Rich content from the overlay, but title/blurb/vocab stay DB-driven, and
+    // the vocab-burst steps are generated fresh from the real word count.
+    const levels = base.levels ? buildMissionSteps(base.levels, vocab.length) : undefined;
+    return { ...base, id, title, blurb: description ?? base.blurb, vocab, levels, speakingScript, status, grammarPatterns };
+  }
+  const [lat, lon] = FALLBACK_COORDS[i % FALLBACK_COORDS.length];
+  return {
+    id,
+    icon: "globe",
+    title,
+    blurb: description ?? "",
+    tag: "Mission",
+    lat,
+    lon,
+    vocab,
+    grammar: [],
+    listening: { es: "", en: "", q: { question: "", options: [], answer: 0 } },
+    speaking: { es: "", en: "" },
+    writing: { promptEn: "", targetEs: "" },
+    speakingScript,
+    status,
   };
-  const retry = () => { setRes(null); setVal(""); };
+}
+
+/* ════════════════════════ FINAL CHALLENGE ════════════════════════
+   The mission finale: one continuous, unscaffolded real-world conversation.
+   Cold open (NPC speaks first, no test framing), free text input, native-speed
+   in-character replies. Meaning over form — the backend LLM judges intent and
+   repairs misunderstandings IN ROLE rather than failing the learner. The scene
+   ends only when the interaction genuinely completes (done=true). */
+type FcTurn = { who: "npc" | "learner"; es: string; en?: string; correction?: string };
+
+function FinalChallenge({ mission, onExit }: { mission: Mission; onExit: () => void }) {
+  const [scene, setScene] = useState<SpeakingScene | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [turns, setTurns] = useState<FcTurn[]>([]);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  // Cold open: fetch the scene, drop the learner straight into the NPC's first
+  // line — no "Final Challenge: order a coffee" setup screen. Speak it aloud so
+  // it feels like walking into the café, not reading a quiz.
+  useEffect(() => {
+    let alive = true;
+    missionsApi
+      .speakingScene(mission.id)
+      .then((s) => {
+        if (!alive) return;
+        setScene(s);
+        setTurns([{ who: "npc", es: s.opening, en: s.opening_en }]);
+        speakEs(s.opening);
+      })
+      .catch(() => { if (alive) setError("Could not start the challenge. Try again in a moment."); })
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
+  }, [mission.id]);
+
+  // Keep the newest line in view as the conversation grows.
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [turns, busy]);
+
+  const send = async () => {
+    const utterance = input.trim();
+    if (!utterance || busy || !scene || done) return;
+    // History the backend sees is everything BEFORE this utterance.
+    const history = turns.map((t) => ({ speaker: t.who, text: t.es }));
+    setTurns((t) => [...t, { who: "learner", es: utterance }]);
+    setInput("");
+    setBusy(true);
+    try {
+      const r = await missionsApi.speakingTurn(mission.id, {
+        role: scene.role,
+        setting: scene.setting,
+        goal: scene.goal,
+        history,
+        utterance,
+      });
+      setTurns((t) => {
+        const next = [...t];
+        // Attach any gentle correction to the learner's line we just added.
+        if (r.correction) {
+          for (let i = next.length - 1; i >= 0; i--) {
+            if (next[i].who === "learner") { next[i] = { ...next[i], correction: r.correction }; break; }
+          }
+        }
+        next.push({ who: "npc", es: r.npc_reply, en: r.npc_reply_en });
+        return next;
+      });
+      speakEs(r.npc_reply);
+      if (r.done) {
+        setDone(true);
+        // The interaction succeeded — record the mission as completed. Fire-and-
+        // forget: a failed write must not block the celebratory finish.
+        void missionsApi.complete(mission.id).catch(() => {});
+      }
+    } catch {
+      // Stay in-scene on failure rather than throwing a test-style error.
+      setTurns((t) => [...t, { who: "npc", es: "Perdone, no le oí bien. ¿Puede repetir?", en: "Sorry, I didn't catch that. Can you repeat?" }]);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ width: "100%", display: "grid", placeItems: "center", paddingTop: 60 }}>
+        <div className="mi-prep-spinner" aria-hidden />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div style={{ width: "100%", display: "grid", placeItems: "center", paddingTop: 40 }}>
+        <div className="sp-card gr-stage-card" style={{ textAlign: "center", maxWidth: 460 }}>
+          <p className="sp-sub" style={{ marginBottom: 18 }}>{error}</p>
+          <button className="sp-btn sp-btn-primary" onClick={onExit}>Back to missions</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <textarea className="wr-editor" style={{ minHeight: 90 }} placeholder={placeholder} value={val} disabled={!!res} onChange={(e) => setVal(e.target.value)} />
-      {!res && (
-        <div className="wr-editbar">
-          {err ? <span className="gr-fix" style={{ color: "#b5354f" }}>{err}</span> : <span />}
-          <button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} disabled={busy || !val.trim()} onClick={submit}>
-            <Icon name="check" size={16} /> {busy ? "Checking…" : "Check"}
+    <div className="fc-wrap">
+      <div className="fc-head">
+        <span className="sp-tag pink"><Icon name="spark" size={15} style={{ verticalAlign: "-2px", marginRight: 4 }} /> Final Challenge</span>
+        {scene && <span className="fc-scene">{scene.setting}</span>}
+      </div>
+
+      <div className="fc-thread" ref={scrollRef}>
+        {turns.map((t, i) => (
+          <div key={i} className={"fc-turn " + t.who}>
+            <div className="fc-bubble">
+              <span className="fc-es">{t.es}</span>
+              {t.who === "npc" && (
+                <span className="fc-tools">
+                  <button className="fc-icon" title="Hear it again" onClick={() => speakEs(t.es)}><Icon name="speaker" size={14} /></button>
+                  <FcReveal en={t.en} />
+                </span>
+              )}
+            </div>
+            {t.correction && (
+              <div className="fc-correction" title="A more natural way to say it">
+                <Icon name="spark" size={12} /> {t.correction}
+              </div>
+            )}
+          </div>
+        ))}
+        {busy && (
+          <div className="fc-turn npc">
+            <div className="fc-bubble fc-typing"><i /><i /><i /></div>
+          </div>
+        )}
+      </div>
+
+      {done ? (
+        <div className="fc-done">
+          <div className="fc-done-badge"><Icon name="check" size={22} /></div>
+          <div className="fc-done-txt">
+            <b>Mission complete</b>
+            <span>You handled the whole conversation in Spanish.</span>
+          </div>
+          <button className="sp-btn sp-btn-primary" style={{ minHeight: 46 }} onClick={onExit}>
+            Back to missions <Icon name="chevron" size={16} />
+          </button>
+        </div>
+      ) : (
+        <div className="fc-inputbar">
+          <input
+            className="fc-input"
+            value={input}
+            placeholder="Responde en español…"
+            autoFocus
+            disabled={busy}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") send(); }}
+          />
+          <button className="fc-send sp-btn sp-btn-primary" disabled={busy || !input.trim()} onClick={send} title="Send">
+            <Icon name="chevron" size={18} />
           </button>
         </div>
       )}
-      {res && (
-        <div className={"coach" + (res.correct ? " ok" : "")}>
-          <div className="coach-row"><span className="coach-k">Your answer</span><span className="coach-v your">{val}</span></div>
-          <div className="coach-row"><span className="coach-k">Natural</span><span className="coach-v nat">{res.natural}<button className="vo-speak" onClick={() => speakEs(res.natural)} title="Listen"><Icon name="speaker" size={16} /></button></span></div>
-          {res.why && <div className="coach-row"><span className="coach-k">Why</span><span className="coach-v">{res.why}</span></div>}
-          {res.think && <div className="coach-row"><span className="coach-k">Think</span><span className="coach-v think">“{res.think}”</span></div>}
-          <div className="gr-foot" style={{ marginTop: 12 }}>
-            <span className={"gr-verdict " + (res.correct ? "ok" : "no")}>{res.correct ? "¡Correcto!" : "Almost — see above"}</span>
-            <div style={{ display: "flex", gap: 8 }}>
-              {!res.correct && <button className="sp-btn sp-btn-soft" style={{ minHeight: 44 }} onClick={retry}>Try again</button>}
-              <button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} onClick={onDone}>Continue <Icon name="chevron" size={16} /></button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 }
 
+// English is hidden by default (immersion first). The learner can uncover it for
+// one line if they're stuck — a repair aid, not an always-on translation.
+function FcReveal({ en }: { en?: string }) {
+  const [open, setOpen] = useState(false);
+  if (!en) return null;
+  return open ? (
+    <span className="fc-en">{en}</span>
+  ) : (
+    <button className="fc-icon" title="What did that mean?" onClick={() => setOpen(true)}>?</button>
+  );
+}
+
+// A mission run is now a focused vocabulary session: the exact same 5-level
+// trainer as the Vocabulary tab, scoped to this mission's words. No multi-skill
+// steps. The trainer self-centres (.vt-wrap has margin:auto), so we don't wrap
+// it in .ls-stage (whose 760px cap would squeeze the level-1 layout).
 function MissionRun({ mission, onExit }: { mission: Mission; onExit: () => void }) {
-  const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
-  const next = () => { if (step + 1 >= MISSION_STEPS.length) setDone(true); else setStep(step + 1); };
 
   if (done) {
     return (
-      <div className="ls-stage">
-        <div className="sp-card gr-stage-card" style={{ textAlign: "center" }}>
-          <div className="mi-complete-emoji">{mission.emoji}</div>
+      <div style={{ width: "100%", display: "grid", placeItems: "center", paddingTop: 40 }}>
+        <div className="sp-card gr-stage-card" style={{ textAlign: "center", maxWidth: 460 }}>
+          <div className="mi-complete-emoji"><Icon name={mission.icon} size={64} /></div>
           <div className="gr-done-ico" style={{ margin: "0 auto 12px" }}><Icon name="check" size={26} /></div>
-          <h2 className="sp-h2" style={{ marginBottom: 6 }}>Mission complete</h2>
-          <p className="sp-sub" style={{ marginBottom: 20 }}>You ordered, listened, spoke and wrote — every skill in one goal.</p>
+          <h2 className="sp-h2" style={{ marginBottom: 6 }}>Vocabulary complete</h2>
+          <p className="sp-sub" style={{ marginBottom: 20 }}>
+            Every word is off to a solid start. They&apos;ll keep coming back in Review to build toward full mastery.
+          </p>
           <button className="sp-btn sp-btn-primary" onClick={onExit}>Back to missions <Icon name="chevron" size={16} /></button>
         </div>
       </div>
     );
   }
 
-  const skill = MISSION_STEPS[step];
   return (
-    <div className="ls-stage">
-      <div className="mi-runhead">
-        <button className="mi-back" onClick={onExit}><Icon name="chevron" size={16} /> Missions</button>
-        <span className="sp-tag pink">{mission.emoji} {mission.title}</span>
+    <div style={{ width: "100%" }}>
+      <div className="mi-runhead" style={{ maxWidth: 640, margin: "0 auto", justifyContent: "center" }}>
+        <span className="sp-tag pink"><Icon name={mission.icon} size={16} style={{ verticalAlign: "-2px", marginRight: 4 }} /> {mission.title}</span>
       </div>
-      <div className="gr-stepper" style={{ marginBottom: 16 }}>
-        {MISSION_STEPS.map((s, i) => (
-          <span key={s} className={"gr-step" + (i === step ? " is-active" : "") + (i < step ? " done" : "")} style={{ cursor: "default" }}>
-            <span className="gr-step-n">{i < step ? "✓" : i + 1}</span>{s}
-          </span>
-        ))}
-      </div>
+      <VocabTrainer
+        missionId={mission.id}
+        advanceThreshold={MISSION_ADVANCE_LEVEL}
+        missionVocabLevels={mission.vocab}
+        onBack={onExit}
+        onDone={() => setDone(true)}
+        backLabel="Missions"
+        emptyTitle="Vocabulary done!"
+      />
+    </div>
+  );
+}
 
-      <div className="sp-card gr-stage-card">
-        {skill === "Vocabulary" && (
-          <>
-            <p className="gr-stage-hint">Learn the words you&apos;ll need.</p>
-            <div className="mi-vocab">
-              {mission.vocab.map((w) => (
-                <button className="mi-word" key={w.es} onClick={() => speakEs(w.es)}>
-                  <span className="mi-word-es">{w.es}</span><span className="mi-word-en">{w.en}</span>
-                  <Icon name="speaker" size={15} style={{ color: "var(--muted-2)" }} />
-                </button>
-              ))}
-            </div>
-            <div className="gr-foot"><span /><button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} onClick={next}>Got them <Icon name="chevron" size={16} /></button></div>
-          </>
-        )}
-        {skill === "Grammar" && (
-          <>
-            <p className="gr-stage-hint">Two structures to make polite requests.</p>
-            <div className="mi-grammar">
-              {mission.grammar.map((g) => (
-                <div className="mi-struct" key={g.es}>
-                  <div className="mi-struct-es">{g.es}<button className="vo-speak" onClick={() => speakEs(g.es)} title="Listen"><Icon name="speaker" size={16} /></button></div>
-                  <div className="mi-struct-en">{g.en}</div>
-                </div>
-              ))}
-            </div>
-            <div className="gr-foot"><span /><button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} onClick={next}>Next <Icon name="chevron" size={16} /></button></div>
-          </>
-        )}
-        {skill === "Listening" && <MissionListen data={mission.listening} onNext={next} />}
-        {skill === "Speaking" && <MissionSpeak data={mission.speaking} onNext={next} />}
-        {skill === "Writing" && (
-          <>
-            <div className="wr-sheet-head" style={{ marginBottom: 16 }}>
-              <div className="wr-sheet-prompt">
-                <span className="sp-tag pink"><Icon name="writing" size={13} /> Write your order</span>
-                <div className="wr-prompt-text">{mission.writing.promptEn}</div>
-              </div>
-            </div>
-            <CoachCard promptEn={mission.writing.promptEn} targetEs={mission.writing.targetEs} placeholder="Escribe en español…" onDone={next} />
-          </>
-        )}
+// The "downloading" window shown the first time a mission is opened, while its
+// vocabulary runs through the Gemini enrichment pipeline.
+function MissionPreparing({ title, enriched, total, onCancel }: {
+  title: string; enriched: number; total: number; onCancel: () => void;
+}) {
+  const pct = total > 0 ? Math.round((enriched / total) * 100) : 0;
+  return (
+    <div className="mi-prep-overlay" role="dialog" aria-modal="true">
+      <div className="sp-card mi-prep-card">
+        <div className="mi-prep-spinner" aria-hidden />
+        <h2 className="sp-h2" style={{ marginBottom: 6 }}>Preparing {title || "mission"}…</h2>
+        <p className="sp-sub" style={{ marginBottom: 18 }}>
+          Downloading and enriching the vocabulary. This runs once — next time the mission opens instantly.
+        </p>
+        <div className="mi-prep-bar"><div className="mi-prep-fill" style={{ width: `${pct}%` }} /></div>
+        <p className="mi-prep-count">{enriched} / {total || "…"} words ready</p>
+        <button className="sp-btn sp-btn-soft" style={{ marginTop: 16, minHeight: 44 }} onClick={onCancel}>
+          Cancel
+        </button>
       </div>
     </div>
   );
 }
 
-function MissionListen({ data, onNext }: { data: Mission["listening"]; onNext: () => void }) {
-  const [pick, setPick] = useState<number | null>(null);
-  useEffect(() => { speakEs(data.es); }, [data]);
-  return (
-    <>
-      <p className="gr-stage-hint">Listen to the waiter, then answer.</p>
-      <button className="ls-bigplay" onClick={() => speakEs(data.es)}><Icon name="speaker" size={24} /> Play</button>
-      <div className="ls-q-text">{data.q.question}</div>
-      <div className="gr-answers">
-        {data.q.options.map((o, i) => (
-          <button key={i} className={"gr-answer" + (pick !== null && i === data.q.answer ? " correct" : "") + (pick === i && i !== data.q.answer ? " wrong" : "")}
-            onClick={() => pick === null && setPick(i)}>
-            <span className="key">{String.fromCharCode(65 + i)}</span>{o}
-          </button>
-        ))}
-      </div>
-      {pick !== null && <div className="gr-foot" style={{ marginTop: 12 }}><span className="gr-fix">{data.en}</span><button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} onClick={onNext}>Next <Icon name="chevron" size={16} /></button></div>}
-    </>
-  );
-}
-
-function MissionSpeak({ data, onNext }: { data: Mission["speaking"]; onNext: () => void }) {
-  const [listening, setListening] = useState(false);
-  const [heard, setHeard] = useState("");
-  const [ok, setOk] = useState<boolean | null>(null);
-  const record = () => {
-    const sr = getSR();
-    if (!sr) { setOk(false); return; }
-    sr.lang = "es-ES"; sr.interimResults = false; sr.maxAlternatives = 1; sr.continuous = false;
-    setListening(true); setHeard("");
-    sr.onresult = (e) => { const said = e.results[0][0].transcript || ""; setHeard(said); setOk(rvScore(data.es, said)); };
-    sr.onend = () => setListening(false);
-    sr.onerror = () => { setListening(false); setOk(false); };
-    sr.start();
-  };
-  return (
-    <>
-      <p className="gr-stage-hint">Now say it. Order your coffee.</p>
-      <div className="wr-copy-target">{data.es}<button className="vo-speak" onClick={() => speakEs(data.es)} title="Listen"><Icon name="speaker" size={18} /></button></div>
-      <div className="wr-prompt-en" style={{ marginBottom: 12 }}>{data.en}</div>
-      {!getSR() ? (
-        <div className="gr-foot"><span className="gr-fix" style={{ color: "#b5354f" }}>Speech needs Chrome/Edge.</span><button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} onClick={onNext}>Skip <Icon name="chevron" size={16} /></button></div>
-      ) : (
-        <>
-          <button className={"sp-btn sp-btn-primary ls-rec" + (listening ? " is-rec" : "")} style={{ minHeight: 46 }} disabled={listening} onClick={record}>
-            <Icon name="podcast" size={16} /> {listening ? "Listening…" : "Record"}
-          </button>
-          {heard && <p className="gr-fix">Heard: <span style={{ fontStyle: "italic" }}>{heard}</span></p>}
-          {ok !== null && (
-            <div className="gr-foot" style={{ marginTop: 8 }}>
-              <span className={"gr-verdict " + (ok ? "ok" : "no")}>{ok ? "Sounded great" : "Close — try once more"}</span>
-              <button className="sp-btn sp-btn-primary" style={{ minHeight: 44 }} onClick={onNext}>Next <Icon name="chevron" size={16} /></button>
-            </div>
-          )}
-        </>
-      )}
-    </>
-  );
-}
-
 function MissionScreen() {
+  const router = useRouter();
   const [active, setActive] = useState<Mission | null>(null);
+  const [planet, setPlanet] = useState<Mission | null>(null);
+  const [lesson, setLesson] = useState(false); // running the mission's step-by-step lesson
+  const [stepIndex, setStepIndex] = useState(0); // which step the user is practising
+  const [missions, setMissions] = useState<Mission[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [openingId, setOpeningId] = useState<string | null>(null);
+  // Soft nudge (never a hard block) shown when the user has due reviews and
+  // hasn't already dismissed it this session — offers a detour to /study
+  // before jumping into a new mission.
+  const [reviewPrompt, setReviewPrompt] = useState<{ missionId: string; dueCount: number } | null>(null);
+  // The "downloading" window shown while a mission's Gemini enrichment runs
+  // (first open only). null when no mission is being prepared.
+  const [preparing, setPreparing] = useState<
+    { id: string; title: string; enriched: number; total: number } | null
+  >(null);
+  // Cache each mission's fetched detail so re-opening doesn't refetch.
+  const detailCache = useRef<Record<string, Mission>>({});
+  // Deep-link restore: a mission/step/lesson read from the URL on first mount,
+  // applied once the mission's planet has loaded. Cleared after it's consumed.
+  const deepLink = useRef<{ mid: string; step: number; lesson: boolean } | null>(null);
+  const didDeepLink = useRef(false);
+
+  // The mission LIST is loaded from the backend (summaries only — no vocab), so
+  // newly seeded missions appear here with no frontend change.
+  useEffect(() => {
+    let alive = true;
+    missionsApi
+      .list()
+      .then((data) => {
+        if (alive) setMissions(data.map((s, i) => buildMission(s.id, s.title, s.description, [], i)));
+      })
+      .catch(() => { if (alive) setError("Could not load missions."); })
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
+  }, []);
+
+  // Turn a fetched mission detail into a Mission and enter its planet.
+  const enterPlanet = useCallback((detail: ApiMission) => {
+    const i = missions.findIndex((m) => m.id === detail.id);
+    const full = buildMission(
+      detail.id,
+      detail.title,
+      detail.description,
+      detail.vocab.map((v) => ({ es: v.spanish, en: v.english, level: v.level })),
+      i < 0 ? 0 : i,
+      detail.speaking,
+      detail.status,
+      detail.grammar,
+    );
+    detailCache.current[detail.id] = full;
+    setPlanet(full);
+    // The mission is now enriched and open — pre-generate its listening audio on
+    // the backend (persisted to disk) so every clip is ready before the learner
+    // reaches the Listening step. Fire-and-forget; playback synthesises live if
+    // this hasn't finished. Only cached texts are skipped server-side.
+    const listening = MISSION_LISTENING_LESSONS[detail.id];
+    if (listening) {
+      void ttsApi.prewarm(audioTextsForScript(listening)).catch(() => {});
+    }
+  }, [missions]);
+
+  // Re-fetch a mission's vocab levels and patch the open planet + its cache, so
+  // the rings reflect the user's real training level (e.g. after a session).
+  const refreshLevels = useCallback(async (id: string) => {
+    try {
+      const detail = await missionsApi.get(id);
+      const vocab = detail.vocab.map((v) => ({ es: v.spanish, en: v.english, level: v.level }));
+      const cached = detailCache.current[id];
+      const updated = cached ? { ...cached, vocab, status: detail.status } : null;
+      if (updated) detailCache.current[id] = updated;
+      setPlanet((p) => (p && p.id === id && updated ? updated : p));
+    } catch { /* leave the current levels in place */ }
+  }, []);
+
+  // Load one mission on demand. If its Gemini enrichment has never run, show the
+  // downloading window and only enter once it's ready; otherwise open straight.
+  const enterMission = useCallback(async (id: string) => {
+    const cached = detailCache.current[id];
+    if (cached) {
+      // Deck already exists — show instantly, then sync levels in the background.
+      void missionsApi.start(id).catch(() => {});
+      setPlanet(cached);
+      void refreshLevels(id);
+      return;
+    }
+    const title = missions.find((m) => m.id === id)?.title ?? "";
+    setOpeningId(id);
+    try {
+      // Await start so the user's deck cards exist before we read their levels —
+      // otherwise every word reads back as "New" on the first open. Idempotent.
+      await missionsApi.start(id).catch(() => {});
+      const detail = await missionsApi.get(id);
+      if (detail.enrichment_status === "ready") {
+        enterPlanet(detail);
+      } else {
+        // First open — the pipeline is (or is now) running. Show the window; the
+        // polling effect below drives it to completion.
+        setPreparing({ id, title, enriched: 0, total: detail.vocab.length });
+      }
+    } catch {
+      setError("Could not open mission.");
+    } finally {
+      setOpeningId(null);
+    }
+  }, [missions, enterPlanet, refreshLevels]);
+
+  // Entry point used by the UI. Checks for due reviews first and offers a
+  // detour — but never blocks: skipping (or a failed check) always proceeds
+  // straight into the mission. Asked at most once per browser session.
+  const openMission = useCallback(async (id: string) => {
+    const alreadyAsked =
+      typeof window !== "undefined" && sessionStorage.getItem("sp-review-nudge-dismissed") === "1";
+    if (!alreadyAsked) {
+      try {
+        const due = await studyApi.due();
+        if (due.length > 0) {
+          setReviewPrompt({ missionId: id, dueCount: due.length });
+          return;
+        }
+      } catch { /* review check failed — don't let it block mission entry */ }
+    }
+    await enterMission(id);
+  }, [enterMission]);
+
+  // Deep link: on first mount, if the URL names a mission, open it straight
+  // (bypassing the review nudge) and remember the step/lesson to restore once
+  // the planet has loaded. Lets a reload drop the user back into the mission.
+  useEffect(() => {
+    if (didDeepLink.current || typeof window === "undefined") return;
+    didDeepLink.current = true;
+    const sp = new URLSearchParams(window.location.search);
+    const mid = sp.get("mission");
+    if (!mid) return;
+    deepLink.current = { mid, step: Number(sp.get("step")) || 0, lesson: sp.get("lesson") === "1" };
+    void enterMission(mid);
+  }, [enterMission]);
+
+  // Apply the deep-linked step/lesson once its planet is open, then consume it.
+  useEffect(() => {
+    const dl = deepLink.current;
+    if (!planet || !dl || planet.id !== dl.mid) return;
+    deepLink.current = null;
+    setStepIndex(dl.step);
+    if (dl.lesson) setLesson(true);
+  }, [planet]);
+
+  // Mirror the open mission into the URL (?mission=&step=&lesson=) so a reload
+  // restores it. replaceState (not push) keeps in-dashboard history clean. The
+  // ?tab= param set elsewhere is preserved.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (planet) {
+      url.searchParams.set("mission", planet.id);
+      if (stepIndex) url.searchParams.set("step", String(stepIndex));
+      else url.searchParams.delete("step");
+      if (lesson) url.searchParams.set("lesson", "1");
+      else url.searchParams.delete("lesson");
+    } else {
+      url.searchParams.delete("mission");
+      url.searchParams.delete("step");
+      url.searchParams.delete("lesson");
+    }
+    window.history.replaceState(window.history.state, "", url);
+  }, [planet, lesson, stepIndex]);
+
+  // Leaving the mission tab unmounts this screen — strip the mission params so
+  // the URL doesn't keep pointing at a mission the user has left.
+  useEffect(() => () => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("mission");
+    url.searchParams.delete("step");
+    url.searchParams.delete("lesson");
+    window.history.replaceState(window.history.state, "", url);
+  }, []);
+
+  // While the downloading window is up, poll enrichment progress. When ready,
+  // fetch the now-enriched mission and enter it.
+  useEffect(() => {
+    if (!preparing) return;
+    const id = preparing.id;
+    let alive = true;
+    const tick = async () => {
+      try {
+        const s = await missionsApi.status(id);
+        if (!alive) return;
+        setPreparing((p) => (p && p.id === id ? { ...p, enriched: s.enriched, total: s.total } : p));
+        if (s.status === "ready") {
+          const detail = await missionsApi.get(id);
+          if (!alive) return;
+          enterPlanet(detail);
+          setPreparing(null);
+        }
+      } catch { /* transient — keep polling */ }
+    };
+    const iv = setInterval(tick, 2500);
+    tick();
+    return () => { alive = false; clearInterval(iv); };
+  }, [preparing?.id, enterPlanet]);
+
+  // Stable pin array — a fresh array each render would rebuild the globe and reset its rotation.
+  const globePins = useMemo(
+    () => [
+      ...missions.map((m) => ({ id: m.id, title: m.title, lat: m.lat, lon: m.lon })),
+      ...LOCKED_MISSIONS.map((m) => ({ id: m.id, title: m.title, lat: m.lat, lon: m.lon, locked: true })),
+    ],
+    [missions],
+  );
+  if (planet && lesson) {
+    // Which step is being practised drives which exercise runs. Every step
+    // returns to this same mission hub (progress bar + vocab-with-levels) on
+    // completion — steps stay separated rather than auto-chaining into each
+    // other — and refreshes levels so the hub reflects what just changed.
+    const curStepLevel = planet.levels?.[Math.min(stepIndex, (planet.levels?.length ?? 1) - 1)];
+    const stepName = curStepLevel?.name;
+    const grammarScript = stepName === "Grammar" ? MISSION_GRAMMAR_LESSONS[planet.id] : undefined;
+    const listeningScript = stepName === "Listening" ? MISSION_LISTENING_LESSONS[planet.id] : undefined;
+    const writingScript = stepName === "Writing" ? MISSION_WRITING_LESSONS[planet.id] : undefined;
+    const isSpeaking = stepName === "Speaking";
+    const finalChallenge = stepName === "Final Challenge";
+    // Each vocabulary step drills one ~4-5-word burst of the mission's words
+    // (see buildMissionSteps/vocabBurstRanges) instead of all of them at once,
+    // and finishes once every word in that burst reaches MISSION_ADVANCE_LEVEL
+    // — not full mastery. Mastery keeps accruing later via ordinary FSRS review.
+    const burstIndex = curStepLevel?.vocabBurst;
+    const vocabBurstWords =
+      burstIndex != null
+        ? planet.vocab.slice(...vocabBurstRanges(planet.vocab.length)[burstIndex])
+        : null;
+    const backToHub = () => { setLesson(false); void refreshLevels(planet.id); };
+    return (
+      <div
+        className="sp-lesson-fill"
+        style={{
+          position: "fixed", inset: 0, zIndex: 1002, background: "var(--bg)",
+          overflow: "auto", padding: "clamp(18px, 2.4vw, 30px) clamp(18px, 3vw, 40px) 60px",
+        }}
+      >
+        {grammarScript ? (
+          <GrammarLesson script={grammarScript} onExit={backToHub} onDone={backToHub} patterns={planet.grammarPatterns} />
+        ) : listeningScript ? (
+          <ListeningLesson script={listeningScript} onExit={backToHub} onDone={backToHub} />
+        ) : writingScript ? (
+          <WritingLesson script={writingScript} onExit={backToHub} onDone={backToHub} />
+        ) : isSpeaking ? (
+          planet.speakingScript ? (
+            <SpeakingTrainer
+              speaking={planet.speakingScript}
+              missionId={planet.id}
+              onExit={backToHub}
+              onDone={backToHub}
+            />
+          ) : (
+            <div className="sp-card vt-card" style={{ textAlign: "center", maxWidth: 460, margin: "0 auto" }}>
+              <p className="sp-sub" style={{ marginBottom: 20 }}>
+                Speaking practice is still being prepared for this mission. Check back in a moment.
+              </p>
+              <button className="sp-btn sp-btn-primary" onClick={backToHub}>Back</button>
+            </div>
+          )
+        ) : finalChallenge ? (
+          <FinalChallenge mission={planet} onExit={backToHub} />
+        ) : vocabBurstWords ? (
+          <VocabTrainer
+            missionId={planet.id}
+            words={vocabBurstWords.map((v) => v.es)}
+            advanceThreshold={MISSION_ADVANCE_LEVEL}
+            missionVocabLevels={vocabBurstWords}
+            onBack={backToHub}
+            onDone={backToHub}
+            backLabel="Missions"
+            emptyTitle={`${stepName} ready!`}
+          />
+        ) : (
+          <MissionRun mission={planet} onExit={backToHub} />
+        )}
+      </div>
+    );
+  }
+  if (planet) return (
+    <div
+      style={{
+        position: "fixed", inset: 0, zIndex: 1000, background: "var(--bg)",
+      }}
+    >
+      {(() => {
+        // If the mission defines step-levels, drive the planet from them.
+        if (planet.levels && planet.levels.length) {
+          const cur = Math.min(stepIndex, planet.levels.length - 1);
+          const curLevel = planet.levels[cur];
+          return (
+            <PlanetScene
+              title={planet.title}
+              vocab={planet.vocab}
+              steps={planet.levels}
+              levelIndex={cur}
+              levelCount={planet.levels.length}
+              level={curLevel}
+              nextLevel={planet.levels[cur + 1]}
+              onLevel={curLevel.vocabBurst != null ? () => setLesson(true) : undefined}
+              // Clicking a step selects it and starts its practice. Only the
+              // vocabulary trainer is built, so every step runs it (scoped to
+              // the mission's words) for now.
+              onStep={(i) => { setStepIndex(i); setLesson(true); }}
+            />
+          );
+        }
+        // Fallback for missions without defined levels.
+        const idx = missions.findIndex((x) => x.id === planet.id);
+        const next = missions[(idx + 1) % missions.length];
+        return (
+          <PlanetScene
+            title={planet.title}
+            vocab={planet.vocab}
+            levelIndex={idx}
+            levelCount={7}
+            level={{
+              name: planet.tag,
+              learn: `${planet.blurb} — ${planet.vocab.length} words, ${planet.grammar.length} grammar patterns.`,
+              minutes: 5 + planet.vocab.length + planet.grammar.length,
+            }}
+            nextLevel={
+              next && {
+                name: next.tag,
+                learn: next.blurb,
+                minutes: 5 + next.vocab.length + next.grammar.length,
+              }
+            }
+          />
+        );
+      })()}
+      <button
+        className="sp-btn"
+        onClick={() => { setPlanet(null); setStepIndex(0); }}
+        style={{ position: "absolute", top: 16, left: 16, zIndex: 1001 }}
+      >
+        <Icon name="chevron" size={16} /> Back
+      </button>
+    </div>
+  );
   if (active) return (
     <>
       <div className="sp-pagehead">
@@ -2149,29 +2778,101 @@ function MissionScreen() {
     </>
   );
   return (
-    <div>
-      <div className="sp-pagehead">
-        <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Missions</p>
-        <h1 className="sp-h1">Real situations, every skill at once</h1>
-      </div>
-      <p className="sp-sub" style={{ maxWidth: 560, marginBottom: 20 }}>
-        Each mission chains vocabulary, grammar, listening, speaking and writing toward one goal.
-        Finish it and you can actually do the thing.
-      </p>
-      <div className="mi-grid">
-        {MISSIONS.map((m) => (
-          <div className="sp-card mi-card" key={m.id} onClick={() => setActive(m)}>
-            <div className="mi-card-emoji">{m.emoji}</div>
-            <div className="mi-card-body">
-              <div className="mi-card-title">{m.title}</div>
-              <div className="mi-card-blurb">{m.blurb}</div>
-              <div className="mi-card-skills">
-                {MISSION_STEPS.map((s) => <span key={s} className="mi-chip">{s}</span>)}
-              </div>
+    <div className="mi-stage">
+      {preparing && (
+        <MissionPreparing
+          title={preparing.title}
+          enriched={preparing.enriched}
+          total={preparing.total}
+          onCancel={() => setPreparing(null)}
+        />
+      )}
+      {reviewPrompt && (
+        <div className="mi-prep-overlay" role="dialog" aria-modal="true">
+          <div className="sp-card mi-prep-card">
+            <h2 className="sp-h2" style={{ marginBottom: 6 }}>Reviews are waiting</h2>
+            <p className="sp-sub" style={{ marginBottom: 18 }}>
+              {reviewPrompt.dueCount} word{reviewPrompt.dueCount !== 1 ? "s" : ""} from earlier missions
+              could use a quick review before you start something new.
+            </p>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+              <button
+                className="sp-btn sp-btn-soft"
+                onClick={() => {
+                  sessionStorage.setItem("sp-review-nudge-dismissed", "1");
+                  const id = reviewPrompt.missionId;
+                  setReviewPrompt(null);
+                  void enterMission(id);
+                }}
+              >
+                Skip, start mission
+              </button>
+              <button
+                className="sp-btn sp-btn-primary"
+                onClick={() => { setReviewPrompt(null); router.push("/study"); }}
+              >
+                Review now
+              </button>
             </div>
-            <span className="sp-tag ghost">{m.tag}</span>
           </div>
-        ))}
+        </div>
+      )}
+      <aside className="mi-side">
+        <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Missions</p>
+        <h1 className="sp-h1" style={{ marginBottom: 8 }}>Real situations, every skill at once</h1>
+        <p className="sp-sub" style={{ marginBottom: 22 }}>
+          Spin the globe and hover a pin. Locked pins are missions you’ll unlock as you level up.
+        </p>
+        <h2 className="mi-side-title">Current available missions</h2>
+        {loading && <p className="sp-sub">Loading missions…</p>}
+        {error && <p className="sp-sub" style={{ color: "var(--negative)" }}>{error}</p>}
+        {!loading && !error && missions.length === 0 && (
+          <p className="sp-sub">No missions yet — run the seed to add them.</p>
+        )}
+        <div className="mi-side-list">
+          {missions.map((m) => (
+            <div key={m.id} className="sp-card mi-card mi-float-card" onClick={() => openMission(m.id)}>
+              <div className="mi-card-body">
+                <div className="mi-card-title">{m.title}</div>
+                <div className="mi-card-blurb">{m.blurb}</div>
+              </div>
+              <span className="sp-tag ghost">{openingId === m.id ? "Loading…" : m.tag}</span>
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      <div className="mi-globe-col">
+        <MissionGlobe
+          pins={globePins}
+          onSelect={(id) => { if (missions.some((x) => x.id === id)) openMission(id); }}
+          renderCard={(p) => {
+            if (p.locked) {
+              const lm = LOCKED_MISSIONS.find((x) => x.id === p.id);
+              if (!lm) return null;
+              return (
+                <div className="sp-card mi-card mi-float-card is-locked">
+                  <div className="mi-card-body">
+                    <div className="mi-card-title">{lm.title}</div>
+                    <div className="mi-card-blurb">{lm.blurb}</div>
+                  </div>
+                  <span className="sp-tag ghost">Locked · {lm.tag}</span>
+                </div>
+              );
+            }
+            const m = missions.find((x) => x.id === p.id);
+            if (!m) return null;
+            return (
+              <div className="sp-card mi-card mi-float-card" onClick={() => openMission(m.id)}>
+                <div className="mi-card-body">
+                  <div className="mi-card-title">{m.title}</div>
+                  <div className="mi-card-blurb">{m.blurb}</div>
+                </div>
+                <span className="sp-tag ghost">{m.tag}</span>
+              </div>
+            );
+          }}
+        />
       </div>
     </div>
   );
@@ -2219,18 +2920,39 @@ function SpeakingScreen() {
 /* ════════════════════════ Shell ════════════════════════ */
 export default function AppShell({ avatarLetter }: { avatarLetter: string }) {
   const router = useRouter();
-  const [tab, setTab] = useState<TabKey>("home");
+  // Init to the server-safe default; read the real tab from the URL only after
+  // mount so SSR and first client render agree (avoids a hydration mismatch).
+  const [tab, setTabState] = useState<TabKey>("home");
+  useEffect(() => { setTabState(readTabFromUrl()); }, []);
+  const setTab = useCallback((k: TabKey) => {
+    setTabState(k);
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (k === "home") url.searchParams.delete("tab");
+    else url.searchParams.set("tab", k);
+    // replaceState (not push) keeps in-dashboard history clean while making the
+    // current entry carry the tab, so browser Back from /vocab etc. restores it.
+    window.history.replaceState(window.history.state, "", url);
+  }, []);
   const [saved, setSaved] = useState<string[]>(["frontera", "esperanza"]);
-  const [dark, setDark] = useState(() => {
-    if (typeof window === "undefined") return false;
+  // Same reasoning as `tab`: default false on server + first client render,
+  // then resolve the stored/system theme after mount.
+  const [dark, setDark] = useState(false);
+  const [themeReady, setThemeReady] = useState(false);
+  useEffect(() => {
     const stored = localStorage.getItem("sp-theme");
-    if (stored) return stored === "dark";
-    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
-  });
+    if (stored) setDark(stored === "dark");
+    else setDark(window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false);
+    setThemeReady(true);
+  }, []);
   const bgRef = useRef<HTMLDivElement>(null);
 
   // Dark mode persists to localStorage so the shell stays consistent across screens.
-  useEffect(() => { localStorage.setItem("sp-theme", dark ? "dark" : "light"); }, [dark]);
+  // Skip the first pass so we don't overwrite storage before it's read in.
+  useEffect(() => {
+    if (!themeReady) return;
+    localStorage.setItem("sp-theme", dark ? "dark" : "light");
+  }, [dark, themeReady]);
 
   const onSave = (w: string) => {
     setSaved((s) => (s.includes(w) ? s : [...s, w]));

@@ -1,0 +1,103 @@
+{
+  "id": "m001-coffee-shop",
+  "order_index": 1,
+  "title": "At the Coffee Shop",
+  "description": "Order a drink, ask the price and pay at a Spanish café. Learn the words you need to walk up to the counter and get exactly what you want.",
+  "vocab": [
+    {
+      "spanish": "el café",
+      "english": "coffee",
+      "part_of_speech": "noun",
+      "example_sentence": "Un café, por favor."
+    },
+    {
+      "spanish": "el café con leche",
+      "english": "coffee with milk",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero un café con leche."
+    },
+    {
+      "spanish": "el té",
+      "english": "tea",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Tienes té verde?"
+    },
+    {
+      "spanish": "el agua",
+      "english": "water",
+      "part_of_speech": "noun",
+      "example_sentence": "Un vaso de agua, por favor."
+    },
+    {
+      "spanish": "la leche",
+      "english": "milk",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Con leche o sin leche?"
+    },
+    {
+      "spanish": "el azúcar",
+      "english": "sugar",
+      "part_of_speech": "noun",
+      "example_sentence": "Sin azúcar, gracias."
+    },
+    {
+      "spanish": "el camarero",
+      "english": "waiter",
+      "part_of_speech": "noun",
+      "example_sentence": "El camarero toma el pedido."
+    },
+    {
+      "spanish": "la carta",
+      "english": "menu",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Me trae la carta?"
+    },
+    {
+      "spanish": "la cuenta",
+      "english": "the bill / check",
+      "part_of_speech": "noun",
+      "example_sentence": "La cuenta, por favor."
+    },
+    {
+      "spanish": "para llevar",
+      "english": "to take away / to go",
+      "part_of_speech": "phrase",
+      "example_sentence": "Un café para llevar."
+    },
+    {
+      "spanish": "quiero",
+      "english": "I want",
+      "part_of_speech": "verb",
+      "example_sentence": "Quiero un café con leche."
+    },
+    {
+      "spanish": "por favor",
+      "english": "please",
+      "part_of_speech": "phrase",
+      "example_sentence": "Un café, por favor."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Quisiera…",
+      "gloss": "“I would like…” — order politely.",
+      "example_es": "Quisiera un café.",
+      "cloze_template": "______ café.",
+      "cloze_answer": "Quisiera"
+    },
+    {
+      "pattern": "¿Me puede dar…?",
+      "gloss": "“Can you give me…?” — ask for something.",
+      "example_es": "¿Me puede dar el menú?",
+      "cloze_template": "¿Me puede dar ______?",
+      "cloze_answer": "la cuenta"
+    },
+    {
+      "pattern": "Aquí / Para llevar",
+      "gloss": "“For here” / “to go”.",
+      "example_es": "Para llevar, por favor.",
+      "cloze_template": "Un café ______, por favor.",
+      "cloze_answer": "para llevar"
+    }
+  ]
+}

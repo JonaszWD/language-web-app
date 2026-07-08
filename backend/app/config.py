@@ -16,8 +16,18 @@ class Settings(BaseSettings):
     # Google Gemini — word enrichment (chunks, synonyms, gender...) and the
     # level-5 sentence evaluation. Env var: GEMINI_KEY.
     gemini_key: str | None = None
+    # Anthropic Claude — fallback for enrichment/grading when Gemini fails or is
+    # rate-limited. Uses the cheapest model (Haiku). Env var: CLAUDE_API_KEY.
+    claude_api_key: str | None = None
     # Pexels image search for the level-2 picture exercise. Env var: PEXELS_API_KEY.
     pexels_api_key: str | None = None
+    # How many mission words to enrich in parallel on first open. Higher = faster,
+    # but risks Gemini free-tier rate limits (429 → retry, then Claude fallback).
+    # Env var: ENRICH_CONCURRENCY.
+    enrich_concurrency: int = 6
+    # Times to retry Gemini on a 429/503 (rate-limited / overloaded) with
+    # exponential backoff before falling back to Claude. Env: GEMINI_MAX_RETRIES.
+    gemini_max_retries: int = 3
     # Comma-separated list: http://localhost:3000,https://app.vercel.app
     cors_origins: list[str] = ["http://localhost:3000"]
 

@@ -1,4 +1,4 @@
-# ── Production stack — self-hosted with Docker (no Railway) ─────────────────
+# ── Production stack — self-hosted with Docker ─────────────────────────────
 # Run:  docker compose -f docker-compose.prod.yml up -d --build
 #
 # Only the frontend is published (port 3000). It proxies /api → backend over
@@ -49,6 +49,8 @@ services:
       - whisper-cache:/root/.cache/huggingface
       # Persist downloaded podcast audio (yt-dlp writes to /data/podcasts).
       - podcast-audio:/data/podcasts
+      # Persist generated listening TTS clips (Gemini writes to /data/tts).
+      - tts-audio:/data/tts
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)\""]
       interval: 15s
@@ -77,6 +79,7 @@ volumes:
   pgdata:
   whisper-cache:
   podcast-audio:
+  tts-audio:
 
 networks:
   app-net:

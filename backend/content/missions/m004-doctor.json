@@ -1,0 +1,109 @@
+{
+  "id": "m004-doctor",
+  "order_index": 4,
+  "title": "At the Doctor",
+  "description": "Describe your symptoms, say how long you've felt unwell, understand the doctor's advice and ask for medication. Your first real B1 conversation about health.",
+  "vocab": [
+    {
+      "spanish": "me duele",
+      "english": "it hurts / my ... hurts",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me duele la cabeza."
+    },
+    {
+      "spanish": "me duelen",
+      "english": "they hurt (plural)",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me duelen los ojos."
+    },
+    {
+      "spanish": "la cabeza",
+      "english": "the head",
+      "part_of_speech": "noun",
+      "example_sentence": "Me duele la cabeza desde ayer."
+    },
+    {
+      "spanish": "el estómago",
+      "english": "the stomach",
+      "part_of_speech": "noun",
+      "example_sentence": "Me duele el estómago."
+    },
+    {
+      "spanish": "la garganta",
+      "english": "the throat",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo la garganta irritada."
+    },
+    {
+      "spanish": "tener fiebre",
+      "english": "to have a fever",
+      "part_of_speech": "phrase",
+      "example_sentence": "Creo que tengo fiebre."
+    },
+    {
+      "spanish": "la tos",
+      "english": "the cough",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo mucha tos por la noche."
+    },
+    {
+      "spanish": "mareado",
+      "english": "dizzy",
+      "part_of_speech": "adjective",
+      "example_sentence": "Estoy un poco mareado."
+    },
+    {
+      "spanish": "desde hace",
+      "english": "for / since (a period)",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me duele desde hace dos días."
+    },
+    {
+      "spanish": "la receta",
+      "english": "the prescription",
+      "part_of_speech": "noun",
+      "example_sentence": "Aquí tiene la receta."
+    },
+    {
+      "spanish": "el medicamento",
+      "english": "the medicine",
+      "part_of_speech": "noun",
+      "example_sentence": "Tome este medicamento tres veces al día."
+    },
+    {
+      "spanish": "¿puede recetarme?",
+      "english": "can you prescribe me?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Puede recetarme algo para el dolor?"
+    },
+    {
+      "spanish": "descansar",
+      "english": "to rest",
+      "part_of_speech": "verb",
+      "example_sentence": "Debe descansar y beber agua."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Me duele… / Me duelen…",
+      "gloss": "“My ... hurts.” — duele for one thing, duelen for several.",
+      "example_es": "Me duele la cabeza.",
+      "cloze_template": "Me duele ______.",
+      "cloze_answer": "la garganta"
+    },
+    {
+      "pattern": "Desde hace…",
+      "gloss": "“For / since…” — say how long a symptom has lasted.",
+      "example_es": "Me duele desde hace dos días.",
+      "cloze_template": "Me duele desde hace ______.",
+      "cloze_answer": "dos días"
+    },
+    {
+      "pattern": "¿Puede recetarme…?",
+      "gloss": "“Can you prescribe me…?” — ask for medication politely.",
+      "example_es": "¿Puede recetarme algo?",
+      "cloze_template": "¿Puede recetarme ______?",
+      "cloze_answer": "algo"
+    }
+  ]
+}
