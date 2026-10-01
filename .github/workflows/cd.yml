@@ -1,8 +1,10 @@
 name: CD
 
+# The project is archived, so nothing deploys automatically any more. Run this
+# by hand (Actions -> CD -> Run workflow) to publish images to GHCR and, if the
+# EC2_* secrets are still configured, roll them out with docker-compose.deploy.yml.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: cd-${{ github.ref }}

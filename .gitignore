@@ -108,5 +108,10 @@ desktop.ini
 # ───────────────────────────── Claude Code / Agents  ───────────────────────────────
 .claude/
 .agent/
+.agents/
+skills-lock.json
 docs/
 .idea/
+
+# Local scratch images in the repo root
+/Screenshot*.png
