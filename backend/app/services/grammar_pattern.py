@@ -11,6 +11,7 @@ from __future__ import annotations
 import uuid
 from datetime import date, datetime, time, timezone
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.models.grammar_pattern import GrammarPattern, UserGrammarCard
@@ -54,3 +55,38 @@ def grade_pattern(db: Session, user_id: uuid.UUID, pattern: GrammarPattern, answ
     db.commit()
 
     return {"correct": correct, "cloze_answer": pattern.cloze_answer, "due_date": card.due_date}
+
+
+def weakest_patterns(db: Session, user_id: uuid.UUID, *, limit: int = 3) -> list[GrammarPattern]:
+    """This user's shakiest grammar patterns for the weakness-targeted Review
+    lesson. UserGrammarCard carries no accuracy counters (unlike UserCard) —
+    only FSRS's own lapses/difficulty — so those stand in as the weakness
+    signal: most Again-ratings first, FSRS's own difficulty estimate as the
+    tiebreak. Only patterns the learner has actually reviewed at least once
+    (reps > 0) qualify; a brand-new UserGrammarCard's zeroed fields would
+    otherwise look artificially "weak" and crowd out real signal."""
+    rows = (
+        db.query(UserGrammarCard, GrammarPattern)
+        .join(GrammarPattern, GrammarPattern.id == UserGrammarCard.pattern_id)
+        .filter(UserGrammarCard.user_id == user_id, UserGrammarCard.reps > 0)
+        .all()
+    )
+    rows.sort(key=lambda r: (-r[0].lapses, -r[0].difficulty))
+    return [pattern for _, pattern in rows[:limit]]
+
+
+def grammar_dashboard_summary(db: Session, user_id: uuid.UUID) -> dict:
+    """Deck-wide grammar aggregates for the Home tab's Data section —
+    mirrors vocab_dashboard_summary's mature-count/hardest-words shape,
+    pointed at UserGrammarCard instead of UserCard."""
+    mastered_count = (
+        db.query(func.count(UserGrammarCard.id))
+        .filter(UserGrammarCard.user_id == user_id, UserGrammarCard.state == "review")
+        .scalar()
+        or 0
+    )
+    weakest = weakest_patterns(db, user_id, limit=1)
+    return {
+        "mastered_count": mastered_count,
+        "weakest_structure": weakest[0].pattern if weakest else None,
+    }

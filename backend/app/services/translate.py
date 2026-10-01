@@ -16,8 +16,14 @@ class TranslationError(Exception):
     """Raised when a translation can't be produced (missing key, API error)."""
 
 
-def translate_es_en(text: str) -> str:
-    """Translate Spanish ``text`` to English. Raises TranslationError on failure."""
+def translate_es_en(text: str, context: str | None = None) -> str:
+    """Translate Spanish ``text`` to English. Raises TranslationError on failure.
+
+    ``context`` is DeepL's dedicated context parameter: extra surrounding text
+    (e.g. the full sentence a tapped word came from) that DeepL reads to
+    disambiguate the translation, but never translates or includes in the
+    output itself — only ``text`` comes back translated.
+    """
     key = settings.deepl_api_key
     if not key:
         raise TranslationError(
@@ -25,11 +31,14 @@ def translate_es_en(text: str) -> str:
         )
 
     url = _FREE_URL if key.endswith(":fx") else _PRO_URL
+    data = {"text": text, "source_lang": "ES", "target_lang": "EN-US"}
+    if context:
+        data["context"] = context
     try:
         resp = httpx.post(
             url,
             headers={"Authorization": f"DeepL-Auth-Key {key}"},
-            data={"text": text, "source_lang": "ES", "target_lang": "EN-US"},
+            data=data,
             timeout=10.0,
         )
         resp.raise_for_status()

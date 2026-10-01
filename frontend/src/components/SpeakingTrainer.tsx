@@ -7,6 +7,7 @@ import type {
   SpeakingTurnResult,
 } from "@/types";
 import { missionsApi } from "@/lib/api";
+import { recordMistake } from "@/lib/missionMistakes";
 
 /* ── Speech helpers ─────────────────────────────────────────────────────── */
 
@@ -132,16 +133,6 @@ function MicIcon() {
   );
 }
 
-function StageDots({ total, current }: { total: number; current: number }) {
-  return (
-    <div className="spk-dots">
-      {Array.from({ length: total }).map((_, i) => (
-        <span key={i} className={"spk-dot" + (i < current ? " done" : i === current ? " on" : "")} />
-      ))}
-    </div>
-  );
-}
-
 // The waiter/NPC line, auto-spoken on mount, with a replay button.
 function NpcLine({ es, en, autoplay = true }: { es: string; en?: string; autoplay?: boolean }) {
   useEffect(() => {
@@ -217,7 +208,7 @@ function SpeakInput({
 // Repeat (1) and Prompt (4) share the "say the target, grade by overlap" flow.
 // Repeat shows the full sentence as a crutch; Prompt shows only a cue + first
 // word on request.
-function SayTargetStage({ stage, onPass }: { stage: SpeakingStage; onPass: () => void }) {
+function SayTargetStage({ stage, onPass, missionId }: { stage: SpeakingStage; onPass: () => void; missionId?: string }) {
   const [heard, setHeard] = useState("");
   const [ok, setOk] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState(stage.type === "repeat");
@@ -225,6 +216,7 @@ function SayTargetStage({ stage, onPass }: { stage: SpeakingStage; onPass: () =>
   // Prompt stages accept ANY correct phrasing (communicate, not recite): grade
   // against every valid answer, pass if the learner matches any one.
   const accepted = stage.valid && stage.valid.length ? stage.valid : [stage.target];
+  const reportedRef = useRef(false);
 
   const check = (text: string) => {
     setHeard(text);
@@ -232,6 +224,10 @@ function SayTargetStage({ stage, onPass }: { stage: SpeakingStage; onPass: () =>
     const pass = accepted.some((a) => overlap(text, a) >= threshold);
     setOk(pass);
     if (!pass && isPrompt) setShowHint(true);
+    if (!pass && missionId && !reportedRef.current) {
+      reportedRef.current = true;
+      recordMistake(missionId, { step: "Speaking", es: stage.target, en: stage.target_en });
+    }
   };
 
   // For an open prompt, the hint is a set of example answers (not one sentence),
@@ -302,13 +298,10 @@ function ChoiceStage({ stage, onPass }: { stage: SpeakingStage; onPass: () => vo
         <div className="spk-verdict bad">That one sounds off — pick another.</div>
       )}
       {chosen && chosen.ok && !said && (
-        <>
-          <p className="spk-instr">Now say it aloud:</p>
-          <SpeakInput
-            placeholder={chosen.es}
-            onSubmit={(t) => { if (overlap(t, chosen.es) >= PASS) setSaid(true); }}
-          />
-        </>
+        <SpeakInput
+          placeholder={chosen.es}
+          onSubmit={(t) => { if (overlap(t, chosen.es) >= PASS) setSaid(true); }}
+        />
       )}
       {said && (
         <div className="spk-result good">
@@ -321,14 +314,22 @@ function ChoiceStage({ stage, onPass }: { stage: SpeakingStage; onPass: () => vo
 }
 
 // Fill (3): choose the missing words, assemble the sentence, then say it.
-function FillStage({ stage, onPass }: { stage: SpeakingStage; onPass: () => void }) {
+function FillStage({ stage, onPass, missionId }: { stage: SpeakingStage; onPass: () => void; missionId?: string }) {
   // Track a chosen word per blank (by segment index).
   const [chosen, setChosen] = useState<Record<number, string>>({});
   const [said, setSaid] = useState(false);
+  const reportedRef = useRef(false);
 
   const blankIdxs = stage.segments.map((s, i) => (s.blank ? i : -1)).filter((i) => i >= 0);
   const allFilled = blankIdxs.every((i) => chosen[i] != null);
   const allCorrect = blankIdxs.every((i) => norm(chosen[i] ?? "") === norm(stage.segments[i].answer));
+
+  useEffect(() => {
+    if (allFilled && !allCorrect && missionId && !reportedRef.current) {
+      reportedRef.current = true;
+      recordMistake(missionId, { step: "Speaking", es: stage.target, en: stage.target_en });
+    }
+  }, [allFilled, allCorrect, missionId, stage.target, stage.target_en]);
 
   const assembled = stage.segments
     .map((s, i) => (s.blank ? (chosen[i] ?? "___") : s.text))
@@ -357,7 +358,6 @@ function FillStage({ stage, onPass }: { stage: SpeakingStage; onPass: () => void
       {allFilled && allCorrect && !said && (
         <>
           <div className="spk-hint">{stage.target || assembled}</div>
-          <p className="spk-instr">Now say the whole sentence:</p>
           <SpeakInput
             placeholder={stage.target}
             onSubmit={(t) => { if (overlap(t, stage.target || assembled) >= PASS) setSaid(true); }}
@@ -411,6 +411,7 @@ function ConversationStage({
         history: priorHistory,
         utterance,
         confidence: confidence ?? undefined,
+        recorded: confidence != null,
       });
       setHistory((h) => {
         const copy = [...h];
@@ -482,7 +483,6 @@ export default function SpeakingTrainer({
   if (!stages.length) {
     return (
       <div className="spk-wrap">
-        <button className="vt-back" onClick={onExit}>‹ Back</button>
         <div className="sp-card vt-card"><p className="sp-sub">Speaking practice isn’t ready for this mission yet.</p></div>
       </div>
     );
@@ -505,16 +505,12 @@ export default function SpeakingTrainer({
 
   return (
     <div className="spk-wrap">
-      <div className="vt-topbar" style={{ width: "100%" }}>
-        <button className="vt-back" onClick={onExit}>‹ Back</button>
-        <span className="vt-level">Stage {stage.n} · {stage.title}</span>
+      <div className="vt-progress">
+        <div className="vt-progress-fill" style={{ width: `${((idx + 1) / stages.length) * 100}%` }} />
       </div>
-      <StageDots total={stages.length} current={idx} />
-      <div className="spk-scene">You are talking to the {speaking.role_en} — {speaking.setting}.</div>
-
-      {(stage.type === "repeat" || stage.type === "prompt") && <SayTargetStage stage={stage} onPass={next} />}
+      {(stage.type === "repeat" || stage.type === "prompt") && <SayTargetStage stage={stage} onPass={next} missionId={missionId} />}
       {stage.type === "choice" && <ChoiceStage stage={stage} onPass={next} />}
-      {stage.type === "fill" && <FillStage stage={stage} onPass={next} />}
+      {stage.type === "fill" && <FillStage stage={stage} onPass={next} missionId={missionId} />}
       {(stage.type === "dynamic" || stage.type === "branch" || stage.type === "free") && (
         <ConversationStage
           stage={stage}

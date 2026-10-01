@@ -1,0 +1,116 @@
+{
+  "id": "m005-family",
+  "order_index": 5,
+  "title": "Mi Familia",
+  "description": "Aprende a presentar a tu familia y hablar de sus relaciones.",
+  "level": "A1",
+  "topics": [
+    "heritage",
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "la familia",
+      "english": "the family",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi familia toma café."
+    },
+    {
+      "spanish": "mi",
+      "english": "my",
+      "part_of_speech": "possessive adjective",
+      "example_sentence": "Mi padre es médico."
+    },
+    {
+      "spanish": "tu",
+      "english": "your (informal singular)",
+      "part_of_speech": "possessive adjective",
+      "example_sentence": "¿Cómo está tu madre?"
+    },
+    {
+      "spanish": "el padre",
+      "english": "the father",
+      "part_of_speech": "noun",
+      "example_sentence": "El padre del médico tiene fiebre."
+    },
+    {
+      "spanish": "la madre",
+      "english": "the mother",
+      "part_of_speech": "noun",
+      "example_sentence": "La madre del médico toma café."
+    },
+    {
+      "spanish": "el hermano",
+      "english": "the brother",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi hermano tiene un billete para el avión."
+    },
+    {
+      "spanish": "la hermana",
+      "english": "the sister",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi hermana quiere agua."
+    },
+    {
+      "spanish": "el hijo",
+      "english": "the son",
+      "part_of_speech": "noun",
+      "example_sentence": "El hijo del médico tiene tos."
+    },
+    {
+      "spanish": "la hija",
+      "english": "the daughter",
+      "part_of_speech": "noun",
+      "example_sentence": "La hija del médico descansa."
+    },
+    {
+      "spanish": "el esposo",
+      "english": "the husband",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi esposo es médico."
+    },
+    {
+      "spanish": "la esposa",
+      "english": "the wife",
+      "part_of_speech": "noun",
+      "example_sentence": "La esposa del médico toma té."
+    },
+    {
+      "spanish": "años",
+      "english": "years (for age)",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo veinte años."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "mi/tu + noun",
+      "gloss": "my/your + noun",
+      "example_es": "Mi madre toma café.",
+      "cloze_template": "___ padre es médico.",
+      "cloze_answer": "Mi"
+    },
+    {
+      "pattern": "(yo) tengo + number + años",
+      "gloss": "I am + number + years old",
+      "example_es": "Tengo veinte años.",
+      "cloze_template": "Mi hermano tiene treinta ___ .",
+      "cloze_answer": "años"
+    },
+    {
+      "pattern": "Subject + es + Noun",
+      "gloss": "Subject + is + Noun",
+      "example_es": "Mi padre es médico.",
+      "cloze_template": "Mi hermano ___ mi familia.",
+      "cloze_answer": "es"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Amigo/a",
+    "role_en": "Friend",
+    "setting": "En un café.",
+    "opening": "Hola, mucho gusto. ¿Cómo estás? Quiero un café. ¿Tu familia está bien?",
+    "opening_en": "Hello, nice to meet you. How are you? I want a coffee. Is your family well?",
+    "goal": "Presenta a tu familia y pregunta sobre la suya."
+  }
+}

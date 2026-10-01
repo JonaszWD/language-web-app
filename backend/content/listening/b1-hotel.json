@@ -1,0 +1,137 @@
+{
+  "id": "b1-hotel",
+  "scenario_tag": null,
+  "cefr_level": "B1",
+  "title": "La Facturación",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Cliente",
+      "text_es": "Hola. Buenos días. Me llamo Ana.",
+      "text_en": "Hello. Good morning. My name is Ana."
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Recepcionista",
+      "text_es": "Buenos días. ¿Su pasaporte, por favor?",
+      "text_en": "Good morning. Your passport, please?"
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Cliente",
+      "text_es": "Sí, aquí está.",
+      "text_en": "Yes, here it is."
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Recepcionista",
+      "text_es": "Gracias. Ana, ¿verdad? Para la facturación.",
+      "text_en": "Thank you. Ana, right? For the check-in."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Cliente",
+      "text_es": "Sí. ¿Está todo bien?",
+      "text_en": "Yes. Is everything okay?"
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Recepcionista",
+      "text_es": "Sí, todo bien. Aquí está.",
+      "text_en": "Yes, all good. Here it is."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Cliente",
+      "text_es": "Gracias. ¿Hay café aquí?",
+      "text_en": "Thank you. Is there coffee here?"
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Recepcionista",
+      "text_es": "Sí, hay café.",
+      "text_en": "Yes, there is coffee."
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Cliente",
+      "text_es": "Bien. Adiós.",
+      "text_en": "Good. Goodbye."
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Recepcionista",
+      "text_es": "Adiós.",
+      "text_en": "Goodbye."
+    }
+  ],
+  "vocab_reused": [
+    "adios",
+    "ana",
+    "aqui",
+    "bien",
+    "buenos",
+    "cafe",
+    "dias",
+    "esta",
+    "facturacion",
+    "favor",
+    "gracias",
+    "hay",
+    "hola",
+    "la",
+    "llamo",
+    "me",
+    "para",
+    "pasaporte",
+    "por",
+    "si",
+    "su",
+    "todo",
+    "verdad"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 3,
+      "type": "vocab_in_context",
+      "prompt": "¿Qué significa 'facturación' en este contexto?",
+      "options": [
+        "El billete de avión",
+        "El proceso de llegada",
+        "La cuenta del café"
+      ],
+      "correct_answer": "El proceso de llegada",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "facturación",
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 5,
+      "type": "inference",
+      "prompt": "¿Qué le da la recepcionista al cliente?",
+      "options": [
+        "Un café",
+        "Algo para su descanso",
+        "Un billete de avión"
+      ],
+      "correct_answer": "Algo para su descanso",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 7,
+      "type": "delayed_recall",
+      "prompt": "¿Qué pidió la recepcionista al cliente al principio?",
+      "options": [
+        "Su maleta",
+        "Su pasaporte",
+        "Su café"
+      ],
+      "correct_answer": "Su pasaporte",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    }
+  ]
+}

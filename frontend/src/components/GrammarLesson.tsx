@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { studyApi } from "@/lib/api";
 import { useBlockQueue } from "@/components/lessonQueue";
 import SpeakButton from "@/components/SpeakButton";
+import { generatedGrammar } from "@/content/generated";
+import { recordMistake } from "@/lib/missionMistakes";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Mission grammar as micro-learning with immediate application. Gradual
@@ -44,7 +46,7 @@ export interface GrammarLessonScript {
 
 // Per-mission grammar scripts, keyed by mission id. A mission with no script
 // falls back to the vocabulary trainer for its Grammar step.
-export const GRAMMAR_LESSONS: Record<string, GrammarLessonScript> = {
+const BASE_GRAMMAR_LESSONS: Record<string, GrammarLessonScript> = {
   "m001-coffee-shop": {
     title: "Order food at a café",
     cards: [
@@ -335,6 +337,13 @@ export const GRAMMAR_LESSONS: Record<string, GrammarLessonScript> = {
   },
 };
 
+// Hand-authored scripts, with generated missions merged in (generated wins only
+// for ids not authored by hand).
+export const GRAMMAR_LESSONS: Record<string, GrammarLessonScript> = {
+  ...generatedGrammar,
+  ...BASE_GRAMMAR_LESSONS,
+};
+
 // Accent/case/punctuation-insensitive compare, matching the vocab trainer's
 // forgiving check so "quisiera agua" ≈ "Quisiera agua".
 function norm(s: string): string {
@@ -347,54 +356,51 @@ function norm(s: string): string {
     .trim();
 }
 
-function ChevronIcon() {
-  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 6 6 6-6 6" /></svg>;
-}
-
 export default function GrammarLesson({
   script,
   onExit,
   onDone,
-  backLabel = "Mission",
   patterns,
+  missionId,
 }: {
   script: GrammarLessonScript;
   onExit: () => void;
   onDone?: () => void;
-  backLabel?: string;
   // The mission's backend GrammarPattern rows, matched to this script's
   // "review" cards by cloze_template — lets a review answer here also post an
   // FSRS review for the pattern (see services.grammar_pattern), so it re-enters
   // spaced review instead of being forgotten once the lesson ends.
   patterns?: { id: string; cloze_template: string }[];
+  // Feeds the Feedback/Correction step's mistake round-up (see
+  // lib/missionMistakes) — omitted, mistakes just aren't recorded.
+  missionId?: string;
 }) {
-  const { cardIndex, pos, isLast, next, requeue } = useBlockQueue(script.cards.length, onDone ?? onExit);
-  const card = script.cards[cardIndex];
+  const cards = useMemo(() => script.cards.filter((c) => c.kind !== "intro"), [script]);
+  const { cardIndex, pos, isLast, next, requeue } = useBlockQueue(cards.length, onDone ?? onExit);
+  const card = cards[cardIndex];
   const wrong = requeue; // a wrong answer requeues the card before the block's finale
+  const wrongWith = (es: string, en?: string) => () => {
+    if (missionId) recordMistake(missionId, { step: "Grammar", es, en });
+    wrong();
+  };
 
   return (
     <div className="vt-wrap">
-      <div className="vt-topbar" style={{ width: "100%" }}>
-        <button className="vt-back" onClick={onExit}><ChevronIcon /> {backLabel}</button>
-        <span className="vt-level">Grammar · {script.title}</span>
+      <div className="vt-progress">
+        <div className="vt-progress-fill" style={{ width: `${((pos + 1) / cards.length) * 100}%` }} />
       </div>
 
-      <div className="vt-dots">
-        {script.cards.map((_, n) => <span key={n} className={"vt-dot" + (n <= pos ? " on" : "")} />)}
-      </div>
-
-      {card.kind === "intro" && <IntroCard key={pos} card={card} onNext={next} />}
       {card.kind === "learn" && <LearnCard key={pos} card={card} onNext={next} />}
-      {card.kind === "recognition" && <RecognitionCard key={pos} card={card} onNext={next} onWrong={wrong} />}
-      {card.kind === "build" && <BuildCard key={pos} card={card} onNext={next} onWrong={wrong} />}
-      {card.kind === "respond" && <RespondCard key={pos} card={card} onNext={next} onWrong={wrong} />}
-      {card.kind === "production" && <ProductionCard key={pos} card={card} onNext={next} onWrong={wrong} />}
+      {card.kind === "recognition" && <RecognitionCard key={pos} card={card} onNext={next} onWrong={wrongWith(card.options[card.answer])} />}
+      {card.kind === "build" && <BuildCard key={pos} card={card} onNext={next} onWrong={wrongWith(card.answer.join(" "))} />}
+      {card.kind === "respond" && <RespondCard key={pos} card={card} onNext={next} onWrong={wrongWith(card.options[card.answer])} />}
+      {card.kind === "production" && <ProductionCard key={pos} card={card} onNext={next} onWrong={wrongWith(card.prompts[card.prompts.length - 1].answer)} />}
       {card.kind === "review" && (
         <ReviewCard
           key={pos}
           card={card}
           onNext={next}
-          onWrong={wrong}
+          onWrong={wrongWith(card.template.replace("______", card.answer))}
           patternId={patterns?.find((p) => p.cloze_template === card.template)?.id}
         />
       )}
@@ -403,28 +409,12 @@ export default function GrammarLesson({
   );
 }
 
-// ── Intro: the goal. No grammar yet — just why we're here. ──
-function IntroCard({ card, onNext }: { card: Extract<GrammarCard, { kind: "intro" }>; onNext: () => void }) {
-  return (
-    <div className="sp-card vt-card gl-mission">
-      <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Mission</p>
-      <p className="vt-es" style={{ marginBottom: 14 }}>{card.mission}</p>
-      <p className="sp-sub" style={{ marginBottom: 8 }}>By the end you&apos;ll be able to:</p>
-      <ul className="gl-goals">
-        {card.goals.map((g, i) => <li key={i}>{g}</li>)}
-      </ul>
-      <button className="sp-btn sp-btn-primary" style={{ marginTop: 16 }} onClick={onNext}>Let&apos;s go</button>
-    </div>
-  );
-}
-
 // ── Learn: one structure, ≤20 s. Pattern + gloss + a couple of examples. ──
 function LearnCard({ card, onNext }: { card: Extract<GrammarCard, { kind: "learn" }>; onNext: () => void }) {
   return (
     <div className="sp-card vt-card">
-      <p className="sp-eyebrow" style={{ marginBottom: 10 }}>New phrase</p>
-      <p className="vt-es" style={{ marginBottom: 6 }}>{card.pattern}</p>
-      <p className="sp-sub" style={{ marginBottom: 16 }}>{card.gloss}</p>
+      <p className="vt-es">{card.pattern}</p>
+      <p className="sp-sub">{card.gloss}</p>
       <div className="gl-examples">
         {card.examples.map((ex, i) => (
           <div key={i} className="gl-example">
@@ -442,7 +432,7 @@ function LearnCard({ card, onNext }: { card: Extract<GrammarCard, { kind: "learn
           {card.notice}
         </p>
       )}
-      <button className="sp-btn sp-btn-primary" style={{ marginTop: 14 }} onClick={onNext}>Got it</button>
+      <button className="sp-btn sp-btn-primary" onClick={onNext}>Got it</button>
     </div>
   );
 }
@@ -465,8 +455,8 @@ function RecognitionCard({ card, onNext, onWrong }: { card: Extract<GrammarCard,
         })}
       </div>
       {picked !== null && (
-        <div style={{ marginTop: 12 }}>
-          <p className="sp-sub" style={{ marginBottom: 10 }}>{correct ? "¡Correcto!" : "Not quite — the highlighted one is right. You'll see this again shortly."}</p>
+        <div className="vt-stack">
+          <p className="sp-sub">{correct ? "¡Correcto!" : "Not quite — the highlighted one is right."}</p>
           <button className="sp-btn sp-btn-primary" onClick={correct ? onNext : onWrong}>Continue</button>
         </div>
       )}
@@ -504,8 +494,7 @@ function BuildCard({ card, onNext, onWrong }: { card: Extract<GrammarCard, { kin
 
   return (
     <div className="sp-card vt-card">
-      {card.instruction && <p className="sp-eyebrow" style={{ marginBottom: 8 }}>{card.instruction}</p>}
-      <p className="vt-prompt" style={{ marginBottom: 14 }}>{card.cue}</p>
+      <p className="vt-prompt">{card.cue}</p>
 
       <div className="gl-build-slots">
         {placed.length === 0 && <span className="gl-build-ph">Tap the words in order…</span>}
@@ -536,16 +525,14 @@ function RespondCard({ card, onNext, onWrong }: { card: Extract<GrammarCard, { k
   const correct = picked === card.answer;
   return (
     <div className="sp-card vt-card">
-      <p className="sp-eyebrow" style={{ marginBottom: 10 }}>{card.label ?? "Reply"}</p>
-      <div className="gl-line" style={{ marginBottom: 14 }}>
+      <div className="gl-line">
         <span className="gl-who">NPC</span>
         <span className="gl-bubble">
           {card.npc}
           <SpeakButton text={card.npc} label="Listen" />
         </span>
       </div>
-      {card.npc_en && <p className="sp-sub" style={{ marginBottom: 12 }}>{card.npc_en}</p>}
-      <p className="vt-prompt" style={{ marginBottom: 10, fontSize: 15 }}>Choose your reply:</p>
+      {card.npc_en && <p className="sp-sub">{card.npc_en}</p>}
       <div className="gl-options">
         {card.options.map((opt, i) => {
           const state = picked === null ? "" : i === card.answer ? " ok" : i === picked ? " bad" : "";
@@ -557,8 +544,8 @@ function RespondCard({ card, onNext, onWrong }: { card: Extract<GrammarCard, { k
         })}
       </div>
       {picked !== null && (
-        <div style={{ marginTop: 12 }}>
-          <p className="sp-sub" style={{ marginBottom: 10 }}>{correct ? "¡Correcto!" : "Not quite — the highlighted one is right. You'll see this again shortly."}</p>
+        <div className="vt-stack">
+          <p className="sp-sub">{correct ? "¡Correcto!" : "Not quite — the highlighted one is right."}</p>
           <button className="sp-btn sp-btn-primary" onClick={correct ? onNext : onWrong}>Continue</button>
         </div>
       )}
@@ -587,7 +574,7 @@ function ProductionCard({ card, onNext, onWrong }: { card: Extract<GrammarCard, 
 
   return (
     <form className="sp-card vt-card" onSubmit={(e) => { e.preventDefault(); if (value.trim()) setChecked(true); }}>
-      {card.instruction && <p className="sp-eyebrow" style={{ marginBottom: 8 }}>{card.instruction} · {idx + 1}/{card.prompts.length}</p>}
+      <p className="sp-eyebrow">{idx + 1}/{card.prompts.length}</p>
       <p className="vt-prompt">{p.cue}</p>
       {!checked ? (
         <>
@@ -610,17 +597,18 @@ function ReviewCard({ card, onNext, onWrong, patternId }: {
   const [checked, setChecked] = useState(false);
   const correct = norm(value) === norm(card.answer);
   const [before, after] = card.template.split("______");
+  const mountedAt = useRef<number | null>(null);
+  useEffect(() => { mountedAt.current = Date.now(); }, []);
   const submitReview = () => {
     setChecked(true);
     // Fire-and-forget: this is the pattern's spaced-review signal, not a
     // blocking part of the in-lesson flow. Silently skipped if the pattern
     // couldn't be matched (e.g. content drifted from the seeded JSON).
-    if (patternId) void studyApi.reviewGrammar(patternId, value).catch(() => {});
+    if (patternId) void studyApi.reviewGrammar(patternId, value, Date.now() - (mountedAt.current ?? Date.now())).catch(() => {});
   };
   return (
     <form className="sp-card vt-card" onSubmit={(e) => { e.preventDefault(); if (value.trim()) submitReview(); }}>
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>{card.label ?? "Review"}</p>
-      <p className="sp-sub" style={{ marginBottom: 10 }}>{card.cue}</p>
+      <p className="sp-sub">{card.cue}</p>
       {!checked ? (
         <>
           <div className="gl-cloze">
@@ -644,12 +632,12 @@ function Reveal({ correct, answer, onContinue, nextLabel = "Continue" }: {
   correct: boolean; answer: string; onContinue: () => void; nextLabel?: string;
 }) {
   return (
-    <div style={{ marginTop: 8 }}>
-      <p className="sp-h2" style={{ marginBottom: 6 }}>{correct ? "¡Perfecto!" : "Not quite"}</p>
-      <p className="sp-sub" style={{ marginBottom: 10 }}>
-        {correct ? "That's it." : <>The answer is <b style={{ color: "var(--ink)" }}>{answer}</b>. You&apos;ll see this one again shortly.</>}
+    <div className="vt-stack">
+      <p className="sp-h2">{correct ? "¡Perfecto!" : "Not quite"}</p>
+      <p className="sp-sub">
+        {correct ? "That's it." : <>The answer is <b style={{ color: "var(--ink)" }}>{answer}</b>.</>}
       </p>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <SpeakButton text={answer} label="Listen" />
       </div>
       <div className="vt-rates">
@@ -703,8 +691,7 @@ function MissionCard({ card, onNext, lastLabel }: {
 
   return (
     <div className="sp-card vt-card gl-mission">
-      <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Final mission</p>
-      {card.intro && <p className="sp-sub" style={{ marginBottom: 14 }}>{card.intro}</p>}
+      {card.intro && <p className="sp-sub">{card.intro}</p>}
       <div className="gl-dialogue">
         {lines.slice(0, revealed).map((l, n) => (
           <div key={n} className={"gl-line" + (l.you ? " you" : "")}>

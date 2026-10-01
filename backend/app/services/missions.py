@@ -1,12 +1,12 @@
-"""Mission orchestration — background Gemini enrichment of mission vocab.
+"""Mission orchestration — background Mistral enrichment of mission vocab.
 
-When a mission is opened, every one of its vocab words is run through the Gemini
+When a mission is opened, every one of its vocab words is run through the Mistral
 enrichment pipeline (see services.enrich) and the result cached on the
 MissionVocab row. Work runs on a background thread so opening a mission stays
 snappy; the cached data is served on subsequent loads.
 
 Idempotent: words that already have enrichment are skipped, so re-opening a
-mission does not re-hit Gemini.
+mission does not re-hit Mistral.
 
 Single-thread pool + one-process assumption, same as the podcast pipeline.
 """
@@ -24,11 +24,14 @@ from sqlalchemy.orm import Session
 
 from app.config import settings
 from app.database import SessionLocal
+from app.models.goal import Goal, MissionGoal, UserGoal, VocabularyExampleSentence
 from app.models.mission import (
     ENRICH_PENDING,
     ENRICH_PROCESSING,
     ENRICH_READY,
     MISSION_COMPLETED,
+    MISSION_TYPE_BONUS,
+    MISSION_TYPE_CORE,
     Mission,
     MissionVocab,
     UserMission,
@@ -40,6 +43,159 @@ from app.services import images as image_service
 
 logger = logging.getLogger("missions")
 
+# Onboarding motivation (User.motivation, exact PickOption.name strings from
+# frontend/src/app/register/page.tsx's MOTIVATIONS) → the topic tag used on
+# Mission.topics (see content/missions/*.json). One entry per motivation
+# option so the mapping is 1:1, no fuzzy matching.
+MOTIVATION_TOPIC_MAP: dict[str, str] = {
+    "Travel": "travel",
+    "Work / business": "work",
+    "Academic study": "academic",
+    "Living abroad / relocation": "relocation",
+    "Family or heritage": "heritage",
+    "Dating or a partner": "dating",
+    "Making friends": "social",
+    "Consuming media": "media",
+    "Gaming / online communities": "gaming",
+}
+
+
+def sync_user_goal_from_motivation(db: Session, user) -> None:
+    """Bridge for the single-select onboarding UI: mirrors User.motivation into
+    a single UserGoal(priority=1) row so the goals-based scoring/flavor-text
+    machinery below has real data without any frontend change. Called from
+    PATCH /auth/me/onboarding whenever motivation is set.
+
+    No-ops (clears any existing UserGoal rows) when motivation doesn't map to
+    a known goal key — treat "no goal selected" as valid, not an error.
+    """
+    db.query(UserGoal).filter(UserGoal.user_id == user.id).delete()
+    goal_key = MOTIVATION_TOPIC_MAP.get(user.motivation or "")
+    if not goal_key:
+        return
+    goal = db.query(Goal).filter(Goal.key == goal_key).first()
+    if goal is None:
+        return
+    db.add(UserGoal(user_id=user.id, goal_id=goal.id, priority=1))
+
+
+def user_goal_weights(db: Session, user_id) -> dict[int, float]:
+    """goal_id -> priority_weight for one user's selected goals. Rank 1 (top
+    priority) weighs 1.0, rank 2 weighs 0.5, rank 3 weighs 0.33, ... — the top
+    goal dominates but lower-ranked goals still nudge the score."""
+    rows = db.query(UserGoal.goal_id, UserGoal.priority).filter(UserGoal.user_id == user_id).all()
+    return {goal_id: 1.0 / priority for goal_id, priority in rows}
+
+
+def recommended_mission_ids(db: Session, user) -> set[str]:
+    """Ids of missions matching any of the user's selected goals — a soft
+    "recommended for you" badge (see MissionSummary.recommended), not a sort
+    or filter; GET /missions applies the real re-sort via mission_scores.
+
+    Empty set when the user has no goals selected.
+    """
+    weights = user_goal_weights(db, user.id)
+    if not weights:
+        return set()
+    rows = db.query(MissionGoal.mission_id).filter(MissionGoal.goal_id.in_(weights.keys())).all()
+    return {mid for (mid,) in rows}
+
+
+def mission_scores(
+    db: Session, user_id, mission_ids: list[str] | None = None, mission_type: str = MISSION_TYPE_CORE
+) -> dict[str, float]:
+    """mission_id -> score = order_index - sum(priority_weight * relevance_weight)
+    over the user's selected goals. Sorting ascending by this score keeps the
+    CEFR order_index as the floor, and lets a stronger goal match pull a
+    mission earlier; missions with no goal match keep their pure order_index
+    position (bonus term is 0)."""
+    query = db.query(Mission.id, Mission.order_index).filter(Mission.mission_type == mission_type)
+    if mission_ids is not None:
+        query = query.filter(Mission.id.in_(mission_ids))
+    base = {mid: float(order_index) for mid, order_index in query.all()}
+
+    weights = user_goal_weights(db, user_id)
+    if not weights or not base:
+        return base
+
+    mg_rows = (
+        db.query(MissionGoal.mission_id, MissionGoal.goal_id, MissionGoal.relevance_weight)
+        .filter(MissionGoal.goal_id.in_(weights.keys()))
+        .all()
+    )
+    bonus: dict[str, float] = {}
+    for mission_id, goal_id, relevance_weight in mg_rows:
+        if mission_id not in base:
+            continue
+        bonus[mission_id] = bonus.get(mission_id, 0.0) + weights[goal_id] * relevance_weight
+    return {mid: base[mid] - bonus.get(mid, 0.0) for mid in base}
+
+
+# Missions this many steps ahead of the user's progress get goal-based
+# re-sorting; the rest of the pending tail (and every completed mission)
+# keeps pure order_index order — the CEFR spine itself never reorders.
+NEXT_WINDOW = 8
+
+
+def ordered_mission_ids(db: Session, user) -> list[str]:
+    """Core mission play order, with the next NEXT_WINDOW not-yet-completed
+    missions re-sorted by mission_scores. Completed missions keep their
+    chronological order_index position so progress views don't jump."""
+    all_rows = (
+        db.query(Mission.id)
+        .filter(Mission.mission_type == MISSION_TYPE_CORE)
+        .order_by(Mission.order_index)
+        .all()
+    )
+    all_ids = [mid for (mid,) in all_rows]
+    completed_ids = {
+        mid
+        for (mid,) in db.query(UserMission.mission_id)
+        .filter(UserMission.user_id == user.id, UserMission.status == MISSION_COMPLETED)
+        .all()
+    }
+    pending = [mid for mid in all_ids if mid not in completed_ids]
+    window, rest = pending[:NEXT_WINDOW], pending[NEXT_WINDOW:]
+    scores = mission_scores(db, user.id, mission_ids=window)
+    window_sorted = sorted(window, key=lambda mid: scores.get(mid, float("inf")))
+
+    reordered_pending = iter(window_sorted + rest)
+    return [mid if mid in completed_ids else next(reordered_pending) for mid in all_ids]
+
+
+def bonus_mission_ids_scored(db: Session, user) -> list[str]:
+    """Bonus mission ids (mission_type='bonus'), most goal-relevant first.
+    Entirely separate from ordered_mission_ids — bonus content is optional
+    and never part of the core progression."""
+    scores = mission_scores(db, user.id, mission_type=MISSION_TYPE_BONUS)
+    return sorted(scores, key=lambda mid: scores[mid])
+
+
+def pick_example_sentences(db: Session, vocab_ids: list, user_id) -> dict:
+    """mission_vocab_id -> goal-flavored example sentence, for every vocab id
+    that has a variant matching the user's #1-priority goal. Ids without a
+    matching row are simply absent — callers should fall back to
+    MissionVocab.example_sentence themselves. One query, not N+1."""
+    if not vocab_ids:
+        return {}
+    top_goal = (
+        db.query(UserGoal.goal_id)
+        .filter(UserGoal.user_id == user_id)
+        .order_by(UserGoal.priority.asc())
+        .first()
+    )
+    if top_goal is None:
+        return {}
+    rows = (
+        db.query(VocabularyExampleSentence.mission_vocab_id, VocabularyExampleSentence.example_text)
+        .filter(
+            VocabularyExampleSentence.mission_vocab_id.in_(vocab_ids),
+            VocabularyExampleSentence.goal_id == top_goal[0],
+        )
+        .all()
+    )
+    return {r[0]: r[1] for r in rows}
+
 # One worker: only one mission enriches at a time (never hammer the APIs across
 # parallel opens). Within a mission, words are fetched concurrently — see
 # _enrich_mission_job — since enrichment + image lookups are network-bound.
@@ -47,7 +203,7 @@ _enrich_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="mission-enr
 
 
 def _enrich_one(spanish: str, english: str) -> dict:
-    """Enrich one word. On a Gemini 429 the enrich service falls back to Claude,
+    """Enrich one word. On a Mistral 429 the enrich service falls back to Claude,
     so no local backoff/retry is needed here."""
     return enrich_service.enrich_word(spanish, english)
 
@@ -117,6 +273,60 @@ def _generate_speaking(db: Session, mission_id: str) -> None:
         logger.warning("Speaking-script generation failed for %s: %s", mission_id, exc)
 
 
+# Bump when the Context Preview design changes so already-cached previews
+# regenerate on next open instead of serving the old shape.
+CONTEXT_PREVIEW_VERSION = 1
+
+
+def context_preview_stale(preview: dict | None) -> bool:
+    """True when a mission has no Context Preview or one from an older design."""
+    return not isinstance(preview, dict) or preview.get("v") != CONTEXT_PREVIEW_VERSION
+
+
+def _fallback_context_preview(mission: Mission) -> dict:
+    """A minimal Context Preview synthesized from mission fields, used when the
+    LLM call fails or quota-stalls — the step must never block on Mistral."""
+    phrases = [
+        {"es": v.spanish, "english": v.english} for v in mission.vocab[:4]
+    ]
+    return {
+        "situation": mission.description or mission.title,
+        "situation_en": mission.description or mission.title,
+        "key_phrases": [{"es": p["es"], "en": p["english"]} for p in phrases],
+        "v": CONTEXT_PREVIEW_VERSION,
+    }
+
+
+def _generate_context_preview(db: Session, mission_id: str) -> None:
+    """Generate the Context Preview stage for a mission.
+
+    Regenerates when the stored preview is missing or from an older
+    CONTEXT_PREVIEW_VERSION. On LLM failure, falls back to a minimal preview
+    synthesized from the mission's own fields rather than leaving it null —
+    the step must never block the ladder on a quota stall.
+    """
+    mission = db.get(Mission, mission_id)
+    if mission is None or not context_preview_stale(mission.context_preview):
+        return
+    vocab = [(v.spanish, v.english) for v in mission.vocab]
+    try:
+        if vocab:
+            preview = enrich_service.generate_context_preview(
+                mission.title, mission.description or "", vocab
+            )
+            preview["v"] = CONTEXT_PREVIEW_VERSION
+        else:
+            preview = _fallback_context_preview(mission)
+        mission.context_preview = preview
+        db.commit()
+        logger.info("Generated context preview (v%d) for mission %s", CONTEXT_PREVIEW_VERSION, mission_id)
+    except enrich_service.EnrichmentError as exc:
+        db.rollback()
+        logger.warning("Context-preview generation failed for %s, using fallback: %s", mission_id, exc)
+        mission.context_preview = _fallback_context_preview(mission)
+        db.commit()
+
+
 def _finalize_status(db: Session, mission_id: str) -> None:
     """Set the mission's enrichment_status from how many words are enriched:
     ready if all done, else back to pending so a later open can retry."""
@@ -143,6 +353,7 @@ def _enrich_mission_job(mission_id: str) -> None:
         todo = [v for v in rows if v.enrichment is None]
         if not todo:
             _generate_speaking(db, mission_id)
+            _generate_context_preview(db, mission_id)
             _finalize_status(db, mission_id)
             return
 
@@ -179,6 +390,7 @@ def _enrich_mission_job(mission_id: str) -> None:
                     _backfill_word(db, vocab)
                     db.commit()
         _generate_speaking(db, mission_id)
+        _generate_context_preview(db, mission_id)
         _finalize_status(db, mission_id)
         logger.info("Finished enriching mission %s", mission_id)
     except Exception:  # noqa: BLE001 — background thread must not crash silently
@@ -195,11 +407,11 @@ def _enrich_mission_job(mission_id: str) -> None:
 
 
 def queue_enrichment(mission_id: str) -> None:
-    """Run the Gemini pipeline for a mission — but only the first time.
+    """Run the Mistral pipeline for a mission — but only the first time.
 
     Gated on Mission.enrichment_status: a mission that is already ``ready`` or
     currently ``processing`` is left alone, so opening a mission a second time
-    never re-hits Gemini. Only a ``pending`` mission is flipped to ``processing``
+    never re-hits Mistral. Only a ``pending`` mission is flipped to ``processing``
     and submitted to the background pool.
     """
     db = SessionLocal()
@@ -249,6 +461,39 @@ def queue_speaking(mission_id: str) -> None:
     _enrich_pool.submit(_speaking_job, mission_id)
 
 
+# Missions currently having their Context Preview generated, so a burst of
+# opens doesn't submit the same LLM job repeatedly.
+_context_preview_in_flight: set[str] = set()
+
+
+def _context_preview_job(mission_id: str) -> None:
+    db = SessionLocal()
+    try:
+        _generate_context_preview(db, mission_id)
+    finally:
+        db.close()
+        _context_preview_in_flight.discard(mission_id)
+
+
+def queue_context_preview(mission_id: str) -> None:
+    """(Re)generate a mission's Context Preview if it is missing or stale.
+
+    Same idempotent/de-duplicated pattern as queue_speaking, sharing the single-
+    worker enrich pool so it never runs concurrently with vocab enrichment.
+    """
+    if mission_id in _context_preview_in_flight:
+        return
+    db = SessionLocal()
+    try:
+        mission = db.get(Mission, mission_id)
+        if mission is None or not context_preview_stale(mission.context_preview):
+            return
+    finally:
+        db.close()
+    _context_preview_in_flight.add(mission_id)
+    _enrich_pool.submit(_context_preview_job, mission_id)
+
+
 def enrichment_progress(db: Session, mission_id: str) -> tuple[str, int, int]:
     """Return (status, enriched_count, total) for the mission's enrichment."""
     mission = db.get(Mission, mission_id)
@@ -278,7 +523,20 @@ def speaking_turn(
     return enrich_service.evaluate_speaking_turn(role, setting, goal, history, utterance, vocab)
 
 
-# Final Challenge scenes for the authored missions, used when a mission's Gemini
+def stream_speaking_turn(
+    role: str,
+    setting: str,
+    goal: str,
+    history: list[tuple[str, str]],
+    utterance: str,
+    vocab: list[str] | None = None,
+    objectives: list[str] | None = None,
+):
+    """Streamed variant of speaking_turn (Claude Haiku only). Thin pass-through."""
+    yield from enrich_service.stream_speaking_turn(role, setting, goal, history, utterance, vocab, objectives)
+
+
+# Final Challenge scenes for the authored missions, used when a mission's Mistral
 # speaking script hasn't been generated yet (free-tier quota can stall it). Keyed
 # by mission id; a generic default derived from the title covers the rest.
 _SCENE_FALLBACKS: dict[str, dict] = {
@@ -422,7 +680,7 @@ def add_mission_vocab_to_deck(db: Session, user_id: uuid.UUID, mission_id: str) 
 
     Reuses the same get-or-create pattern as POST /vocab/save, and copies the
     mission's cached enrichment/image onto a freshly minted Word so the deck
-    doesn't have to re-hit Gemini/Pexels for it.
+    doesn't have to re-hit Mistral/Pexels for it.
     """
     rows = (
         db.query(MissionVocab)

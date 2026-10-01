@@ -17,14 +17,14 @@ def check_production(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Grade the Grammar flow's 'Produce' step via Gemini."""
+    """Grade the Grammar flow's 'Produce' step via Mistral."""
     if not body.text.strip():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Write something first.")
     try:
         result = grammar_service.check_production(body.topic, body.instructions, body.text)
     except EnrichmentError as exc:
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc)) from exc
-    # Free production graded by Gemini — same skill dimension as the writing
+    # Free production graded by Mistral — same skill dimension as the writing
     # coach/feedback endpoints, not a separate "grammar" score.
     skill_stats_service.record_attempt(
         db, current_user.id, skill_stats_service.SKILL_WRITING,

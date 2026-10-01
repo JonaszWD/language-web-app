@@ -1,0 +1,238 @@
+{
+  "id": "c1-news",
+  "scenario_tag": null,
+  "cefr_level": "C1",
+  "title": "Un Informe del Clima Local",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Narrador",
+      "text_es": "Buenos días, soy el narrador de las noticias desde hace tres años.",
+      "text_en": "Good morning, I am the news narrator for the past three years."
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Narrador",
+      "text_es": "Hoy tengo noticias del agua en la región y del clima.",
+      "text_en": "Today I have news about water in the region and about the weather."
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Narrador",
+      "text_es": "Desde hace dos días, el agua cae mucho en la ciudad.",
+      "text_en": "For the past two days, water falls heavily in the city."
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Narrador",
+      "text_es": "En el aeropuerto, los vuelos tienen problemas.",
+      "text_en": "At the airport, the flights have problems."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Reportero",
+      "text_es": "Desde aquí en la puerta del aeropuerto, veo que muchas personas están mareadas por el clima.",
+      "text_en": "From here at the airport entrance, I see that many people are dizzy from the weather."
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Reportero",
+      "text_es": "Los pasajeros no pueden embarcar bien porque el tiempo es muy malo.",
+      "text_en": "Passengers cannot board well because the weather is very bad."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Narrador",
+      "text_es": "¿Qué pasa con la facturación de las maletas hoy?",
+      "text_en": "What is happening with luggage check-in today?"
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Reportero",
+      "text_es": "La facturación está cerrada desde hace una hora por el clima.",
+      "text_en": "Check-in has been closed for the past hour because of the weather."
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Narrador",
+      "text_es": "Las personas que tienen hambre pueden beber café y tomar agua con azúcar en la sala de espera.",
+      "text_en": "People who are hungry can drink coffee and have water with sugar in the waiting room."
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Reportero",
+      "text_es": "Aquí, el camarero de la sala de espera trabaja bien con los pasajeros.",
+      "text_en": "Here, the waiter in the waiting room works well with the passengers."
+    },
+    {
+      "sentence_id": 10,
+      "speaker": "Narrador",
+      "text_es": "¿Cuándo podemos descansar en el aeropuerto?",
+      "text_en": "When can we rest at the airport?"
+    },
+    {
+      "sentence_id": 11,
+      "speaker": "Reportero",
+      "text_es": "El médico del aeropuerto dice que debemos descansar bien y tener paciencia hasta mañana.",
+      "text_en": "The airport doctor says that we should rest well and be patient until tomorrow."
+    },
+    {
+      "sentence_id": 12,
+      "speaker": "Narrador",
+      "text_es": "Muchas gracias por el informe desde el aeropuerto.",
+      "text_en": "Thank you very much for the report from the airport."
+    }
+  ],
+  "vocab_reused": [
+    "aeropuerto",
+    "agua",
+    "anos",
+    "aqui",
+    "azucar",
+    "beber",
+    "bien",
+    "buenos",
+    "cae",
+    "cafe",
+    "camarero",
+    "cerrada",
+    "ciudad",
+    "clima",
+    "con",
+    "cuando",
+    "de",
+    "debemos",
+    "del",
+    "descansar",
+    "desde",
+    "dias",
+    "dice",
+    "dos",
+    "el",
+    "embarcar",
+    "en",
+    "es",
+    "espera",
+    "esta",
+    "estan",
+    "facturacion",
+    "gracias",
+    "hace",
+    "hambre",
+    "hasta",
+    "hora",
+    "hoy",
+    "informe",
+    "la",
+    "las",
+    "los",
+    "maletas",
+    "malo",
+    "manana",
+    "mareadas",
+    "medico",
+    "muchas",
+    "mucho",
+    "muy",
+    "narrador",
+    "no",
+    "noticias",
+    "paciencia",
+    "pasa",
+    "pasajeros",
+    "personas",
+    "podemos",
+    "por",
+    "porque",
+    "problemas",
+    "pueden",
+    "puerta",
+    "que",
+    "region",
+    "sala",
+    "soy",
+    "tener",
+    "tengo",
+    "tiempo",
+    "tienen",
+    "tomar",
+    "trabaja",
+    "tres",
+    "una",
+    "veo",
+    "vuelos",
+    "y"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 2,
+      "type": "predict",
+      "prompt": "¿Qué crees que va a pasar en el aeropuerto por el agua que cae mucho?",
+      "options": [
+        "Los vuelos van a salir bien y rápido.",
+        "Los vuelos van a tener problemas.",
+        "El agua va a desaparecer."
+      ],
+      "correct_answer": "Los vuelos van a tener problemas.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 5,
+      "type": "comprehension",
+      "prompt": "¿Por qué los pasajeros no pueden embarcar bien?",
+      "options": [
+        "Porque el tiempo es muy malo.",
+        "Porque no tienen maletas.",
+        "Porque el camarero cierra la puerta."
+      ],
+      "correct_answer": "Porque el tiempo es muy malo.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 7,
+      "type": "inference",
+      "prompt": "¿Cuál es la razón por la que la facturación está cerrada?",
+      "options": [
+        "El clima es muy malo y peligroso.",
+        "Los camareros están descansando.",
+        "No hay pasajeros en el aeropuerto."
+      ],
+      "correct_answer": "El clima es muy malo y peligroso.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 9,
+      "type": "vocab_in_context",
+      "prompt": "En el contexto de esta noticia, ¿qué significa 'trabaja bien' cuando hablamos del camarero?",
+      "options": [
+        "Ayuda y atiende a los pasajeros de forma correcta.",
+        "Come y bebe con los pasajeros.",
+        "Abre y cierra las puertas del aeropuerto."
+      ],
+      "correct_answer": "Ayuda y atiende a los pasajeros de forma correcta.",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "trabaja",
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 12,
+      "type": "delayed_recall",
+      "prompt": "¿Cuánto tiempo hace que el agua cae en la ciudad?",
+      "options": [
+        "Desde hace un año.",
+        "Desde hace tres años.",
+        "Desde hace dos días."
+      ],
+      "correct_answer": "Desde hace dos días.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    }
+  ]
+}

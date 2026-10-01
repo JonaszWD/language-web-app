@@ -1,0 +1,116 @@
+{
+  "id": "m030-hotel",
+  "order_index": 30,
+  "title": "At the Hotel",
+  "description": "Check in with a reservation, ask about breakfast and Wi-Fi, and politely report a problem with your room.",
+  "level": "A2",
+  "topics": [
+    "travel",
+    "work"
+  ],
+  "vocab": [
+    {
+      "spanish": "la reserva",
+      "english": "the reservation / booking",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo una reserva a nombre de García."
+    },
+    {
+      "spanish": "la recepción",
+      "english": "the reception desk",
+      "part_of_speech": "noun",
+      "example_sentence": "La recepción está abierta las 24 horas."
+    },
+    {
+      "spanish": "la habitación doble",
+      "english": "the double room",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero una habitación doble para dos noches."
+    },
+    {
+      "spanish": "la llave",
+      "english": "the key",
+      "part_of_speech": "noun",
+      "example_sentence": "Aquí tiene la llave de su habitación."
+    },
+    {
+      "spanish": "el desayuno",
+      "english": "the breakfast",
+      "part_of_speech": "noun",
+      "example_sentence": "¿El desayuno está incluido?"
+    },
+    {
+      "spanish": "está incluido",
+      "english": "it is included",
+      "part_of_speech": "phrase",
+      "example_sentence": "El wifi está incluido en el precio."
+    },
+    {
+      "spanish": "la contraseña",
+      "english": "the password",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es la contraseña del wifi?"
+    },
+    {
+      "spanish": "el ascensor",
+      "english": "the lift / elevator",
+      "part_of_speech": "noun",
+      "example_sentence": "El ascensor está a la derecha."
+    },
+    {
+      "spanish": "no funciona",
+      "english": "it doesn't work",
+      "part_of_speech": "phrase",
+      "example_sentence": "El aire acondicionado no funciona."
+    },
+    {
+      "spanish": "las toallas",
+      "english": "the towels",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Me puede traer más toallas?"
+    },
+    {
+      "spanish": "hacer el check-out",
+      "english": "to check out",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿A qué hora tengo que hacer el check-out?"
+    },
+    {
+      "spanish": "¿me puede...?",
+      "english": "could you... (for me)?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Me puede cambiar de habitación?"
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Tengo una reserva a nombre de...",
+      "gloss": "The standard way to say you have a booking under a name",
+      "example_es": "Tengo una reserva a nombre de López. Tenemos una reserva para dos noches.",
+      "cloze_template": "Tengo una reserva a _____ de García.",
+      "cloze_answer": "nombre"
+    },
+    {
+      "pattern": "¿Me puede + infinitivo?",
+      "gloss": "Polite requests: could you (usted) do something for me?",
+      "example_es": "¿Me puede traer más toallas? ¿Me puede dar la contraseña?",
+      "cloze_template": "¿Me _____ cambiar de habitación?",
+      "cloze_answer": "puede"
+    },
+    {
+      "pattern": "Estar + incluido / no funcionar",
+      "gloss": "Ask what is included and say that something does not work",
+      "example_es": "¿El desayuno está incluido? La ducha no funciona.",
+      "cloze_template": "El aire acondicionado no _____.",
+      "cloze_answer": "funciona"
+    }
+  ],
+  "speaking_scene": {
+    "role": "un recepcionista de hotel",
+    "role_en": "a hotel receptionist",
+    "setting": "en la recepción de un hotel pequeño en Sevilla",
+    "opening": "Buenas noches, bienvenido. ¿Tiene una reserva?",
+    "opening_en": "Good evening, welcome. Do you have a reservation?",
+    "goal": "Check in with your reservation, ask whether breakfast is included and for the Wi-Fi password, then report that the air conditioning in your room doesn't work."
+  }
+}

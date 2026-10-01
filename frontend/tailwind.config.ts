@@ -13,18 +13,18 @@ const config: Config = {
       },
       colors: {
         brand: {
-          // Primary — pink
-          pink:        "#FF8FA3",
-          "pink-hover": "#F07088",
-          "pink-text":  "#B5354F", // WCAG AA on white (5.7:1)
-          "pink-soft":  "#FFF0F3",
-          "pink-border":"#FFBDCA",
-          // Secondary — aquamarine
-          aqua:        "#5CE6D5",
-          "aqua-hover": "#4ACDC4",
-          "aqua-text":  "#1A7A72", // WCAG AA on white (4.9:1)
-          "aqua-soft":  "#E8FDFB",
-          "aqua-border":"#9EF0E8",
+          // Secondary — warm coral (CTAs / highlights)
+          pink:        "#E8805C",
+          "pink-hover": "#D66A45",
+          "pink-text":  "#B85A3A", // WCAG AA on white (4.7:1)
+          "pink-soft":  "#FBE2D5",
+          "pink-border":"#F0BBA5",
+          // Primary — muted taupe (subtle UI)
+          aqua:        "#9C9481",
+          "aqua-hover": "#8A8271",
+          "aqua-text":  "#5F5849", // WCAG AA on white (5.1:1)
+          "aqua-soft":  "#F0EEE7",
+          "aqua-border":"#C7C0AE",
         },
       },
     },

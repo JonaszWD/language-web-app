@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useBlockQueue } from "@/components/lessonQueue";
 import { studyApi } from "@/lib/api";
+import { generatedListening } from "@/content/generated";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Mission listening as a progressive compression of real speech into
@@ -151,7 +152,7 @@ const STAGE_LABELS: Record<number, string> = {
 
 // Per-mission listening scripts, keyed by mission id. A mission with no script
 // falls back to the vocabulary trainer for its Listening step.
-export const LISTENING_LESSONS: Record<string, ListeningLessonScript> = {
+const BASE_LISTENING_LESSONS: Record<string, ListeningLessonScript> = {
   "m001-coffee-shop": {
     title: "Understand a café conversation",
     cards: [
@@ -669,6 +670,12 @@ export const LISTENING_LESSONS: Record<string, ListeningLessonScript> = {
   },
 };
 
+// Hand-authored scripts, with generated missions merged in.
+export const LISTENING_LESSONS: Record<string, ListeningLessonScript> = {
+  ...generatedListening,
+  ...BASE_LISTENING_LESSONS,
+};
+
 // Accent/case/punctuation-insensitive compare, matching the grammar + vocab
 // trainers so "soy de mexico" ≈ "Soy de México."
 function norm(s: string): string {
@@ -702,7 +709,7 @@ function pickSpanishVoice(): Promise<SpeechSynthesisVoice | undefined> {
 }
 
 // Fallback: speak via the browser SpeechSynthesis API at a given rate (no
-// backend). Used only when the Gemini TTS request fails. Queues each line so a
+// backend). Used only when the backend TTS request fails. Queues each line so a
 // dialogue plays turn by turn. Must be called from a user gesture.
 function speakBrowser(lines: string[], rate: number, onDone?: () => void): void {
   if (typeof window === "undefined" || !window.speechSynthesis) { onDone?.(); return; }
@@ -766,7 +773,7 @@ function getAudio(text: string): Promise<HTMLAudioElement> {
     });
 }
 
-// Speak Spanish via the backend Gemini TTS endpoint, one line at a time so a
+// Speak Spanish via the backend TTS endpoint, one line at a time so a
 // dialogue plays turn by turn with natural gaps (and every cache key is a single
 // authored phrase — the same phrases prewarmed on mission open). `rate` maps to
 // the audio element's playbackRate, so "Slower" works without re-synthesising.
@@ -828,8 +835,15 @@ function ChevronIcon() {
 // card. `lines` are spoken in order at `rate`.
 function AudioButton({ lines, rate, label = "Play" }: { lines: string[]; rate: number; label?: string }) {
   const [playing, setPlaying] = useState(false);
+  const playCount = useRef(0);
   const play = () => {
     setPlaying(true);
+    // First play is the intentional listen; every click after that is the
+    // learner asking to hear it again — that's the "replay" signal. Speed is
+    // reported on every play so "avg listening speed reached" reflects the
+    // base rate too, not just replays.
+    void studyApi.lessonProgress({ skill: "listening", replay: playCount.current > 0, speed: rate });
+    playCount.current += 1;
     speakLines(lines, rate, () => setPlaying(false));
   };
   return (
@@ -849,31 +863,40 @@ export default function ListeningLesson({
   onExit,
   onDone,
   backLabel = "Mission",
+  hideBack = false,
 }: {
   script: ListeningLessonScript;
   onExit: () => void;
   onDone?: () => void;
   backLabel?: string;
+  /** Set when a caller already renders its own persistent back button (e.g. the mission hub). */
+  hideBack?: boolean;
 }) {
-  const { cardIndex, pos, isLast, next, requeue } = useBlockQueue(script.cards.length, onDone ?? onExit);
-  const card = script.cards[cardIndex];
+  const cards = useMemo(() => script.cards.filter((c) => c.kind !== "intro"), [script]);
+  const { cardIndex, pos, isLast, next, requeue } = useBlockQueue(cards.length, onDone ?? onExit);
+  const card = cards[cardIndex];
   // A wrong answer requeues the card to just before the block's final card.
   const wrong = requeue;
 
+  useEffect(() => {
+    void studyApi.lessonProgress({ skill: "listening", stage: card.stage });
+  }, [card.stage]);
+
   return (
     <div className="vt-wrap">
-      <div className="vt-topbar" style={{ width: "100%" }}>
-        <button className="vt-back" onClick={onExit}><ChevronIcon /> {backLabel}</button>
-        <span className="vt-level">
-          Listening{card.kind !== "intro" ? ` · Stage ${card.stage} · ${(card as { label?: string }).label ?? STAGE_LABELS[card.stage]}` : ` · ${script.title}`}
-        </span>
+      {!hideBack && (
+        <div className="vt-topbar" style={{ width: "100%" }}>
+          <button className="vt-back" onClick={onExit}><ChevronIcon /> {backLabel}</button>
+          <span className="vt-level">
+            Listening · Stage {card.stage} · {(card as { label?: string }).label ?? STAGE_LABELS[card.stage]}
+          </span>
+        </div>
+      )}
+
+      <div className="vt-progress">
+        <div className="vt-progress-fill" style={{ width: `${((pos + 1) / cards.length) * 100}%` }} />
       </div>
 
-      <div className="vt-dots">
-        {script.cards.map((_, n) => <span key={n} className={"vt-dot" + (n <= pos ? " on" : "")} />)}
-      </div>
-
-      {card.kind === "intro" && <IntroCard key={pos} card={card} onNext={next} />}
       {card.kind === "predict" && <PredictCard key={pos} card={card} onNext={next} />}
       {card.kind === "recognition" && <RecognitionCard key={pos} card={card} onNext={next} onWrong={wrong} />}
       {card.kind === "speaker" && <SpeakerCard key={pos} card={card} onNext={next} onWrong={wrong} />}
@@ -884,21 +907,6 @@ export default function ListeningLesson({
       {card.kind === "conversation" && <ConversationCard key={pos} card={card} onNext={next} onWrong={wrong} />}
       {card.kind === "shadow" && <ShadowCard key={pos} card={card} onNext={next} />}
       {card.kind === "challenge" && <ChallengeCard key={pos} card={card} onNext={next} lastLabel={isLast ? "Finish" : "Continue"} />}
-    </div>
-  );
-}
-
-// ── Intro: the goal. Why we're listening — no audio yet. ──
-function IntroCard({ card, onNext }: { card: Extract<ListeningCard, { kind: "intro" }>; onNext: () => void }) {
-  return (
-    <div className="sp-card vt-card gl-mission">
-      <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Mission</p>
-      <p className="vt-es" style={{ marginBottom: 14 }}>{card.mission}</p>
-      <p className="sp-sub" style={{ marginBottom: 8 }}>By the end you&apos;ll be able to:</p>
-      <ul className="gl-goals">
-        {card.goals.map((g, i) => <li key={i}>{g}</li>)}
-      </ul>
-      <button className="sp-btn sp-btn-primary" style={{ marginTop: 16 }} onClick={onNext}>Let&apos;s listen</button>
     </div>
   );
 }
@@ -950,11 +958,15 @@ function AfterAnswer({ correct, transcript, onNext, onWrong, nextLabel = "Contin
   // once the result is known) — the single choke point for every listening
   // card kind, so the skills dashboard sees every comprehension check.
   useEffect(() => { studyApi.listeningResult(correct).catch(() => {}); }, [correct]);
+  useEffect(() => {
+    if (transcript) void studyApi.lessonProgress({ skill: "listening", transcript_reveal: true });
+    // Only report once per mount, regardless of transcript identity changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
-    <div style={{ marginTop: 14 }}>
-      <p className="sp-h2" style={{ marginBottom: 6 }}>{correct ? "¡Correcto!" : "Not quite"}</p>
-      {!correct && <p className="sp-sub" style={{ marginBottom: 8 }}>You&apos;ll see this one again shortly.</p>}
-      {transcript && <div className="li-transcript" style={{ marginBottom: 12 }}>{transcript}</div>}
+    <div className="vt-stack">
+      <p className="sp-h2">{correct ? "¡Correcto!" : "Not quite"}</p>
+      {transcript && <div className="li-transcript">{transcript}</div>}
       <button className="sp-btn sp-btn-primary" onClick={correct ? onNext : onWrong}>{correct ? nextLabel : "Continue"}</button>
     </div>
   );
@@ -986,7 +998,6 @@ function PredictCard({ card, onNext }: { card: Extract<ListeningCard, { kind: "p
   const rightGuess = picked === card.answer;
   return (
     <div className="sp-card vt-card">
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>Before you listen</p>
       <p className="wr-scenario" style={{ textAlign: "center" }}>{card.setup}</p>
       {!revealed ? (
         <>
@@ -1211,7 +1222,6 @@ function ConversationCard({ card, onNext, onWrong }: { card: Extract<ListeningCa
   const q = card.questions[Math.min(qi, card.questions.length - 1)];
   return (
     <div className="sp-card vt-card">
-      <p className="sp-eyebrow" style={{ marginBottom: 10 }}>Listen, then answer</p>
       <AudioButton lines={card.lines.map((l) => l.es)} rate={rate} label="Play conversation" />
       <AudioControls rate={rate} base={card.speed} onSlower={() => setRate(slower(rate))} />
       {!done ? (
@@ -1236,7 +1246,6 @@ function ConversationCard({ card, onNext, onWrong }: { card: Extract<ListeningCa
 function ShadowCard({ card, onNext }: { card: Extract<ListeningCard, { kind: "shadow" }>; onNext: () => void }) {
   return (
     <div className="sp-card vt-card">
-      <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Transcript · shadow each line</p>
       <p className="sp-sub" style={{ marginBottom: 14 }}>Play a line, then repeat it out loud.</p>
       <div className="gl-dialogue">
         {card.lines.map((l, n) => (
@@ -1266,7 +1275,6 @@ function ChallengeCard({ card, onNext, lastLabel }: {
   const correct = accepted.includes(norm(value));
   return (
     <form className="sp-card vt-card" onSubmit={(e) => { e.preventDefault(); if (value.trim()) setChecked(true); }}>
-      <p className="sp-eyebrow" style={{ marginBottom: 10 }}>No options — type what you hear</p>
       <AudioButton lines={card.lines.map((l) => l.es)} rate={rate} label="Play audio" />
       <AudioControls rate={rate} base={card.speed} onSlower={() => setRate(slower(rate))} />
       <p className="vt-prompt">{card.prompt}</p>
@@ -1277,12 +1285,12 @@ function ChallengeCard({ card, onNext, lastLabel }: {
           <button type="submit" className="sp-btn sp-btn-primary" disabled={!value.trim()}>Check</button>
         </>
       ) : (
-        <div style={{ marginTop: 8 }}>
-          <p className="sp-h2" style={{ marginBottom: 6 }}>{correct ? "¡Perfecto!" : "Almost"}</p>
-          <p className="sp-sub" style={{ marginBottom: 10 }}>
+        <div className="vt-stack">
+          <p className="sp-h2">{correct ? "¡Perfecto!" : "Almost"}</p>
+          <p className="sp-sub">
             {correct ? "That's it." : <>The answer is <b style={{ color: "var(--ink)" }}>{card.answer}</b>.</>}
           </p>
-          {card.transcriptEn && <div className="li-transcript" style={{ marginBottom: 12 }}>{card.transcriptEn}</div>}
+          {card.transcriptEn && <div className="li-transcript">{card.transcriptEn}</div>}
           <div className="vt-rates">
             {!correct && <button type="button" className="sp-btn sp-btn-soft" onClick={() => { setChecked(false); setValue(""); }}>Try again</button>}
             <button type="button" className="sp-btn sp-btn-primary" onClick={onNext}>{correct ? lastLabel : "Continue"}</button>

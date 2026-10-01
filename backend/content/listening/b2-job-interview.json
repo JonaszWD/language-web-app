@@ -1,0 +1,196 @@
+{
+  "id": "b2-job-interview",
+  "scenario_tag": null,
+  "cefr_level": "B2",
+  "title": "Una Entrevista de Trabajo",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Entrevistador",
+      "text_es": "Buenos días. Me llamo Carlos. Mucho gusto.",
+      "text_en": "Good morning. My name is Carlos. Nice to meet you."
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Candidato",
+      "text_es": "Buenos días. Me llamo Ana. Mucho gusto.",
+      "text_en": "Good morning. My name is Ana. Nice to meet you."
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Entrevistador",
+      "text_es": "¿Cómo estás? ¿Quieres un café o agua?",
+      "text_en": "How are you? Do you want a coffee or water?"
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Candidato",
+      "text_es": "Estoy bien, gracias. Quiero agua, por favor.",
+      "text_en": "I am well, thank you. I want water, please."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Entrevistador",
+      "text_es": "Bien. Tengo la carta aquí.",
+      "text_en": "Good. I have the letter here."
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Candidato",
+      "text_es": "Sí, es mi carta.",
+      "text_en": "Yes, it is my letter."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Entrevistador",
+      "text_es": "¿Desde hace cuánto tiempo eres bien con esto?",
+      "text_en": "Since how long have you been good with this?"
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Candidato",
+      "text_es": "Soy bien con esto desde hace cinco años.",
+      "text_en": "I am good with this for five years."
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Entrevistador",
+      "text_es": "Bien. ¿Quieres este trabajo?",
+      "text_en": "Good. Do you want this job?"
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Candidato",
+      "text_es": "Sí, quiero este trabajo.",
+      "text_en": "Yes, I want this job."
+    },
+    {
+      "sentence_id": 10,
+      "speaker": "Entrevistador",
+      "text_es": "Gracias. La salida es por aquí.",
+      "text_en": "Thank you. The exit is this way."
+    },
+    {
+      "sentence_id": 11,
+      "speaker": "Candidato",
+      "text_es": "Gracias. Adiós.",
+      "text_en": "Thank you. Goodbye."
+    }
+  ],
+  "vocab_reused": [
+    "adios",
+    "agua",
+    "ana",
+    "anos",
+    "aqui",
+    "bien",
+    "buenos",
+    "cafe",
+    "carlos",
+    "carta",
+    "cinco",
+    "como",
+    "con",
+    "cuanto",
+    "desde",
+    "dias",
+    "eres",
+    "es",
+    "estas",
+    "este",
+    "esto",
+    "estoy",
+    "favor",
+    "gracias",
+    "gusto",
+    "hace",
+    "la",
+    "llamo",
+    "me",
+    "mi",
+    "mucho",
+    "o",
+    "por",
+    "quieres",
+    "quiero",
+    "salida",
+    "si",
+    "soy",
+    "tengo",
+    "tiempo",
+    "trabajo",
+    "un"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 3,
+      "type": "predict",
+      "prompt": "¿Qué va a preguntar el entrevistador ahora?",
+      "options": [
+        "Sobre el café",
+        "Sobre el trabajo",
+        "Sobre el billete"
+      ],
+      "correct_answer": "Sobre el trabajo",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 7,
+      "type": "comprehension",
+      "prompt": "¿Qué información dio el candidato?",
+      "options": [
+        "Que es bien con el trabajo desde hace cinco años.",
+        "Que no quiere el trabajo.",
+        "Que está mareado."
+      ],
+      "correct_answer": "Que es bien con el trabajo desde hace cinco años.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 9,
+      "type": "inference",
+      "prompt": "¿Cómo se siente el candidato sobre el trabajo?",
+      "options": [
+        "No está interesado.",
+        "Está muy interesado.",
+        "Está cansado."
+      ],
+      "correct_answer": "Está muy interesado.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 11,
+      "type": "vocab_in_context",
+      "prompt": "En la frase 'Tengo la carta aquí', ¿qué significa 'la carta' en este contexto?",
+      "options": [
+        "Un documento de identidad",
+        "Un menú de restaurante",
+        "Un currículum o CV"
+      ],
+      "correct_answer": "Un currículum o CV",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "la carta",
+      "difficulty_tag": "hard"
+    },
+    {
+      "after_sentence_id": 11,
+      "type": "delayed_recall",
+      "prompt": "¿Qué bebida pidió el candidato al principio de la entrevista?",
+      "options": [
+        "Café",
+        "Agua",
+        "Té"
+      ],
+      "correct_answer": "Agua",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    }
+  ]
+}

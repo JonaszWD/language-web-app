@@ -1,5 +1,7 @@
+import random
 import uuid
 from datetime import date, datetime, timezone
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func
@@ -16,11 +18,14 @@ from app.schemas.study import (
     GrammarCardResponse,
     GrammarReviewRequest,
     GrammarReviewResponse,
+    LessonProgressRequest,
     ListeningResultRequest,
     ReviewRequest,
     SessionEndRequest,
     SessionStartResponse,
     UserCardResponse,
+    WeakReviewItem,
+    WeakReviewResponse,
 )
 from app.schemas.vocab import CardStats
 from app.services import grammar_pattern as grammar_pattern_service
@@ -214,7 +219,8 @@ def review_grammar_card(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pattern not found")
     result = grammar_pattern_service.grade_pattern(db, current_user.id, pattern, body.answer)
     skill_stats_service.record_attempt(
-        db, current_user.id, skill_stats_service.SKILL_GRAMMAR, correct=result["correct"],
+        db, current_user.id, skill_stats_service.SKILL_GRAMMAR,
+        correct=result["correct"], response_ms=body.response_ms,
     )
     return GrammarReviewResponse(**result)
 
@@ -230,6 +236,46 @@ def listening_result(
     skill_stats_service.record_attempt(
         db, current_user.id, skill_stats_service.SKILL_LISTENING, correct=body.correct,
     )
+
+
+@router.get("/weak-review", response_model=WeakReviewResponse)
+def get_weak_review(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """The Review lesson's question set — this user's actual worst-performing
+    words and shakiest grammar pattern, not a fixed daily mix. Each weak word
+    is asked back across the 4 vocab-facing exercise shapes the Review UI
+    supports (Vocabulary/Translate/Listening/Speaking all quiz the same word,
+    just different retrieval angles) so the same weak spot gets hit from
+    multiple directions in one session; grading flows through the exact same
+    POST /study/review and /study/review-grammar endpoints the dedicated
+    trainers use, so a Review-lesson answer counts for FSRS scheduling and the
+    skill-stats rollup exactly like any other."""
+    weak_cards = vocab_service.weakest_words(db, current_user.id, limit=6)
+    weak_patterns = grammar_pattern_service.weakest_patterns(db, current_user.id, limit=3)
+
+    items: list[WeakReviewItem] = []
+    vocab_skills: list[Literal["Vocabulary", "Translate", "Listening", "Speaking"]] = [
+        "Vocabulary", "Translate", "Listening", "Speaking",
+    ]
+    for i, card in enumerate(weak_cards):
+        word = db.query(Word).filter(Word.id == card.word_id).first()
+        if not word:
+            continue
+        items.append(WeakReviewItem(
+            skill=vocab_skills[i % len(vocab_skills)],
+            es=word.spanish, en=word.english, card_id=card.id,
+        ))
+    for pattern in weak_patterns:
+        items.append(WeakReviewItem(
+            skill="Grammar", es=pattern.cloze_answer, en=pattern.gloss,
+            pattern_id=pattern.id, cloze_template=pattern.cloze_template,
+        ))
+
+    random.shuffle(items)
+    weakest_skill = skill_stats_service.weakest_skill(db, current_user.id)
+    return WeakReviewResponse(items=items, weakest_skill=weakest_skill)
 
 
 @router.post("/session", response_model=SessionStartResponse, status_code=status.HTTP_201_CREATED)
@@ -273,7 +319,25 @@ def end_session(
         elif (today - user.last_study_date).days > 1:
             user.streak_count = 1
         user.last_study_date = today
+        user.longest_streak = max(user.longest_streak, user.streak_count)
 
     db.commit()
     db.refresh(session)
+    skill_stats_service.bust_dashboard_cache(current_user.id)
     return session
+
+
+@router.post("/lesson-progress", status_code=status.HTTP_204_NO_CONTENT)
+def lesson_progress(
+    body: LessonProgressRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Engagement ping from a scripted lesson deck — see LessonProgressRequest.
+    Never raises past auth; a failed/slow ping should never break the lesson
+    the learner is actually doing."""
+    skill_stats_service.record_lesson_progress(
+        db, current_user.id, body.skill,
+        stage=body.stage, replay=body.replay,
+        transcript_reveal=body.transcript_reveal, speed=body.speed,
+    )

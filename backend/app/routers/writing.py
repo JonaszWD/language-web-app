@@ -25,7 +25,7 @@ def writing_feedback(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Coach a piece of writing (translation / guided / journal) via Gemini."""
+    """Coach a piece of writing (translation / guided / journal) via Mistral."""
     if not body.text.strip():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Write something first.")
     try:
@@ -44,7 +44,7 @@ def writing_rewrite(
     body: WritingRewriteRequest,
     current_user: User = Depends(get_current_user),
 ):
-    """Rewrite the learner's text in a chosen style via Gemini."""
+    """Rewrite the learner's text in a chosen style via Mistral."""
     if not body.text.strip():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Write something first.")
     try:

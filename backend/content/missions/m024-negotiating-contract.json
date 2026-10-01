@@ -1,0 +1,115 @@
+{
+  "id": "m024-negotiating-contract",
+  "order_index": 24,
+  "title": "Negotiating a Business Contract",
+  "description": "Master the language of professional negotiation in Spanish. Learn to discuss terms, propose modifications, reach agreements, and close deals in a formal business context at B2 level.",
+  "level": "B2",
+  "topics": [
+    "work"
+  ],
+  "vocab": [
+    {
+      "spanish": "proponer",
+      "english": "to propose",
+      "part_of_speech": "verb",
+      "example_sentence": "Propongo que el salario sea más alto durante el primer año."
+    },
+    {
+      "spanish": "la cláusula",
+      "english": "clause",
+      "part_of_speech": "noun",
+      "example_sentence": "La cláusula sobre el depósito es muy importante en el contrato."
+    },
+    {
+      "spanish": "la modificación",
+      "english": "modification",
+      "part_of_speech": "noun",
+      "example_sentence": "Solicito una modificación en los términos del acuerdo."
+    },
+    {
+      "spanish": "aceptar",
+      "english": "to accept",
+      "part_of_speech": "verb",
+      "example_sentence": "Estoy de acuerdo, aceptamos sus condiciones."
+    },
+    {
+      "spanish": "rechazar",
+      "english": "to reject",
+      "part_of_speech": "verb",
+      "example_sentence": "No podemos rechazar esta propuesta porque es muy favorable."
+    },
+    {
+      "spanish": "la vigencia",
+      "english": "validity period",
+      "part_of_speech": "noun",
+      "example_sentence": "La vigencia del contrato es de tres años."
+    },
+    {
+      "spanish": "el plazo",
+      "english": "deadline",
+      "part_of_speech": "noun",
+      "example_sentence": "El plazo para firmar es antes de la próxima semana."
+    },
+    {
+      "spanish": "la penalidad",
+      "english": "penalty",
+      "part_of_speech": "noun",
+      "example_sentence": "Hay una penalidad si no cumplimos con los requisitos."
+    },
+    {
+      "spanish": "renovar",
+      "english": "to renew",
+      "part_of_speech": "verb",
+      "example_sentence": "Queremos renovar el contrato después de dos años."
+    },
+    {
+      "spanish": "el beneficio",
+      "english": "benefit",
+      "part_of_speech": "noun",
+      "example_sentence": "El principal beneficio para nuestra empresa es el acceso a nuevos mercados."
+    },
+    {
+      "spanish": "la garantía",
+      "english": "guarantee",
+      "part_of_speech": "noun",
+      "example_sentence": "La garantía cubre todos los defectos durante el primer año."
+    },
+    {
+      "spanish": "resolver diferencias",
+      "english": "to resolve differences",
+      "part_of_speech": "phrase",
+      "example_sentence": "Debemos resolver diferencias sobre la comisión antes de firmar."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Conditional: Si + present, conditional",
+      "gloss": "If [condition], [result would happen]",
+      "example_es": "Si aceptamos el plazo, podríamos firmar mañana.",
+      "cloze_template": "Si aceptamos el plazo, ________ firmar mañana.",
+      "cloze_answer": "podríamos"
+    },
+    {
+      "pattern": "Subjunctive after 'proponer que': Propongo que + subjunctive",
+      "gloss": "I propose that [action in subjunctive]",
+      "example_es": "Propongo que la vigencia sea de dos años, no tres.",
+      "cloze_template": "Propongo que la vigencia ________ de dos años, no tres.",
+      "cloze_answer": "sea"
+    },
+    {
+      "pattern": "Double object pronouns: me/te/le + lo/la/los/las",
+      "gloss": "[Indirect] [Direct] = to/for whom, what",
+      "example_es": "Le presento la cláusula sobre la penalidad y se la explico bien.",
+      "cloze_template": "Le presento la cláusula sobre la penalidad y ________ explico bien.",
+      "cloze_answer": "se la"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Director Ejecutivo de una empresa competidora",
+    "role_en": "Executive Director of a competing company",
+    "setting": "una sala de juntas profesional en el centro de negocios de Madrid",
+    "opening": "Buenos días. Hemos revisado su propuesta y tenemos algunas modificaciones importantes que abordar. ¿Podemos comenzar a negociar los términos del contrato?",
+    "opening_en": "Good morning. We've reviewed your proposal and have some important modifications to address. Can we start negotiating the contract terms?",
+    "goal": "Alcanzar un acuerdo final sobre todas las cláusulas principales—incluyendo salario, vigencia, penalidades y beneficios—y firmar el contrato antes del plazo establecido."
+  }
+}

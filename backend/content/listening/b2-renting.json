@@ -1,0 +1,148 @@
+{
+  "id": "b2-renting",
+  "scenario_tag": null,
+  "cefr_level": "B2",
+  "title": "En el apartamento",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Narrator",
+      "text_es": "Un señor es el dueño de un apartamento. Una mujer quiere vivir allí. El dueño abre la puerta.",
+      "text_en": "A man is the owner of an apartment. A woman wants to live there. The owner opens the door."
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Dueño",
+      "text_es": "Buenos días. Me llamo Carlos. Bienvenida al apartamento.",
+      "text_en": "Good morning. My name is Carlos. Welcome to the apartment."
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Mujer",
+      "text_es": "Hola, mucho gusto. Me llamo Ana. ¿Es grande el apartamento?",
+      "text_en": "Hello, nice to meet you. My name is Ana. Is the apartment large?"
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Dueño",
+      "text_es": "Sí, es muy bien. Tiene una puerta grande aquí. El agua es buena. Hay un café con leche para ti, si quieres.",
+      "text_en": "Yes, it is very nice. It has a large door here. The water is good. There is a café with milk for you, if you want."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Mujer",
+      "text_es": "Gracias, por favor. ¿Cuánto cuesta vivir aquí? ¿Cuál es el contrato?",
+      "text_en": "Thank you, please. How much does it cost to live here? What is the contract?"
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Dueño",
+      "text_es": "El contrato es desde hace un año. Tú pagas cada mes. Es importante tomar el contrato con cuidado.",
+      "text_en": "The contract is for one year from now. You pay each month. It is important to take the contract carefully."
+    }
+  ],
+  "vocab_reused": [
+    "abre",
+    "agua",
+    "al",
+    "alli",
+    "ana",
+    "ano",
+    "apartamento",
+    "aqui",
+    "bien",
+    "bienvenida",
+    "buena",
+    "buenos",
+    "cada",
+    "cafe",
+    "carlos",
+    "con",
+    "contrato",
+    "cual",
+    "cuanto",
+    "cuesta",
+    "cuidado",
+    "de",
+    "desde",
+    "dias",
+    "dueno",
+    "el",
+    "es",
+    "favor",
+    "gracias",
+    "grande",
+    "gusto",
+    "hace",
+    "hay",
+    "hola",
+    "importante",
+    "la",
+    "leche",
+    "llamo",
+    "me",
+    "mes",
+    "mucho",
+    "mujer",
+    "muy",
+    "pagas",
+    "para",
+    "por",
+    "puerta",
+    "quiere",
+    "quieres",
+    "senor",
+    "si",
+    "ti",
+    "tiene",
+    "tomar",
+    "tu",
+    "un",
+    "una",
+    "vivir"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 2,
+      "type": "predict",
+      "prompt": "¿Qué quiere hacer Carlos ahora?",
+      "options": [
+        "Mostrar el apartamento a Ana",
+        "Beber un café con leche",
+        "Ir al aeropuerto"
+      ],
+      "correct_answer": "Mostrar el apartamento a Ana",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 3,
+      "type": "comprehension",
+      "prompt": "¿Qué ofrece Carlos a Ana?",
+      "options": [
+        "Un billete de avión",
+        "Un café con leche",
+        "Una receta del médico"
+      ],
+      "correct_answer": "Un café con leche",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "el café con leche",
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 5,
+      "type": "comprehension",
+      "prompt": "¿Cuánto tiempo es el contrato?",
+      "options": [
+        "Un mes",
+        "Seis meses",
+        "Un año"
+      ],
+      "correct_answer": "Un año",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session, selectinload
@@ -6,6 +8,8 @@ from app.dependencies import get_current_user, get_db
 from app.models.mission import (
     MISSION_AVAILABLE,
     MISSION_LOCKED,
+    MISSION_TYPE_BONUS,
+    MISSION_TYPE_CORE,
     Mission,
     MissionVocab,
     UserMission,
@@ -33,11 +37,21 @@ router = APIRouter(prefix="/missions", tags=["missions"])
 
 
 @router.get("", response_model=list[MissionSummary])
-def list_missions(db: Session = Depends(get_db)):
-    """All presaved missions in play order — summaries only, no vocab.
+def list_missions(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Core missions (mission_type='core') in play order — summaries only, no
+    vocab. Vocab is loaded per mission via GET /missions/{id} so the list stays
+    light even at 100 missions.
 
-    Vocab is loaded per mission via GET /missions/{id} so the list stays light
-    even at 100 missions.
+    The next NEXT_WINDOW not-yet-completed missions are re-sorted by the
+    user's selected goals (see services.missions.ordered_mission_ids);
+    everything else, and every completed mission, keeps pure order_index
+    order — the CEFR spine itself never reorders. `recommended` is a separate
+    soft badge for any goal overlap, shown regardless of position.
+
+    Bonus missions (mission_type='bonus') are excluded — see GET /missions/bonus.
     """
     rows = (
         db.query(
@@ -45,18 +59,61 @@ def list_missions(db: Session = Depends(get_db)):
             Mission.order_index,
             Mission.title,
             Mission.description,
+            Mission.mission_type,
+            Mission.level,
             func.count(MissionVocab.id),
         )
         .outerjoin(MissionVocab, MissionVocab.mission_id == Mission.id)
+        .filter(Mission.mission_type == MISSION_TYPE_CORE)
         .group_by(Mission.id)
-        .order_by(Mission.order_index)
         .all()
     )
+    by_id = {r[0]: r for r in rows}
+    order = missions_service.ordered_mission_ids(db, current_user)
+    recommended = missions_service.recommended_mission_ids(db, current_user)
     return [
         MissionSummary(
-            id=r[0], order_index=r[1], title=r[2], description=r[3], vocab_count=r[4]
+            id=r[0], order_index=r[1], title=r[2], description=r[3], mission_type=r[4],
+            level=r[5], vocab_count=r[6], recommended=r[0] in recommended,
         )
-        for r in rows
+        for mid in order
+        for r in [by_id[mid]]
+    ]
+
+
+@router.get("/bonus", response_model=list[MissionSummary])
+def list_bonus_missions(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Bonus missions (mission_type='bonus'), most goal-relevant to the current
+    user first. Entirely separate from GET /missions — not part of the core
+    progression, no lock/unlock semantics."""
+    rows = (
+        db.query(
+            Mission.id,
+            Mission.order_index,
+            Mission.title,
+            Mission.description,
+            Mission.mission_type,
+            Mission.level,
+            func.count(MissionVocab.id),
+        )
+        .outerjoin(MissionVocab, MissionVocab.mission_id == Mission.id)
+        .filter(Mission.mission_type == MISSION_TYPE_BONUS)
+        .group_by(Mission.id)
+        .all()
+    )
+    by_id = {r[0]: r for r in rows}
+    order = missions_service.bonus_mission_ids_scored(db, current_user)
+    recommended = missions_service.recommended_mission_ids(db, current_user)
+    return [
+        MissionSummary(
+            id=r[0], order_index=r[1], title=r[2], description=r[3], mission_type=r[4],
+            level=r[5], vocab_count=r[6], recommended=r[0] in recommended,
+        )
+        for mid in order
+        for r in [by_id[mid]]
     ]
 
 
@@ -76,7 +133,7 @@ def get_mission(
     )
     if mission is None:
         raise HTTPException(status_code=404, detail="Mission not found")
-    # First open only: run every word through the Gemini pipeline in the
+    # First open only: run every word through the Mistral pipeline in the
     # background. queue_enrichment is gated on enrichment_status, so a mission
     # that is already ready/processing is left untouched.
     missions_service.queue_enrichment(mission_id)
@@ -84,6 +141,8 @@ def get_mission(
     # version (queue_enrichment above no-ops for already-enriched missions).
     if missions_service.speaking_stale(mission.speaking):
         missions_service.queue_speaking(mission_id)
+    if missions_service.context_preview_stale(mission.context_preview):
+        missions_service.queue_context_preview(mission_id)
 
     # Per-user training level for each mission word, matched by lowercased
     # spanish (the same key add_mission_vocab_to_deck uses to mint Words).
@@ -101,13 +160,20 @@ def get_mission(
         )
         levels = {k: lvl for k, lvl in rows}
 
+    # Goal-flavored example sentences for the user's top-priority goal, batched
+    # in one query — falls back to the vocab's generic example_sentence for any
+    # word without a matching flavor variant.
+    flavored = missions_service.pick_example_sentences(
+        db, [v.id for v in mission.vocab], current_user.id
+    )
+
     vocab = [
         MissionVocabResponse(
             id=v.id,
             order_index=v.order_index,
             spanish=v.spanish,
             english=v.english,
-            example_sentence=v.example_sentence,
+            example_sentence=flavored.get(v.id, v.example_sentence),
             part_of_speech=v.part_of_speech,
             enrichment=v.enrichment,
             image_url=v.image_url,
@@ -129,8 +195,10 @@ def get_mission(
         order_index=mission.order_index,
         title=mission.title,
         description=mission.description,
+        level=mission.level,
         enrichment_status=mission.enrichment_status,
         speaking=mission.speaking,
+        context_preview=mission.context_preview,
         vocab=vocab,
         grammar=grammar,
         status=user_mission.status if user_mission else None,
@@ -183,11 +251,16 @@ def start_mission(
         db.add(user_mission)
     elif user_mission.status == MISSION_LOCKED:
         user_mission.status = MISSION_AVAILABLE
+    # Bumped on every open (this endpoint is called idempotently each time),
+    # so "most recent, non-completed UserMission" is a reliable "current
+    # mission" for the dashboard.
+    user_mission.last_opened_at = datetime.now(timezone.utc)
     db.commit()
 
     added = missions_service.add_mission_vocab_to_deck(db, current_user.id, mission_id)
     # Enrich in the background so the newly added deck words gain rich data too.
     missions_service.queue_enrichment(mission_id)
+    skill_stats_service.bust_dashboard_cache(current_user.id)
     return MissionStartResponse(
         mission_id=mission_id, status=user_mission.status, vocab_added=added
     )
@@ -206,6 +279,7 @@ def complete_mission(
     status, completed_at = missions_service.complete_mission(
         db, current_user.id, mission_id
     )
+    skill_stats_service.bust_dashboard_cache(current_user.id)
     return MissionCompleteResponse(
         mission_id=mission_id, status=status, completed_at=completed_at
     )
@@ -262,7 +336,7 @@ def speaking_turn(
             vocab_service.apply_word_signal(db, current_user.id, spanish, rating=4)
     skill_stats_service.record_attempt(
         db, current_user.id, skill_stats_service.SKILL_CONVERSATION,
-        correct=result.get("understood"),
+        correct=result.get("understood"), retries=body.retry_count, recorded=body.recorded,
     )
     if body.confidence is not None:
         skill_stats_service.record_attempt(

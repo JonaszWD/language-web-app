@@ -3,6 +3,11 @@
   "order_index": 1,
   "title": "At the Coffee Shop",
   "description": "Order a drink, ask the price and pay at a Spanish café. Learn the words you need to walk up to the counter and get exactly what you want.",
+  "level": "A1",
+  "topics": [
+    "travel",
+    "social"
+  ],
   "vocab": [
     {
       "spanish": "el café",

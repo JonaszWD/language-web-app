@@ -3,6 +3,11 @@
   "order_index": 3,
   "title": "Meeting Someone",
   "description": "Say hello, introduce yourself and ask someone's name and where they're from. The first words you need to start any conversation in Spanish.",
+  "level": "A1",
+  "topics": [
+    "social",
+    "dating"
+  ],
   "vocab": [
     {
       "spanish": "hola",

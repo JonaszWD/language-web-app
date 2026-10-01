@@ -1,0 +1,256 @@
+{
+  "id": "m001-coffee-shop",
+  "scenario_tag": null,
+  "cefr_level": "A1",
+  "title": "En la Cafetería",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Carlos",
+      "text_es": "Hola. Buenos días.",
+      "text_en": "Hello. Good morning."
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Camarero",
+      "text_es": "Buenos días. ¿Cómo estás?",
+      "text_en": "Good morning. How are you?"
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Carlos",
+      "text_es": "Bien, gracias. Estoy bien.",
+      "text_en": "Well, thank you. I am well."
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Carlos",
+      "text_es": "Quiero un café con leche, por favor.",
+      "text_en": "I want a coffee with milk, please."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Camarero",
+      "text_es": "¿Algo más?",
+      "text_en": "Something else?"
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Carlos",
+      "text_es": "Sí, quiero el té, por favor.",
+      "text_en": "Yes, I want the tea, please."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Camarero",
+      "text_es": "¿El té con azúcar?",
+      "text_en": "The tea with sugar?"
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Carlos",
+      "text_es": "No, gracias. El té sin azúcar.",
+      "text_en": "No, thank you. The tea without sugar."
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Camarero",
+      "text_es": "Un café con leche y un té sin azúcar. ¿Para llevar?",
+      "text_en": "A coffee with milk and a tea without sugar. To go?"
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Carlos",
+      "text_es": "No, no para llevar. Aquí, por favor. Quiero descansar.",
+      "text_en": "No, not to go. Here, please. I want to rest."
+    },
+    {
+      "sentence_id": 10,
+      "speaker": "Camarero",
+      "text_es": "Bien. Aquí está el café con leche y el té.",
+      "text_en": "Good. Here is the coffee with milk and the tea."
+    },
+    {
+      "sentence_id": 11,
+      "speaker": "Carlos",
+      "text_es": "Gracias, camarero.",
+      "text_en": "Thank you, waiter."
+    },
+    {
+      "sentence_id": 12,
+      "speaker": "Carlos",
+      "text_es": "El café con leche está bien. Y el té está bien.",
+      "text_en": "The coffee with milk is good. And the tea is good."
+    },
+    {
+      "sentence_id": 13,
+      "speaker": "Carlos",
+      "text_es": "Estoy bien aquí.",
+      "text_en": "I am well here."
+    },
+    {
+      "sentence_id": 14,
+      "speaker": "Camarero",
+      "text_es": "¿Quiere la cuenta?",
+      "text_en": "Do you want the bill?"
+    },
+    {
+      "sentence_id": 15,
+      "speaker": "Carlos",
+      "text_es": "Sí, por favor. Quiero la salida.",
+      "text_en": "Yes, please. I want the exit."
+    },
+    {
+      "sentence_id": 16,
+      "speaker": "Camarero",
+      "text_es": "Aquí está la cuenta.",
+      "text_en": "Here is the bill."
+    },
+    {
+      "sentence_id": 17,
+      "speaker": "Carlos",
+      "text_es": "Gracias. Adiós.",
+      "text_en": "Thank you. Goodbye."
+    },
+    {
+      "sentence_id": 18,
+      "speaker": "Camarero",
+      "text_es": "Adiós. Mucho gusto.",
+      "text_en": "Goodbye. Nice to meet you."
+    },
+    {
+      "sentence_id": 19,
+      "speaker": "Carlos",
+      "text_es": "Mucho gusto.",
+      "text_en": "Nice to meet you."
+    },
+    {
+      "sentence_id": 20,
+      "speaker": "Carlos",
+      "text_es": "Quiero descansar. El café con leche y el té son para descansar.",
+      "text_en": "I want to rest. The coffee with milk and the tea are for resting."
+    },
+    {
+      "sentence_id": 21,
+      "speaker": "Carlos",
+      "text_es": "Tengo el billete para el vuelo. El vuelo es bien.",
+      "text_en": "I have the ticket for the flight. The flight is good."
+    }
+  ],
+  "vocab_reused": [
+    "adios",
+    "algo",
+    "aqui",
+    "azucar",
+    "bien",
+    "billete",
+    "buenos",
+    "cafe",
+    "camarero",
+    "como",
+    "con",
+    "cuenta",
+    "descansar",
+    "dias",
+    "el",
+    "es",
+    "esta",
+    "estas",
+    "estoy",
+    "favor",
+    "gracias",
+    "gusto",
+    "hola",
+    "la",
+    "leche",
+    "llevar",
+    "mas",
+    "mucho",
+    "no",
+    "para",
+    "por",
+    "quiere",
+    "quiero",
+    "salida",
+    "si",
+    "sin",
+    "son",
+    "te",
+    "tengo",
+    "un",
+    "vuelo",
+    "y"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 3,
+      "type": "predict",
+      "prompt": "What will the waiter most likely ask next?",
+      "options": [
+        "Do you want water?",
+        "Do you want something else?",
+        "Are you from here?"
+      ],
+      "correct_answer": "Do you want something else?",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 11,
+      "type": "comprehension",
+      "prompt": "What did Carlos order?",
+      "options": [
+        "Coffee and water",
+        "Coffee with milk and tea",
+        "Tea and milk"
+      ],
+      "correct_answer": "Coffee with milk and tea",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 17,
+      "type": "inference",
+      "prompt": "Why is Carlos saying 'Adiós'?",
+      "options": [
+        "He is leaving the coffee shop.",
+        "He is ordering more food.",
+        "He is asking for the menu."
+      ],
+      "correct_answer": "He is leaving the coffee shop.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 19,
+      "type": "vocab_in_context",
+      "prompt": "What does 'la cuenta' mean in this context?",
+      "options": [
+        "la carta",
+        "la cuenta",
+        "la leche"
+      ],
+      "correct_answer": "la cuenta",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "la cuenta",
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 21,
+      "type": "delayed_recall",
+      "prompt": "What did Carlos say when he first entered the coffee shop?",
+      "options": [
+        "Hello. Good morning.",
+        "I want coffee.",
+        "How are you?"
+      ],
+      "correct_answer": "Hello. Good morning.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    }
+  ]
+}

@@ -44,7 +44,17 @@ class MissionSummary(BaseModel):
     order_index: int
     title: str
     description: Optional[str]
+    # CEFR level this mission targets (A1/A2/B1/B2/…), editorial. None for
+    # older missions authored before this field existed.
+    level: Optional[str] = None
     vocab_count: int
+    # True when this mission shares a goal with the current user's selected
+    # goals (see services.missions.user_goal_weights) — a soft "recommended
+    # for you" badge, separate from the goal-based re-sort GET /missions applies.
+    recommended: bool = False
+    # 'core' (the CEFR spine) or 'bonus' (goal-specific optional content,
+    # surfaced only via GET /missions/bonus).
+    mission_type: str = "core"
 
 
 class MissionResponse(BaseModel):
@@ -52,9 +62,13 @@ class MissionResponse(BaseModel):
     order_index: int
     title: str
     description: Optional[str]
+    level: Optional[str] = None
     enrichment_status: str
     # The LLM-generated 7-stage speaking role-play. None until enrichment runs.
     speaking: Optional[dict] = None
+    # The LLM-generated Context Preview (situation + key phrases), shown before
+    # Listening. None until enrichment runs.
+    context_preview: Optional[dict] = None
     vocab: list[MissionVocabResponse]
     grammar: list[GrammarPatternResponse] = []
     # The current user's progress: None if never started, else "available" or
@@ -85,6 +99,15 @@ class SpeakingTurnRequest(BaseModel):
     # available — a rough, free proxy for pronunciation clarity (no phonetic
     # scoring exists in the stack). None on browsers that don't report it.
     confidence: Optional[float] = None
+    # Optional talking points (English) the client wants tracked across the
+    # conversation — echoed back per-turn as objectives_met (see
+    # SpeakingTurnResponse) so the UI can check them off as they're hit.
+    objectives: list[str] = []
+    # How many times the learner re-recorded/retyped this turn before
+    # submitting it, and whether it came from a mic recording at all —
+    # both purely for the dashboard's Speaking metrics, no grading effect.
+    retry_count: int = 0
+    recorded: bool = False
 
 
 class SpeakingScene(BaseModel):
@@ -106,6 +129,9 @@ class SpeakingTurnResponse(BaseModel):
     npc_reply_en: str         # English translation of npc_reply
     correction: str           # gentle post-hoc fix, "" when none needed
     done: bool                # has the scene's goal been fully completed?
+    # Present only when the request included `objectives` — parallel booleans,
+    # one per requested objective, true once satisfied at any point so far.
+    objectives_met: list[bool] = []
 
 
 class MissionEnrichStatus(BaseModel):

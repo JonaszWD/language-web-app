@@ -11,8 +11,10 @@ from app.models.user import User
 from app.models.user_card import UserCard
 from app.models.word import Word
 from app.schemas.vocab import (
+    CardStats,
     SavedWordResponse,
     SaveWordRequest,
+    TranslateResponse,
     VocabAnswerRequest,
     VocabAnswerResponse,
     VocabCardResponse,
@@ -106,6 +108,50 @@ def save_word(
     )
 
 
+@router.get("/translate", response_model=TranslateResponse)
+def translate_word(
+    word: str = Query(min_length=1, max_length=100),
+    context: str | None = Query(
+        default=None, max_length=1000,
+        description="The full sentence this word/phrase was taken from. Sent "
+        "to DeepL as context to disambiguate the translation — DeepL reads it "
+        "but only ever translates and returns `word`.",
+    ),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Read-only Spanish->English lookup for a single word or phrase — unlike
+    /vocab/save, this never adds a UserCard to the caller's deck. Used to
+    gloss words/phrases on hover (e.g. unknown ones in an AI reply) without
+    touching the study deck.
+
+    Reuses the same shared Word cache as /vocab/save (translate once, keyed by
+    lowercased spelling, reused by every future caller) so repeat lookups of a
+    popular word never re-hit DeepL — including the ``context``-aware first
+    translation, since context only sharpens which sense gets returned, not
+    which cache row it lands in.
+    """
+    spanish = word.strip().lower()
+    if not spanish:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No word provided.")
+
+    existing = db.query(Word).filter(func.lower(Word.spanish) == spanish).first()
+    if existing:
+        return TranslateResponse(spanish=existing.spanish, english=existing.english)
+
+    try:
+        english = translate_es_en(spanish, context=context)
+    except TranslationError as exc:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc)) from exc
+
+    word_row = Word(
+        spanish=spanish, english=english, category="Saved", cefr_level="?",
+    )
+    db.add(word_row)
+    db.commit()
+    return TranslateResponse(spanish=spanish, english=english)
+
+
 @router.get("/cards", response_model=list[VocabListItem])
 def list_vocab_cards(
     db: Session = Depends(get_db),
@@ -163,7 +209,7 @@ def vocab_card_detail(
         cefr_level=word.cefr_level,
         level=card.level,
         tips=_tips(word),
-        stats=vocab_service.card_stats(card),
+        stats=CardStats(**vocab_service.card_stats(card)),
     )
 
 

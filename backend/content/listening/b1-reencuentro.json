@@ -1,0 +1,1425 @@
+{
+  "id": "b1-reencuentro",
+  "scenario_tag": null,
+  "cefr_level": "B1",
+  "title": "Un reencuentro en Madrid",
+  "long_form": true,
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Marta",
+      "text_es": "¡No puede ser! ¿Diego? ¿Eres tú?",
+      "text_en": "No way! Diego? Is that you?"
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Diego",
+      "text_es": "¡Marta! Qué sorpresa tan grande. No te veía desde hace años.",
+      "text_en": "Marta! What a huge surprise. I hadn't seen you in years."
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Marta",
+      "text_es": "Es verdad. Creo que la última vez fue en la boda de tu primo.",
+      "text_en": "It's true. I think the last time was at your cousin's wedding."
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Diego",
+      "text_es": "Sí, exacto. Eso fue hace casi cinco años.",
+      "text_en": "Yes, exactly. That was almost five years ago."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Marta",
+      "text_es": "No me lo puedo creer. ¿Qué haces en Madrid? Pensaba que vivías en Argentina.",
+      "text_en": "I can't believe it. What are you doing in Madrid? I thought you lived in Argentina."
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Diego",
+      "text_es": "Vivo allí, sí, pero estoy aquí de visita. Vine a ver a mi familia.",
+      "text_en": "I do live there, yes, but I'm here visiting. I came to see my family."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Marta",
+      "text_es": "¿Cuánto tiempo llevas viviendo en Buenos Aires?",
+      "text_en": "How long have you been living in Buenos Aires?"
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Diego",
+      "text_es": "Ya hace tres años que me mudé. Me ofrecieron un trabajo increíble y no pude decir que no.",
+      "text_en": "It's been three years since I moved. They offered me an incredible job and I couldn't say no."
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Marta",
+      "text_es": "¿En qué trabajas exactamente?",
+      "text_en": "What exactly do you work in?"
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Diego",
+      "text_es": "Soy ingeniero de software. Trabajo para una empresa que hace aplicaciones para bancos.",
+      "text_en": "I'm a software engineer. I work for a company that makes apps for banks."
+    },
+    {
+      "sentence_id": 10,
+      "speaker": "Marta",
+      "text_es": "Vaya, suena interesante. ¿Y te gusta vivir allí?",
+      "text_en": "Wow, that sounds interesting. And do you like living there?"
+    },
+    {
+      "sentence_id": 11,
+      "speaker": "Diego",
+      "text_es": "Me encanta. Buenos Aires es una ciudad enorme, con mucha vida por la noche.",
+      "text_en": "I love it. Buenos Aires is a huge city, with a lot of nightlife."
+    },
+    {
+      "sentence_id": 12,
+      "speaker": "Diego",
+      "text_es": "Al principio fue difícil, porque no conocía a nadie.",
+      "text_en": "At first it was hard, because I didn't know anyone."
+    },
+    {
+      "sentence_id": 13,
+      "speaker": "Marta",
+      "text_es": "Me imagino. Empezar de cero en otro país debe de ser complicado.",
+      "text_en": "I can imagine. Starting from scratch in another country must be complicated."
+    },
+    {
+      "sentence_id": 14,
+      "speaker": "Diego",
+      "text_es": "Lo fue, pero poco a poco hice amigos en el trabajo. Ahora ya se siente como mi casa.",
+      "text_en": "It was, but little by little I made friends at work. Now it already feels like home."
+    },
+    {
+      "sentence_id": 15,
+      "speaker": "Marta",
+      "text_es": "¿Y la comida? He escuchado que la carne argentina es excelente.",
+      "text_en": "And the food? I've heard Argentine meat is excellent."
+    },
+    {
+      "sentence_id": 16,
+      "speaker": "Diego",
+      "text_es": "Es verdad, es buenísima. Como asado casi todos los domingos con mis compañeros.",
+      "text_en": "It's true, it's really good. I eat asado almost every Sunday with my colleagues."
+    },
+    {
+      "sentence_id": 17,
+      "speaker": "Diego",
+      "text_es": "Pero echo de menos la comida española, sobre todo la tortilla de mi madre.",
+      "text_en": "But I miss Spanish food, especially my mother's tortilla."
+    },
+    {
+      "sentence_id": 18,
+      "speaker": "Marta",
+      "text_es": "Ja, eso lo entiendo perfectamente. No hay tortilla como la de las madres.",
+      "text_en": "Ha, I understand that perfectly. There's no tortilla like a mother's tortilla."
+    },
+    {
+      "sentence_id": 19,
+      "speaker": "Diego",
+      "text_es": "Bueno, cuéntame de ti. ¿Sigues trabajando en el mismo sitio?",
+      "text_en": "Well, tell me about you. Are you still working at the same place?"
+    },
+    {
+      "sentence_id": 20,
+      "speaker": "Marta",
+      "text_es": "No, cambié de trabajo hace dos años. Ahora soy enfermera en el hospital central.",
+      "text_en": "No, I changed jobs two years ago. Now I'm a nurse at the central hospital."
+    },
+    {
+      "sentence_id": 21,
+      "speaker": "Diego",
+      "text_es": "¡Enfermera! No lo sabía. ¿Qué te hizo cambiar de carrera?",
+      "text_en": "A nurse! I didn't know. What made you change careers?"
+    },
+    {
+      "sentence_id": 22,
+      "speaker": "Marta",
+      "text_es": "Trabajaba en una oficina y no me sentía feliz. Quería hacer algo que ayudara a la gente de verdad.",
+      "text_en": "I was working in an office and I wasn't feeling happy. I wanted to do something that really helped people."
+    },
+    {
+      "sentence_id": 23,
+      "speaker": "Marta",
+      "text_es": "Estudié de noche durante tres años mientras seguía trabajando.",
+      "text_en": "I studied at night for three years while I kept working."
+    },
+    {
+      "sentence_id": 24,
+      "speaker": "Diego",
+      "text_es": "Eso es admirable. Debió de ser agotador.",
+      "text_en": "That's admirable. It must have been exhausting."
+    },
+    {
+      "sentence_id": 25,
+      "speaker": "Marta",
+      "text_es": "Lo fue, pero mereció la pena. Ahora amo mi trabajo, aunque los turnos de noche son duros.",
+      "text_en": "It was, but it was worth it. Now I love my job, even though the night shifts are hard."
+    },
+    {
+      "sentence_id": 26,
+      "speaker": "Diego",
+      "text_es": "Me alegro mucho por ti, en serio.",
+      "text_en": "I'm really happy for you, seriously."
+    },
+    {
+      "sentence_id": 27,
+      "speaker": "Marta",
+      "text_es": "Gracias. Oye, ¿te acuerdas de que siempre hablábamos de viajar juntos algún día?",
+      "text_en": "Thanks. Hey, do you remember we always talked about traveling together someday?"
+    },
+    {
+      "sentence_id": 28,
+      "speaker": "Diego",
+      "text_es": "Claro que me acuerdo. ¿Al final viajaste a algún lugar interesante?",
+      "text_en": "Of course I remember. Did you end up traveling somewhere interesting?"
+    },
+    {
+      "sentence_id": 29,
+      "speaker": "Marta",
+      "text_es": "Sí, el año pasado fui a Perú con dos amigas. Fue el viaje más increíble de mi vida.",
+      "text_en": "Yes, last year I went to Peru with two friends. It was the most incredible trip of my life."
+    },
+    {
+      "sentence_id": 30,
+      "speaker": "Diego",
+      "text_es": "¡Perú! Siempre quise ir. ¿Subisteis a Machu Picchu?",
+      "text_en": "Peru! I always wanted to go. Did you go up to Machu Picchu?"
+    },
+    {
+      "sentence_id": 31,
+      "speaker": "Marta",
+      "text_es": "Sí, caminamos cuatro días por el Camino Inca para llegar allí.",
+      "text_en": "Yes, we walked four days along the Inca Trail to get there."
+    },
+    {
+      "sentence_id": 32,
+      "speaker": "Marta",
+      "text_es": "Fue muy duro físicamente, pero cuando vimos las ruinas al amanecer, se me olvidó todo el cansancio.",
+      "text_en": "It was very hard physically, but when we saw the ruins at dawn, I forgot all the tiredness."
+    },
+    {
+      "sentence_id": 33,
+      "speaker": "Diego",
+      "text_es": "Qué envidia. ¿Hacía mucho frío por la noche en las montañas?",
+      "text_en": "I'm so envious. Was it very cold at night in the mountains?"
+    },
+    {
+      "sentence_id": 34,
+      "speaker": "Marta",
+      "text_es": "Muchísimo. Dormíamos con dos sacos de dormir y aun así temblábamos.",
+      "text_en": "A lot. We slept with two sleeping bags and we still shivered."
+    },
+    {
+      "sentence_id": 35,
+      "speaker": "Diego",
+      "text_es": "Suena a una aventura de verdad. Me encantaría hacer algo así.",
+      "text_en": "It sounds like a real adventure. I'd love to do something like that."
+    },
+    {
+      "sentence_id": 36,
+      "speaker": "Marta",
+      "text_es": "Deberías. Te lo recomiendo totalmente, aunque hay que prepararse bien antes.",
+      "text_en": "You should. I totally recommend it, though you have to prepare well beforehand."
+    },
+    {
+      "sentence_id": 37,
+      "speaker": "Diego",
+      "text_es": "Lo tendré en cuenta. Oye, cambiando de tema, tengo que contarte algo.",
+      "text_en": "I'll keep that in mind. Hey, changing the subject, I have to tell you something."
+    },
+    {
+      "sentence_id": 38,
+      "speaker": "Marta",
+      "text_es": "¿Qué pasa? Pareces nervioso.",
+      "text_en": "What's up? You seem nervous."
+    },
+    {
+      "sentence_id": 39,
+      "speaker": "Diego",
+      "text_es": "Estoy saliendo con alguien en Buenos Aires. Se llama Valentina.",
+      "text_en": "I'm seeing someone in Buenos Aires. Her name is Valentina."
+    },
+    {
+      "sentence_id": 40,
+      "speaker": "Marta",
+      "text_es": "¡Qué buena noticia! ¿Desde cuándo estáis juntos?",
+      "text_en": "That's great news! Since when have you been together?"
+    },
+    {
+      "sentence_id": 41,
+      "speaker": "Diego",
+      "text_es": "Desde hace ocho meses. Es argentina, trabaja como diseñadora gráfica.",
+      "text_en": "For eight months. She's Argentine, she works as a graphic designer."
+    },
+    {
+      "sentence_id": 42,
+      "speaker": "Marta",
+      "text_es": "¿Y va en serio la cosa?",
+      "text_en": "And is it getting serious?"
+    },
+    {
+      "sentence_id": 43,
+      "speaker": "Diego",
+      "text_es": "Creo que sí. De hecho, quiero traerla a España el año que viene para que conozca a mi familia.",
+      "text_en": "I think so. In fact, I want to bring her to Spain next year so she can meet my family."
+    },
+    {
+      "sentence_id": 44,
+      "speaker": "Marta",
+      "text_es": "Eso es un paso grande. Me alegro muchísimo por ti, Diego.",
+      "text_en": "That's a big step. I'm so happy for you, Diego."
+    },
+    {
+      "sentence_id": 45,
+      "speaker": "Diego",
+      "text_es": "Gracias. Bueno, cuéntame, ¿qué es de la vida de los demás? ¿Sigues en contacto con Pablo y Ana?",
+      "text_en": "Thanks. Well, tell me, what's up with everyone else's life? Are you still in touch with Pablo and Ana?"
+    },
+    {
+      "sentence_id": 46,
+      "speaker": "Marta",
+      "text_es": "Sí, los veo bastante. ¿Sabes que Pablo se casó el verano pasado?",
+      "text_en": "Yes, I see them quite a bit. Did you know Pablo got married last summer?"
+    },
+    {
+      "sentence_id": 47,
+      "speaker": "Diego",
+      "text_es": "¡No lo sabía! ¿Con quién se casó?",
+      "text_en": "I didn't know! Who did he marry?"
+    },
+    {
+      "sentence_id": 48,
+      "speaker": "Marta",
+      "text_es": "Con una chica que conoció en el gimnasio, se llama Rocío. Es muy simpática.",
+      "text_en": "A girl he met at the gym, her name is Rocío. She's very nice."
+    },
+    {
+      "sentence_id": 49,
+      "speaker": "Diego",
+      "text_es": "Vaya, no me lo esperaba. Pablo siempre decía que nunca se casaría.",
+      "text_en": "Wow, I wasn't expecting that. Pablo always said he'd never get married."
+    },
+    {
+      "sentence_id": 50,
+      "speaker": "Marta",
+      "text_es": "Ya ves, la vida te sorprende. Y Ana tuvo un bebé hace cuatro meses.",
+      "text_en": "You see, life surprises you. And Ana had a baby four months ago."
+    },
+    {
+      "sentence_id": 51,
+      "speaker": "Diego",
+      "text_es": "¡Un bebé! Qué rápido pasa el tiempo. ¿Niño o niña?",
+      "text_en": "A baby! How fast time goes by. Boy or girl?"
+    },
+    {
+      "sentence_id": 52,
+      "speaker": "Marta",
+      "text_es": "Una niña, se llama Sofía. Es preciosa, tiene los ojos de Ana.",
+      "text_en": "A girl, her name is Sofía. She's beautiful, she has Ana's eyes."
+    },
+    {
+      "sentence_id": 53,
+      "speaker": "Diego",
+      "text_es": "Qué bonito. Me encantaría verlos a todos otra vez.",
+      "text_en": "How lovely. I'd love to see everyone again."
+    },
+    {
+      "sentence_id": 54,
+      "speaker": "Marta",
+      "text_es": "Deberíamos organizar una cena antes de que te vuelvas a Argentina.",
+      "text_en": "We should organize a dinner before you go back to Argentina."
+    },
+    {
+      "sentence_id": 55,
+      "speaker": "Diego",
+      "text_es": "Me parece una idea perfecta. ¿Cuándo tienes tiempo libre?",
+      "text_en": "That sounds like a perfect idea. When do you have free time?"
+    },
+    {
+      "sentence_id": 56,
+      "speaker": "Marta",
+      "text_es": "Este fin de semana estoy libre. ¿Sigues aquí el sábado?",
+      "text_en": "This weekend I'm free. Are you still here on Saturday?"
+    },
+    {
+      "sentence_id": 57,
+      "speaker": "Diego",
+      "text_es": "Sí, me quedo hasta el lunes. El sábado por la noche estaría genial.",
+      "text_en": "Yes, I'm staying until Monday. Saturday night would be great."
+    },
+    {
+      "sentence_id": 58,
+      "speaker": "Marta",
+      "text_es": "Perfecto, yo aviso a Pablo y a Ana. ¿Te acuerdas de aquel restaurante donde celebrábamos los cumpleaños?",
+      "text_en": "Perfect, I'll let Pablo and Ana know. Do you remember that restaurant where we used to celebrate birthdays?"
+    },
+    {
+      "sentence_id": 59,
+      "speaker": "Diego",
+      "text_es": "¿El que estaba cerca de la universidad? Creo que sí lo recuerdo.",
+      "text_en": "The one that was near the university? I think I remember it."
+    },
+    {
+      "sentence_id": 60,
+      "speaker": "Marta",
+      "text_es": "Ese mismo. Todavía existe, aunque cambiaron un poco el menú.",
+      "text_en": "That very one. It still exists, though they changed the menu a bit."
+    },
+    {
+      "sentence_id": 61,
+      "speaker": "Diego",
+      "text_es": "Qué recuerdos. Pasábamos horas allí hablando de tonterías.",
+      "text_en": "What memories. We used to spend hours there talking about nonsense."
+    },
+    {
+      "sentence_id": 62,
+      "speaker": "Marta",
+      "text_es": "Y también estudiando para los exámenes, aunque siempre acabábamos distraídos.",
+      "text_en": "And also studying for exams, although we always ended up distracted."
+    },
+    {
+      "sentence_id": 63,
+      "speaker": "Diego",
+      "text_es": "Me acuerdo de aquel viaje que hicimos todos juntos a la playa después de los exámenes finales.",
+      "text_en": "I remember that trip we all took together to the beach after the final exams."
+    },
+    {
+      "sentence_id": 64,
+      "speaker": "Marta",
+      "text_es": "¡Ese viaje fue un desastre! Se nos rompió el coche a mitad de camino.",
+      "text_en": "That trip was a disaster! Our car broke down halfway there."
+    },
+    {
+      "sentence_id": 65,
+      "speaker": "Diego",
+      "text_es": "Tuvimos que esperar tres horas a que llegara la grúa. Pero al final nos reímos mucho.",
+      "text_en": "We had to wait three hours for the tow truck to arrive. But in the end we laughed a lot."
+    },
+    {
+      "sentence_id": 66,
+      "speaker": "Marta",
+      "text_es": "Fueron los mejores años de mi vida, la verdad. Todo era más sencillo entonces.",
+      "text_en": "They were the best years of my life, honestly. Everything was simpler back then."
+    },
+    {
+      "sentence_id": 67,
+      "speaker": "Diego",
+      "text_es": "Totalmente de acuerdo. Ahora todo es trabajo y responsabilidades.",
+      "text_en": "Totally agree. Now everything is work and responsibilities."
+    },
+    {
+      "sentence_id": 68,
+      "speaker": "Marta",
+      "text_es": "Bueno, cambiando de tema otra vez, ¿tienes planes de volver a España algún día?",
+      "text_en": "Well, changing the subject again, do you have plans to move back to Spain someday?"
+    },
+    {
+      "sentence_id": 69,
+      "speaker": "Diego",
+      "text_es": "La verdad es que sí. Me han ofrecido un puesto en la oficina de Madrid de mi empresa.",
+      "text_en": "Actually, yes. They've offered me a position at my company's Madrid office."
+    },
+    {
+      "sentence_id": 70,
+      "speaker": "Marta",
+      "text_es": "¿En serio? ¡Eso sería fantástico!",
+      "text_en": "Really? That would be fantastic!"
+    },
+    {
+      "sentence_id": 71,
+      "speaker": "Diego",
+      "text_es": "Todavía lo estoy pensando. Me gusta mi vida en Argentina, pero echo mucho de menos a mi familia.",
+      "text_en": "I'm still thinking about it. I like my life in Argentina, but I really miss my family."
+    },
+    {
+      "sentence_id": 72,
+      "speaker": "Marta",
+      "text_es": "¿Y qué dice Valentina sobre la idea de mudarse aquí?",
+      "text_en": "And what does Valentina say about the idea of moving here?"
+    },
+    {
+      "sentence_id": 73,
+      "speaker": "Diego",
+      "text_es": "Le encanta la idea. Nunca ha estado en Europa y tiene muchas ganas de conocer España.",
+      "text_en": "She loves the idea. She's never been to Europe and is really eager to see Spain."
+    },
+    {
+      "sentence_id": 74,
+      "speaker": "Marta",
+      "text_es": "Bueno, si decides venir, tendrías trabajo asegurado y amigos que te esperan aquí.",
+      "text_en": "Well, if you decide to come, you'd have a guaranteed job and friends waiting for you here."
+    },
+    {
+      "sentence_id": 75,
+      "speaker": "Diego",
+      "text_es": "Lo sé, y eso pesa mucho en mi decisión. Creo que para el próximo verano ya tendré la respuesta.",
+      "text_en": "I know, and that weighs heavily in my decision. I think by next summer I'll already have the answer."
+    },
+    {
+      "sentence_id": 76,
+      "speaker": "Marta",
+      "text_es": "Bueno, mientras decides, tengo que contarte algo importante también.",
+      "text_en": "Well, while you decide, I have to tell you something important too."
+    },
+    {
+      "sentence_id": 77,
+      "speaker": "Diego",
+      "text_es": "Dime, ¿qué pasa?",
+      "text_en": "Tell me, what's up?"
+    },
+    {
+      "sentence_id": 78,
+      "speaker": "Marta",
+      "text_es": "Mi hermana pequeña se casa en octubre. Me encantaría que vinieras a la boda si sigues en España.",
+      "text_en": "My little sister is getting married in October. I'd love for you to come to the wedding if you're still in Spain."
+    },
+    {
+      "sentence_id": 79,
+      "speaker": "Diego",
+      "text_es": "¿Tu hermana pequeña? No puedo creer que ya sea mayor para casarse.",
+      "text_en": "Your little sister? I can't believe she's old enough to get married."
+    },
+    {
+      "sentence_id": 80,
+      "speaker": "Marta",
+      "text_es": "El tiempo pasa rápido, ya te digo. Se casa con su novio de toda la vida, Javier.",
+      "text_en": "Time passes quickly, I'm telling you. She's marrying her longtime boyfriend, Javier."
+    },
+    {
+      "sentence_id": 81,
+      "speaker": "Diego",
+      "text_es": "Me acuerdo de Javier, era un chico muy tranquilo. Claro que iré si puedo.",
+      "text_en": "I remember Javier, he was a very calm guy. Of course I'll go if I can."
+    },
+    {
+      "sentence_id": 82,
+      "speaker": "Marta",
+      "text_es": "Sería un regalo enorme para toda la familia verte allí.",
+      "text_en": "It would be a huge gift for the whole family to see you there."
+    },
+    {
+      "sentence_id": 83,
+      "speaker": "Diego",
+      "text_es": "Voy a intentar organizarme para poder venir en octubre, aunque sea unos días.",
+      "text_en": "I'm going to try to organize myself to come in October, even if just for a few days."
+    },
+    {
+      "sentence_id": 84,
+      "speaker": "Marta",
+      "text_es": "Con eso me conformo. Bueno, ¿pedimos algo de comer? Tengo bastante hambre.",
+      "text_en": "That's enough for me. Well, shall we order something to eat? I'm quite hungry."
+    },
+    {
+      "sentence_id": 85,
+      "speaker": "Diego",
+      "text_es": "Buena idea, yo también. ¿Qué recomiendas de este sitio?",
+      "text_en": "Good idea, me too. What do you recommend from this place?"
+    },
+    {
+      "sentence_id": 86,
+      "speaker": "Marta",
+      "text_es": "Las tostas de jamón están riquísimas, y también hacen una tortilla de patatas muy buena.",
+      "text_en": "The ham toasts are delicious, and they also make a really good potato omelet."
+    },
+    {
+      "sentence_id": 87,
+      "speaker": "Diego",
+      "text_es": "Perfecto, hace meses que no como una buena tortilla española.",
+      "text_en": "Perfect, I haven't had a good Spanish omelet in months."
+    },
+    {
+      "sentence_id": 88,
+      "speaker": "Marta",
+      "text_es": "Pues hoy es tu día de suerte. ¡Camarero, por favor!",
+      "text_en": "Well then, today is your lucky day. Waiter, please!"
+    },
+    {
+      "sentence_id": 89,
+      "speaker": "Diego",
+      "text_es": "Mientras esperamos, cuéntame más de tu trabajo en el hospital. Debe de ser muy exigente.",
+      "text_en": "While we wait, tell me more about your work at the hospital. It must be very demanding."
+    },
+    {
+      "sentence_id": 90,
+      "speaker": "Marta",
+      "text_es": "Lo es, pero también es muy gratificante. Ayer, por ejemplo, ayudé a una mujer a dar a luz.",
+      "text_en": "It is, but it's also very rewarding. Yesterday, for example, I helped a woman give birth."
+    },
+    {
+      "sentence_id": 91,
+      "speaker": "Diego",
+      "text_es": "Qué emocionante debe de ser eso.",
+      "text_en": "That must be so exciting."
+    },
+    {
+      "sentence_id": 92,
+      "speaker": "Marta",
+      "text_es": "Lo es, aunque también hay días muy tristes. No todo puede ser bonito en un hospital.",
+      "text_en": "It is, though there are also very sad days too. Not everything can be nice in a hospital."
+    },
+    {
+      "sentence_id": 93,
+      "speaker": "Diego",
+      "text_es": "Me imagino que necesitas mucha fuerza mental para ese trabajo.",
+      "text_en": "I imagine you need a lot of mental strength for that job."
+    },
+    {
+      "sentence_id": 94,
+      "speaker": "Marta",
+      "text_es": "Sí, al principio me costó mucho, pero con el tiempo aprendí a manejarlo mejor.",
+      "text_en": "Yes, at first it was very hard for me, but over time I learned to handle it better."
+    },
+    {
+      "sentence_id": 95,
+      "speaker": "Diego",
+      "text_es": "Te admiro de verdad. No sé si yo podría hacer ese trabajo.",
+      "text_en": "I really admire you. I don't know if I could do that job."
+    },
+    {
+      "sentence_id": 96,
+      "speaker": "Marta",
+      "text_es": "Cada uno vale para cosas distintas. Tú siempre fuiste bueno con los números y la lógica.",
+      "text_en": "Each person is good at different things. You were always good with numbers and logic."
+    },
+    {
+      "sentence_id": 97,
+      "speaker": "Diego",
+      "text_es": "Es verdad, en el colegio siempre me encantaban las matemáticas.",
+      "text_en": "It's true, in school I always loved math."
+    },
+    {
+      "sentence_id": 98,
+      "speaker": "Marta",
+      "text_es": "Y mira, ahora usas eso para programar aplicaciones. Todo tiene sentido al final.",
+      "text_en": "And look, now you use that to program applications. Everything makes sense in the end."
+    },
+    {
+      "sentence_id": 99,
+      "speaker": "Diego",
+      "text_es": "Ah, mira, aquí llega la comida. Qué buena pinta tiene todo.",
+      "text_en": "Ah, look, here comes the food. Everything looks so good."
+    },
+    {
+      "sentence_id": 100,
+      "speaker": "Marta",
+      "text_es": "Prueba la tortilla primero, quiero saber si está a la altura de la de tu madre.",
+      "text_en": "Try the omelet first, I want to know if it's up to your mother's standard."
+    },
+    {
+      "sentence_id": 101,
+      "speaker": "Diego",
+      "text_es": "Está deliciosa, aunque nada supera la de mi madre, lo siento.",
+      "text_en": "It's delicious, though nothing beats my mother's, sorry."
+    },
+    {
+      "sentence_id": 102,
+      "speaker": "Marta",
+      "text_es": "Ja, me lo esperaba. Bueno, dime, ¿cuáles son tus planes para el resto del viaje?",
+      "text_en": "Ha, I expected that. Well, tell me, what are your plans for the rest of the trip?"
+    },
+    {
+      "sentence_id": 103,
+      "speaker": "Diego",
+      "text_es": "Mañana voy a visitar a mis abuelos en el pueblo, y el domingo vuelvo a Madrid.",
+      "text_en": "Tomorrow I'm going to visit my grandparents in the village, and on Sunday I come back to Madrid."
+    },
+    {
+      "sentence_id": 104,
+      "speaker": "Marta",
+      "text_es": "¿Cómo están tus abuelos? Deben de estar felices de verte.",
+      "text_en": "How are your grandparents? They must be happy to see you."
+    },
+    {
+      "sentence_id": 105,
+      "speaker": "Diego",
+      "text_es": "Están muy bien para su edad. Mi abuela siempre me pregunta cuándo voy a sentar la cabeza.",
+      "text_en": "They're doing very well for their age. My grandmother always asks me when I'm going to settle down."
+    },
+    {
+      "sentence_id": 106,
+      "speaker": "Marta",
+      "text_es": "Las abuelas siempre preguntan lo mismo. La mía me pregunta lo mismo cada domingo.",
+      "text_en": "Grandmothers always ask the same thing. Mine asks me the same thing every Sunday."
+    },
+    {
+      "sentence_id": 107,
+      "speaker": "Diego",
+      "text_es": "¿Y tú qué le respondes?",
+      "text_en": "And what do you tell her?"
+    },
+    {
+      "sentence_id": 108,
+      "speaker": "Marta",
+      "text_es": "Le digo que estoy centrada en mi carrera por ahora, pero que ya llegará el momento.",
+      "text_en": "I tell her I'm focused on my career for now, but that the moment will come."
+    },
+    {
+      "sentence_id": 109,
+      "speaker": "Diego",
+      "text_es": "Sabia respuesta. No hay que tener prisa con esas cosas.",
+      "text_en": "Wise answer. There's no need to rush with those things."
+    },
+    {
+      "sentence_id": 110,
+      "speaker": "Marta",
+      "text_es": "Exacto. Cada persona tiene su propio ritmo en la vida.",
+      "text_en": "Exactly. Each person has their own pace in life."
+    },
+    {
+      "sentence_id": 111,
+      "speaker": "Diego",
+      "text_es": "Oye, esta conversación me está haciendo darme cuenta de cuánto te echaba de menos como amiga.",
+      "text_en": "Hey, this conversation is making me realize how much I missed you as a friend."
+    },
+    {
+      "sentence_id": 112,
+      "speaker": "Marta",
+      "text_es": "Yo también te echaba de menos, Diego. No es lo mismo hablar por mensajes que en persona.",
+      "text_en": "I missed you too, Diego. It's not the same talking through messages as in person."
+    },
+    {
+      "sentence_id": 113,
+      "speaker": "Diego",
+      "text_es": "Tienes toda la razón. Deberíamos esforzarnos más en mantener el contacto.",
+      "text_en": "You're completely right. We should make more of an effort to stay in touch."
+    },
+    {
+      "sentence_id": 114,
+      "speaker": "Marta",
+      "text_es": "Podríamos hacer videollamadas de vez en cuando, aunque sea los domingos.",
+      "text_en": "We could do video calls from time to time, even if it's just on Sundays."
+    },
+    {
+      "sentence_id": 115,
+      "speaker": "Diego",
+      "text_es": "Me parece una idea excelente. Así no perdemos el contacto otra vez.",
+      "text_en": "I think that's an excellent idea. That way we don't lose touch again."
+    },
+    {
+      "sentence_id": 116,
+      "speaker": "Marta",
+      "text_es": "Perfecto, entonces trato hecho. Dame tu nuevo número antes de que se me olvide.",
+      "text_en": "Perfect, then it's a deal. Give me your new number before I forget."
+    },
+    {
+      "sentence_id": 117,
+      "speaker": "Diego",
+      "text_es": "Claro, apunta. Y tú dame el tuyo también, por si cambió algo.",
+      "text_en": "Sure, write it down. And give me yours too, in case anything changed."
+    },
+    {
+      "sentence_id": 118,
+      "speaker": "Marta",
+      "text_es": "Ya está, ahora sí que no nos perdemos de vista.",
+      "text_en": "Done, now we really won't lose sight of each other."
+    },
+    {
+      "sentence_id": 119,
+      "speaker": "Diego",
+      "text_es": "Me alegro mucho de haberte encontrado hoy aquí, en serio.",
+      "text_en": "I'm really glad I ran into you here today, seriously."
+    },
+    {
+      "sentence_id": 120,
+      "speaker": "Marta",
+      "text_es": "Yo también. Fue una casualidad maravillosa. ¿Quién iba a decir que coincidiríamos en este café?",
+      "text_en": "Me too. It was a wonderful coincidence. Who would have said we'd run into each other at this café?"
+    },
+    {
+      "sentence_id": 121,
+      "speaker": "Diego",
+      "text_es": "El destino, supongo. Bueno, avísame en cuanto hables con Pablo y Ana sobre el sábado.",
+      "text_en": "Fate, I suppose. Well, let me know as soon as you talk to Pablo and Ana about Saturday."
+    },
+    {
+      "sentence_id": 122,
+      "speaker": "Marta",
+      "text_es": "Lo haré esta misma tarde. Estoy segura de que se van a alegrar muchísimo.",
+      "text_en": "I'll do it this very afternoon. I'm sure they'll be really happy."
+    },
+    {
+      "sentence_id": 123,
+      "speaker": "Diego",
+      "text_es": "Va a ser una noche estupenda, como en los viejos tiempos.",
+      "text_en": "It's going to be a great night, like in the old days."
+    },
+    {
+      "sentence_id": 124,
+      "speaker": "Marta",
+      "text_es": "Exactamente. Bueno, tengo que irme ya, empiezo mi turno en el hospital en una hora.",
+      "text_en": "Exactly. Well, I have to go now, I start my shift at the hospital in an hour."
+    },
+    {
+      "sentence_id": 125,
+      "speaker": "Diego",
+      "text_es": "No te preocupes, ve tranquila. Nos vemos el sábado sin falta.",
+      "text_en": "Don't worry, go ahead. We'll see each other Saturday without fail."
+    },
+    {
+      "sentence_id": 126,
+      "speaker": "Marta",
+      "text_es": "Sin falta. Qué alegría tan grande haberte visto hoy, Diego.",
+      "text_en": "Without fail. What a huge joy to have seen you today, Diego."
+    },
+    {
+      "sentence_id": 127,
+      "speaker": "Diego",
+      "text_es": "Igualmente, Marta. Hasta el sábado, cuídate mucho.",
+      "text_en": "Likewise, Marta. See you Saturday, take good care."
+    },
+    {
+      "sentence_id": 128,
+      "speaker": "Marta",
+      "text_es": "Tú también, cuídate. ¡Hasta el sábado!",
+      "text_en": "You too, take care. See you Saturday!"
+    }
+  ],
+  "vocab_reused": [
+    "a",
+    "abuela",
+    "abuelas",
+    "abuelos",
+    "acababamos",
+    "acuerdas",
+    "acuerdo",
+    "admirable",
+    "admiro",
+    "agotador",
+    "ah",
+    "ahora",
+    "aires",
+    "al",
+    "alegrar",
+    "alegria",
+    "alegro",
+    "algo",
+    "alguien",
+    "algun",
+    "alli",
+    "altura",
+    "amanecer",
+    "amiga",
+    "amigas",
+    "amigos",
+    "amo",
+    "ana",
+    "ano",
+    "anos",
+    "antes",
+    "aplicaciones",
+    "aprendi",
+    "apunta",
+    "aquel",
+    "aqui",
+    "argentina",
+    "asado",
+    "asegurado",
+    "asi",
+    "aun",
+    "aunque",
+    "aventura",
+    "avisame",
+    "aviso",
+    "ayer",
+    "ayudara",
+    "ayude",
+    "bancos",
+    "bastante",
+    "bebe",
+    "bien",
+    "boda",
+    "bonito",
+    "buena",
+    "buenisima",
+    "bueno",
+    "buenos",
+    "cabeza",
+    "cada",
+    "cafe",
+    "camarero",
+    "cambiando",
+    "cambiar",
+    "cambiaron",
+    "cambie",
+    "cambio",
+    "caminamos",
+    "camino",
+    "cansancio",
+    "carne",
+    "carrera",
+    "casa",
+    "casaria",
+    "casarse",
+    "casi",
+    "caso",
+    "casualidad",
+    "celebrabamos",
+    "cena",
+    "centrada",
+    "central",
+    "cerca",
+    "cero",
+    "chica",
+    "chico",
+    "cinco",
+    "ciudad",
+    "claro",
+    "coche",
+    "coincidiriamos",
+    "colegio",
+    "comer",
+    "comida",
+    "como",
+    "companeros",
+    "complicado",
+    "con",
+    "conformo",
+    "conocer",
+    "conocia",
+    "conocio",
+    "conozca",
+    "contacto",
+    "contarte",
+    "conversacion",
+    "cosa",
+    "cosas",
+    "costo",
+    "creer",
+    "creo",
+    "cuales",
+    "cuando",
+    "cuanto",
+    "cuatro",
+    "cuenta",
+    "cuentame",
+    "cuidate",
+    "cumpleanos",
+    "dame",
+    "dar",
+    "darme",
+    "de",
+    "debe",
+    "deben",
+    "deberiamos",
+    "deberias",
+    "debio",
+    "decia",
+    "decides",
+    "decir",
+    "decision",
+    "del",
+    "deliciosa",
+    "demas",
+    "desastre",
+    "desde",
+    "despues",
+    "destino",
+    "dia",
+    "dias",
+    "dice",
+    "diego",
+    "dificil",
+    "digo",
+    "dime",
+    "disenadora",
+    "distintas",
+    "distraidos",
+    "domingo",
+    "domingos",
+    "donde",
+    "dormiamos",
+    "dormir",
+    "dos",
+    "durante",
+    "duro",
+    "duros",
+    "echaba",
+    "echo",
+    "edad",
+    "ejemplo",
+    "el",
+    "emocionante",
+    "empezar",
+    "empiezo",
+    "empresa",
+    "en",
+    "encanta",
+    "encantaban",
+    "encantaria",
+    "encontrado",
+    "enfermera",
+    "enorme",
+    "entiendo",
+    "entonces",
+    "envidia",
+    "era",
+    "eres",
+    "es",
+    "esas",
+    "escuchado",
+    "ese",
+    "esforzarnos",
+    "eso",
+    "espana",
+    "espanola",
+    "esperaba",
+    "esperamos",
+    "esperan",
+    "esperar",
+    "esta",
+    "estaba",
+    "estado",
+    "estais",
+    "estan",
+    "estar",
+    "estaria",
+    "este",
+    "estoy",
+    "estudiando",
+    "estudie",
+    "estupenda",
+    "europa",
+    "exactamente",
+    "exacto",
+    "examenes",
+    "excelente",
+    "exigente",
+    "existe",
+    "falta",
+    "familia",
+    "fantastico",
+    "favor",
+    "felices",
+    "feliz",
+    "fin",
+    "final",
+    "finales",
+    "fisicamente",
+    "frio",
+    "fue",
+    "fueron",
+    "fuerza",
+    "fui",
+    "fuiste",
+    "ganas",
+    "genial",
+    "gente",
+    "gimnasio",
+    "gracias",
+    "grafica",
+    "grande",
+    "gratificante",
+    "grua",
+    "gusta",
+    "ha",
+    "haberte",
+    "hablabamos",
+    "hablando",
+    "hablar",
+    "hables",
+    "hace",
+    "hacen",
+    "hacer",
+    "haces",
+    "hacia",
+    "haciendo",
+    "hambre",
+    "han",
+    "hare",
+    "hasta",
+    "hay",
+    "he",
+    "hecho",
+    "hermana",
+    "hice",
+    "hicimos",
+    "hizo",
+    "hora",
+    "horas",
+    "hospital",
+    "hoy",
+    "iba",
+    "idea",
+    "igualmente",
+    "imagino",
+    "importante",
+    "inca",
+    "increible",
+    "ingeniero",
+    "intentar",
+    "interesante",
+    "ir",
+    "ire",
+    "irme",
+    "ja",
+    "jamon",
+    "javier",
+    "juntos",
+    "la",
+    "las",
+    "le",
+    "libre",
+    "llama",
+    "llega",
+    "llegar",
+    "llegara",
+    "llevas",
+    "lo",
+    "logica",
+    "los",
+    "lugar",
+    "lunes",
+    "luz",
+    "machu",
+    "madre",
+    "madres",
+    "madrid",
+    "manana",
+    "manejarlo",
+    "mantener",
+    "maravillosa",
+    "marta",
+    "mas",
+    "matematicas",
+    "mayor",
+    "me",
+    "mejor",
+    "mejores",
+    "menos",
+    "mensajes",
+    "mental",
+    "menu",
+    "merecio",
+    "meses",
+    "mi",
+    "mia",
+    "mientras",
+    "mira",
+    "mis",
+    "misma",
+    "mismo",
+    "mitad",
+    "momento",
+    "montanas",
+    "mucha",
+    "muchas",
+    "muchisimo",
+    "mucho",
+    "mudarse",
+    "mude",
+    "mujer",
+    "muy",
+    "nada",
+    "nadie",
+    "necesitas",
+    "nervioso",
+    "nina",
+    "nino",
+    "no",
+    "noche",
+    "nos",
+    "noticia",
+    "novio",
+    "nuevo",
+    "numero",
+    "numeros",
+    "nunca",
+    "o",
+    "ocho",
+    "octubre",
+    "oficina",
+    "ofrecido",
+    "ofrecieron",
+    "ojos",
+    "olvide",
+    "olvido",
+    "organizar",
+    "organizarme",
+    "otra",
+    "otro",
+    "oye",
+    "pablo",
+    "pais",
+    "para",
+    "parece",
+    "pareces",
+    "pasa",
+    "pasabamos",
+    "pasado",
+    "paso",
+    "patatas",
+    "pedimos",
+    "pena",
+    "pensaba",
+    "pensando",
+    "pequena",
+    "perdemos",
+    "perfecta",
+    "perfectamente",
+    "perfecto",
+    "pero",
+    "persona",
+    "peru",
+    "pesa",
+    "picchu",
+    "pinta",
+    "planes",
+    "playa",
+    "poco",
+    "poder",
+    "podria",
+    "podriamos",
+    "por",
+    "porque",
+    "preciosa",
+    "pregunta",
+    "preguntan",
+    "preocupes",
+    "prepararse",
+    "primero",
+    "primo",
+    "principio",
+    "prisa",
+    "programar",
+    "propio",
+    "proximo",
+    "prueba",
+    "pude",
+    "pueblo",
+    "puede",
+    "puedo",
+    "pues",
+    "puesto",
+    "que",
+    "quedo",
+    "queria",
+    "quien",
+    "quiero",
+    "quise",
+    "rapido",
+    "razon",
+    "recomiendas",
+    "recomiendo",
+    "recuerdo",
+    "recuerdos",
+    "regalo",
+    "reimos",
+    "respondes",
+    "responsabilidades",
+    "respuesta",
+    "restaurante",
+    "resto",
+    "riquisimas",
+    "ritmo",
+    "rocio",
+    "rompio",
+    "ruinas",
+    "sabado",
+    "saber",
+    "sabes",
+    "sabia",
+    "sacos",
+    "saliendo",
+    "se",
+    "sea",
+    "seguia",
+    "segura",
+    "semana",
+    "sencillo",
+    "sentar",
+    "sentia",
+    "sentido",
+    "ser",
+    "seria",
+    "serio",
+    "si",
+    "siempre",
+    "siente",
+    "siento",
+    "sigues",
+    "simpatica",
+    "sin",
+    "sitio",
+    "sobre",
+    "sofia",
+    "software",
+    "son",
+    "sorprende",
+    "sorpresa",
+    "soy",
+    "su",
+    "subisteis",
+    "suena",
+    "suerte",
+    "supera",
+    "supongo",
+    "tambien",
+    "tan",
+    "tarde",
+    "te",
+    "tema",
+    "temblabamos",
+    "tendre",
+    "tendrias",
+    "tener",
+    "tengo",
+    "ti",
+    "tiempo",
+    "tiempos",
+    "tiene",
+    "tienes",
+    "toda",
+    "todavia",
+    "todo",
+    "todos",
+    "tonterias",
+    "tortilla",
+    "tostas",
+    "totalmente",
+    "trabaja",
+    "trabajaba",
+    "trabajando",
+    "trabajas",
+    "trabajo",
+    "traerla",
+    "tranquila",
+    "tranquilo",
+    "trato",
+    "tres",
+    "tristes",
+    "tu",
+    "turno",
+    "turnos",
+    "tus",
+    "tuvimos",
+    "tuvo",
+    "tuyo",
+    "ultima",
+    "un",
+    "una",
+    "universidad",
+    "uno",
+    "unos",
+    "usas",
+    "va",
+    "vale",
+    "valentina",
+    "van",
+    "vaya",
+    "ve",
+    "veia",
+    "vemos",
+    "venir",
+    "veo",
+    "ver",
+    "verano",
+    "verdad",
+    "verlos",
+    "verte",
+    "ves",
+    "vez",
+    "viajar",
+    "viajaste",
+    "viaje",
+    "vida",
+    "videollamadas",
+    "viejos",
+    "viene",
+    "vimos",
+    "vine",
+    "vinieras",
+    "visita",
+    "visitar",
+    "vista",
+    "visto",
+    "vivias",
+    "viviendo",
+    "vivir",
+    "vivo",
+    "volver",
+    "voy",
+    "vuelvas",
+    "vuelvo",
+    "y",
+    "ya",
+    "yo"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 128,
+      "type": "comprehension",
+      "prompt": "Why is Diego visiting Madrid?",
+      "options": [
+        "To see his family",
+        "To start a new job",
+        "To attend a wedding"
+      ],
+      "correct_answer": "To see his family",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 128,
+      "type": "comprehension",
+      "prompt": "What career change did Marta make two years ago?",
+      "options": [
+        "She became a nurse",
+        "She became a teacher",
+        "She started her own business"
+      ],
+      "correct_answer": "She became a nurse",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 128,
+      "type": "inference",
+      "prompt": "Why is Diego seriously considering moving back to Spain, even though he likes his life in Argentina?",
+      "options": [
+        "He misses his family and has a job offer in Madrid",
+        "He lost his job in Buenos Aires",
+        "Valentina refuses to live in Argentina"
+      ],
+      "correct_answer": "He misses his family and has a job offer in Madrid",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 128,
+      "type": "vocab_in_context",
+      "prompt": "In this conversation, what does \"sentar la cabeza\" mean, as Diego's grandmother uses it?",
+      "options": [
+        "To settle down",
+        "To hit your head",
+        "To sit down and rest"
+      ],
+      "correct_answer": "To settle down",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "sentar la cabeza",
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 128,
+      "type": "delayed_recall",
+      "prompt": "Earlier in the conversation, where did Marta travel last year, and what did she do there?",
+      "options": [
+        "Peru, hiking the Inca Trail to Machu Picchu",
+        "Argentina, visiting Diego",
+        "Mexico, studying Spanish"
+      ],
+      "correct_answer": "Peru, hiking the Inca Trail to Machu Picchu",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    }
+  ]
+}

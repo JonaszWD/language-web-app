@@ -1,0 +1,204 @@
+{
+  "id": "a2-market",
+  "scenario_tag": null,
+  "cefr_level": "A2",
+  "title": "Un día en el mercado",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Ana",
+      "text_es": "Hola, Pablo. Buenos días.",
+      "text_en": "Hello, Pablo. Good morning."
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Pablo",
+      "text_es": "Hola, Ana. Buenos días. ¿Cómo estás?",
+      "text_en": "Hello, Ana. Good morning. How are you?"
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Ana",
+      "text_es": "No muy bien, Pablo. Me duele la cabeza. Y tengo la garganta.",
+      "text_en": "Not very well, Pablo. My head hurts. And I have a sore throat."
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Pablo",
+      "text_es": "Lo siento mucho. ¿Quieres agua o té?",
+      "text_en": "I'm very sorry. Do you want water or tea?"
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Ana",
+      "text_es": "Quiero agua, por favor. Y quiero descansar.",
+      "text_en": "I want water, please. And I want to rest."
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Pablo",
+      "text_es": "Aquí está el agua. ¿Tienes fiebre?",
+      "text_en": "Here is the water. Do you have a fever?"
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Ana",
+      "text_es": "No, no tengo fiebre. Pero me duele el estómago también.",
+      "text_en": "No, I don't have a fever. But my stomach also hurts."
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Pablo",
+      "text_es": "El médico. ¿Tienes la receta?",
+      "text_en": "The doctor. Do you have the prescription?"
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Ana",
+      "text_es": "No, no tengo la receta. No soy de aquí. Soy de...",
+      "text_en": "No, I don't have the prescription. I'm not from here. I'm from..."
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Pablo",
+      "text_es": "Ah. Bien. ¿Quieres un café con leche para llevar?",
+      "text_en": "Ah. Okay. Do you want a coffee with milk to go?"
+    },
+    {
+      "sentence_id": 10,
+      "speaker": "Ana",
+      "text_es": "No, gracias. Solo quiero descansar. Adiós.",
+      "text_en": "No, thank you. I just want to rest. Goodbye."
+    },
+    {
+      "sentence_id": 11,
+      "speaker": "Pablo",
+      "text_es": "Adiós, Ana. Bien.",
+      "text_en": "Goodbye, Ana. Okay."
+    }
+  ],
+  "vocab_reused": [
+    "adios",
+    "agua",
+    "ah",
+    "ana",
+    "aqui",
+    "bien",
+    "buenos",
+    "cabeza",
+    "cafe",
+    "como",
+    "con",
+    "de",
+    "descansar",
+    "dias",
+    "duele",
+    "el",
+    "esta",
+    "estas",
+    "estomago",
+    "favor",
+    "fiebre",
+    "garganta",
+    "gracias",
+    "hola",
+    "la",
+    "leche",
+    "llevar",
+    "lo",
+    "me",
+    "medico",
+    "mucho",
+    "muy",
+    "no",
+    "o",
+    "pablo",
+    "para",
+    "pero",
+    "por",
+    "quieres",
+    "quiero",
+    "receta",
+    "siento",
+    "solo",
+    "soy",
+    "tambien",
+    "te",
+    "tengo",
+    "tienes",
+    "un",
+    "y"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 3,
+      "type": "predict",
+      "prompt": "What will Ana most likely say next?",
+      "options": [
+        "Quiero té, por favor.",
+        "Quiero agua, por favor.",
+        "No quiero nada."
+      ],
+      "correct_answer": "Quiero agua, por favor.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 4,
+      "type": "vocab_in_context",
+      "prompt": "What does 'descansar' mean in this sentence: 'Y quiero descansar'?",
+      "options": [
+        "to eat",
+        "to rest",
+        "to drink"
+      ],
+      "correct_answer": "to rest",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "descansar",
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 6,
+      "type": "comprehension",
+      "prompt": "What are Ana's symptoms?",
+      "options": [
+        "She has a headache and a fever.",
+        "She has a headache, a sore throat, and a stomach ache.",
+        "She has a sore throat and a fever."
+      ],
+      "correct_answer": "She has a headache, a sore throat, and a stomach ache.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 9,
+      "type": "inference",
+      "prompt": "Why does Pablo offer Ana a 'café con leche para llevar'?",
+      "options": [
+        "He thinks she needs energy.",
+        "He wants her to leave quickly.",
+        "He thinks she might want a warm drink to feel better, and 'para llevar' implies she can take it with her to rest."
+      ],
+      "correct_answer": "He thinks she might want a warm drink to feel better, and 'para llevar' implies she can take it with her to rest.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "hard"
+    },
+    {
+      "after_sentence_id": 11,
+      "type": "delayed_recall",
+      "prompt": "At the beginning of the conversation, what was Ana's first symptom?",
+      "options": [
+        "A sore throat.",
+        "A stomach ache.",
+        "A headache."
+      ],
+      "correct_answer": "A headache.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    }
+  ]
+}

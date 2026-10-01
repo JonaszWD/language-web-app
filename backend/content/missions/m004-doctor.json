@@ -3,6 +3,10 @@
   "order_index": 4,
   "title": "At the Doctor",
   "description": "Describe your symptoms, say how long you've felt unwell, understand the doctor's advice and ask for medication. Your first real B1 conversation about health.",
+  "level": "A1",
+  "topics": [
+    "relocation"
+  ],
   "vocab": [
     {
       "spanish": "me duele",
@@ -81,6 +85,30 @@
       "english": "to rest",
       "part_of_speech": "verb",
       "example_sentence": "Debe descansar y beber agua."
+    },
+    {
+      "spanish": "el médico",
+      "english": "the doctor",
+      "part_of_speech": "noun",
+      "example_sentence": "El médico me da una receta."
+    },
+    {
+      "spanish": "el oído",
+      "english": "the ear",
+      "part_of_speech": "noun",
+      "example_sentence": "Me duelen los oídos."
+    },
+    {
+      "spanish": "tomar",
+      "english": "to take (medicine)",
+      "part_of_speech": "verb",
+      "example_sentence": "Tome el medicamento dos veces al día."
+    },
+    {
+      "spanish": "beber",
+      "english": "to drink",
+      "part_of_speech": "verb",
+      "example_sentence": "Debe beber mucha agua."
     }
   ],
   "grammar": [

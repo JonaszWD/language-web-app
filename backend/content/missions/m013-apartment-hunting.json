@@ -1,0 +1,115 @@
+{
+  "id": "m013-apartment-hunting",
+  "order_index": 13,
+  "title": "Buscando un apartamento para alquilar",
+  "description": "Learn to navigate the apartment rental market in Spanish-speaking countries. Master essential vocabulary and phrases for discussing rental properties, lease terms, and housing details. You'll practice negotiating, asking about amenities, and closing a rental agreement.",
+  "level": "A2",
+  "topics": [
+    "relocation"
+  ],
+  "vocab": [
+    {
+      "spanish": "el apartamento",
+      "english": "the apartment",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero alquilar un apartamento cerca de aquí."
+    },
+    {
+      "spanish": "alquilar",
+      "english": "to rent",
+      "part_of_speech": "verb",
+      "example_sentence": "¿Cuánto cuesta alquilar este apartamento?"
+    },
+    {
+      "spanish": "el alquiler",
+      "english": "the rent",
+      "part_of_speech": "noun",
+      "example_sentence": "El alquiler es disponible desde hace tres meses."
+    },
+    {
+      "spanish": "el propietario",
+      "english": "the landlord",
+      "part_of_speech": "noun",
+      "example_sentence": "El propietario confirma la reserva de la casa."
+    },
+    {
+      "spanish": "la habitación",
+      "english": "the bedroom",
+      "part_of_speech": "noun",
+      "example_sentence": "El apartamento tiene dos habitaciones grandes."
+    },
+    {
+      "spanish": "el baño",
+      "english": "the bathroom",
+      "part_of_speech": "noun",
+      "example_sentence": "El baño está cerca de la habitación."
+    },
+    {
+      "spanish": "la cocina",
+      "english": "the kitchen",
+      "part_of_speech": "noun",
+      "example_sentence": "La cocina es blanca y muy grande."
+    },
+    {
+      "spanish": "la sala",
+      "english": "the living room",
+      "part_of_speech": "noun",
+      "example_sentence": "En la sala hay una mesa grande."
+    },
+    {
+      "spanish": "los muebles",
+      "english": "the furniture",
+      "part_of_speech": "noun",
+      "example_sentence": "Los muebles son pequeños y rojos."
+    },
+    {
+      "spanish": "incluido",
+      "english": "included",
+      "part_of_speech": "adjective",
+      "example_sentence": "El agua y la electricidad están incluidos en el alquiler."
+    },
+    {
+      "spanish": "el contrato",
+      "english": "the lease/contract",
+      "part_of_speech": "noun",
+      "example_sentence": "Necesito firmar el contrato para alquilar."
+    },
+    {
+      "spanish": "disponible ahora",
+      "english": "available now",
+      "part_of_speech": "phrase",
+      "example_sentence": "El apartamento está disponible ahora, desde hace una semana."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "¿Cuántas habitaciones/baños tiene? / Tiene + number + habitaciones/baños",
+      "gloss": "How many bedrooms/bathrooms does it have? / It has + number + bedrooms/bathrooms",
+      "example_es": "¿Cuántas habitaciones tiene el apartamento? Tiene dos habitaciones y un baño.",
+      "cloze_template": "¿Cuántas habitaciones ____ el apartamento? ____ dos habitaciones y un baño.",
+      "cloze_answer": "tiene, Tiene"
+    },
+    {
+      "pattern": "El alquiler incluye/no incluye + noun",
+      "gloss": "The rent includes/does not include + noun",
+      "example_es": "El alquiler incluye el agua y la electricidad. No incluye los muebles.",
+      "cloze_template": "El alquiler ____ el agua y la electricidad. No ____ los muebles.",
+      "cloze_answer": "incluye, incluye"
+    },
+    {
+      "pattern": "¿Está disponible desde + time expression? / Sí, está disponible desde + time expression",
+      "gloss": "Is it available since + time expression? / Yes, it's available since + time expression",
+      "example_es": "¿Está disponible desde ahora? Sí, está disponible desde hace una semana.",
+      "cloze_template": "¿Está disponible desde ahora? Sí, ____ disponible desde hace una semana.",
+      "cloze_answer": "está"
+    }
+  ],
+  "speaking_scene": {
+    "role": "el propietario del apartamento",
+    "role_en": "the apartment landlord",
+    "setting": "un apartamento grande en la calle principal",
+    "opening": "¡Hola! Bienvenido. Aquí está el apartamento. ¿Quieres ver las habitaciones y la cocina?",
+    "opening_en": "Hello! Welcome. Here is the apartment. Do you want to see the bedrooms and kitchen?",
+    "goal": "Ask about the number of bedrooms and bathrooms, confirm what utilities are included in the rent, and verify when the apartment is available to move in. Close the deal by confirming you want to alquilar."
+  }
+}

@@ -1,5 +1,7 @@
 from app.models.app_setting import AppSetting
+from app.models.goal import Goal, MissionGoal, UserGoal, VocabularyExampleSentence
 from app.models.grammar_pattern import GrammarPattern, UserGrammarCard
+from app.models.listening_item import ListeningCheckpoint, ListeningItem, UserListeningResult
 from app.models.mission import Mission, MissionVocab, UserMission
 from app.models.podcast import PodcastEpisode, PodcastFeed
 from app.models.skill_stats import UserSkillStats
@@ -22,4 +24,11 @@ __all__ = [
     "GrammarPattern",
     "UserGrammarCard",
     "UserSkillStats",
+    "ListeningItem",
+    "ListeningCheckpoint",
+    "UserListeningResult",
+    "Goal",
+    "MissionGoal",
+    "UserGoal",
+    "VocabularyExampleSentence",
 ]

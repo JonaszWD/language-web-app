@@ -1,0 +1,115 @@
+{
+  "id": "m016-job-interview",
+  "order_index": 16,
+  "title": "Job Interview: Experience and Skills",
+  "description": "Master the language of job interviews in Spanish. Learn to discuss your professional experience, highlight your key skills, and answer common interview questions with confidence. This B1 level mission prepares you to handle real interview scenarios in Spanish-speaking countries.",
+  "level": "B1",
+  "topics": [
+    "work"
+  ],
+  "vocab": [
+    {
+      "spanish": "la experiencia",
+      "english": "experience",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo cinco años de experiencia en marketing."
+    },
+    {
+      "spanish": "la habilidad",
+      "english": "skill",
+      "part_of_speech": "noun",
+      "example_sentence": "Una habilidad importante es comunicar bien."
+    },
+    {
+      "spanish": "trabajar",
+      "english": "to work",
+      "part_of_speech": "verb",
+      "example_sentence": "Trabajo desde hace tres años en una empresa grande."
+    },
+    {
+      "spanish": "el puesto",
+      "english": "position/job",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero el puesto de gerente de ventas."
+    },
+    {
+      "spanish": "la empresa",
+      "english": "company",
+      "part_of_speech": "noun",
+      "example_sentence": "La empresa es muy grande y moderna."
+    },
+    {
+      "spanish": "responsable",
+      "english": "responsible",
+      "part_of_speech": "adjective",
+      "example_sentence": "Soy responsable de mi equipo de trabajo."
+    },
+    {
+      "spanish": "desarrollar",
+      "english": "to develop",
+      "part_of_speech": "verb",
+      "example_sentence": "Desarrollo nuevos proyectos cada año."
+    },
+    {
+      "spanish": "la fortaleza",
+      "english": "strength",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi fortaleza es la organización del trabajo."
+    },
+    {
+      "spanish": "el objetivo",
+      "english": "goal/objective",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi objetivo es crecer en la empresa."
+    },
+    {
+      "spanish": "disponible para",
+      "english": "available to/for",
+      "part_of_speech": "phrase",
+      "example_sentence": "Estoy disponible para empezar la próxima semana."
+    },
+    {
+      "spanish": "el salario",
+      "english": "salary",
+      "part_of_speech": "noun",
+      "example_sentence": "El salario debe ser competitivo."
+    },
+    {
+      "spanish": "ofrecen",
+      "english": "they offer",
+      "part_of_speech": "verb",
+      "example_sentence": "¿Qué beneficios ofrecen ustedes?"
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Tengo + [number] + años de + [noun]",
+      "gloss": "I have [number] years of [experience/work]",
+      "example_es": "Tengo tres años de experiencia en ventas.",
+      "cloze_template": "Tengo dos años de ___ en marketing.",
+      "cloze_answer": "experiencia"
+    },
+    {
+      "pattern": "Soy + [adjective] + de + [noun/activity]",
+      "gloss": "I am [adjective] at/of [noun]",
+      "example_es": "Soy responsable de la organización del equipo.",
+      "cloze_template": "Soy ___ de mi departamento.",
+      "cloze_answer": "responsable"
+    },
+    {
+      "pattern": "Estoy disponible para + [verb/action]",
+      "gloss": "I am available to [do something]",
+      "example_es": "Estoy disponible para empezar mañana.",
+      "cloze_template": "Estoy ___ para trabajar aquí.",
+      "cloze_answer": "disponible"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Gerente de Recursos Humanos",
+    "role_en": "HR Manager",
+    "setting": "Una oficina moderna en Madrid para una entrevista de trabajo",
+    "opening": "Buenos días, mucho gusto. Soy la gerente de Recursos Humanos. Cuéntame sobre tu experiencia profesional y tus habilidades.",
+    "opening_en": "Good morning, nice to meet you. I am the HR manager. Tell me about your professional experience and your skills.",
+    "goal": "Answer the HR manager's questions confidently by discussing your work experience, your key skills, your strengths, and your career goals."
+  }
+}

@@ -3,6 +3,9 @@ export interface User {
   email: string;
   streak_count: number;
   created_at: string;
+  cefr_level: string;
+  skill_priority: string | null;
+  motivation: string | null;
 }
 
 export interface Word {
@@ -42,14 +45,63 @@ export interface SkillSummary {
   accuracy: number;
   avg_score: number | null;
   last_practiced_at: string | null;
+  avg_response_ms: number | null;
+  max_stage_reached: number | null;
+  replays_total: number;
+  transcript_reveals_total: number;
+  last_speed_reached: number | null;
+  retries_total: number;
+  recordings_total: number;
+}
+
+export interface VocabExtra {
+  due_tomorrow: number;
+  new_count: number;
+  learning_count: number;
+  reviewing_count: number;
+  mature_count: number;
+  avg_stability: number | null;
+  lapse_rate: number | null;
+  hardest_words: string[];
+  avg_response_ms: number | null;
+}
+
+export interface GrammarExtra {
+  mastered_count: number;
+  weakest_structure: string | null;
+}
+
+export interface ProgressExtra {
+  retention_rate: number | null;
+  active_days_30: number;
+  xp_by_week: number[];
+  typical_study_hour_utc: number | null;
+  days_since_last_session: number | null;
+  lapses_total: number;
+  relearning_count: number;
+  grammar_reps_by_structure: { structure: string; reps: number }[];
+}
+
+export interface CurrentMission {
+  id: string;
+  title: string;
 }
 
 export interface DashboardStats {
   streak: number;
+  longest_streak: number;
   total_learned: number;
   due_today: number;
   weekly_xp: number;
+  cefr_level: string;
+  missions_completed: number;
+  current_mission: CurrentMission | null;
+  total_study_seconds: number;
+  study_sessions_count: number;
   skills: Record<string, SkillSummary>;
+  vocab_extra: VocabExtra;
+  grammar_extra: GrammarExtra;
+  progress_extra?: ProgressExtra;
 }
 
 export interface StudySession {
@@ -64,6 +116,13 @@ export interface SavedWord {
   spanish: string;
   english: string;
   added: boolean;
+}
+
+// Read-only Spanish->English lookup (GET /vocab/translate) — doesn't touch
+// the caller's deck, used to gloss unknown words on hover.
+export interface TranslateResponse {
+  spanish: string;
+  english: string;
 }
 
 export interface Chunk {
@@ -235,7 +294,9 @@ export interface ApiMissionSummary {
   order_index: number;
   title: string;
   description: string | null;
+  level: string | null;
   vocab_count: number;
+  recommended: boolean;
 }
 
 export type MissionEnrichmentStatus = "pending" | "processing" | "ready";
@@ -258,8 +319,10 @@ export interface ApiMission {
   order_index: number;
   title: string;
   description: string | null;
+  level: string | null;
   enrichment_status: MissionEnrichmentStatus;
   speaking: MissionSpeaking | null;
+  context_preview: ContextPreview | null;
   vocab: MissionVocabItem[];
   grammar: MissionGrammarPattern[];
   // The current user's progress: null if never started, else "available" or
@@ -284,6 +347,24 @@ export interface GrammarReviewResult {
   correct: boolean;
   cloze_answer: string;
   due_date: string;
+}
+
+// One question in the weakness-targeted Review lesson — sourced from the
+// user's actual worst words/patterns, not a fixed daily mix. Vocab-sourced
+// skills carry card_id (grade via studyApi.review); the Grammar skill
+// carries pattern_id + cloze_template (grade via studyApi.reviewGrammar).
+export type WeakReviewSkill = "Translate" | "Listening" | "Grammar" | "Speaking" | "Vocabulary";
+export interface WeakReviewItem {
+  skill: WeakReviewSkill;
+  es: string;
+  en: string;
+  card_id?: string | null;
+  pattern_id?: string | null;
+  cloze_template?: string | null;
+}
+export interface WeakReviewResponse {
+  items: WeakReviewItem[];
+  weakest_skill?: string | null;
 }
 
 // The LLM-generated progressive speaking role-play attached to a mission.
@@ -313,6 +394,15 @@ export interface SpeakingStage {
   options: SpeakingOption[];
   segments: SpeakingSegment[];
 }
+// The Context Preview stage — a short scene-setting blurb + key phrases shown
+// before Listening, so the learner knows the situation before drilling it.
+export interface ContextPreviewPhrase { es: string; en: string }
+export interface ContextPreview {
+  situation: string;
+  situation_en: string;
+  key_phrases: ContextPreviewPhrase[];
+}
+
 export interface MissionSpeaking {
   role: string;
   role_en: string;
@@ -338,6 +428,9 @@ export interface SpeakingTurnResult {
   npc_reply_en: string;
   correction: string;
   done: boolean;
+  // Present only when the request included `objectives` — parallel booleans,
+  // one per requested objective, true once satisfied at any point so far.
+  objectives_met?: boolean[];
 }
 
 export interface MissionEnrichStatus {
@@ -345,4 +438,41 @@ export interface MissionEnrichStatus {
   status: MissionEnrichmentStatus;
   enriched: number;
   total: number;
+}
+
+// Checkpointed narrative listening (the ListeningSession engine) — see
+// backend/app/models/listening_item.py.
+export interface ListeningSentence {
+  sentence_id: number;
+  speaker: string;
+  text_es: string;
+  text_en: string;
+}
+
+export type CheckpointType = "predict" | "comprehension" | "inference" | "vocab_in_context" | "delayed_recall";
+
+export interface ListeningCheckpointData {
+  id: string;
+  after_sentence_id: number;
+  type: CheckpointType;
+  prompt: string;
+  options: string[] | null;
+  correct_answer: string;
+  linked_concept_type: "vocab" | "grammar_pattern" | null;
+  linked_concept_id: string | null;
+  difficulty_tag: string | null;
+}
+
+export interface ListeningItemSummary {
+  id: string;
+  scenario_tag: string | null;
+  cefr_level: string;
+  title: string;
+  long_form: boolean;
+}
+
+export interface ListeningItemData extends ListeningItemSummary {
+  sentences: ListeningSentence[];
+  vocab_reused: string[];
+  checkpoints: ListeningCheckpointData[];
 }

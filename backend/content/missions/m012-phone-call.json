@@ -1,0 +1,116 @@
+{
+  "id": "m012-phone-call",
+  "order_index": 12,
+  "title": "Llamada Telefónica: Reservas y Mensajes",
+  "description": "Master making phone calls in Spanish to schedule appointments and leave messages. Learn essential vocabulary and phrases for booking, confirming times, and handling voicemail in everyday Spanish contexts.",
+  "level": "A2",
+  "topics": [
+    "social",
+    "work"
+  ],
+  "vocab": [
+    {
+      "spanish": "llamar",
+      "english": "to call",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesito llamar al médico para una cita."
+    },
+    {
+      "spanish": "la cita",
+      "english": "appointment",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo una cita a las tres de la tarde."
+    },
+    {
+      "spanish": "la línea",
+      "english": "line (phone)",
+      "part_of_speech": "noun",
+      "example_sentence": "La línea está ocupada, llama más tarde."
+    },
+    {
+      "spanish": "ocupado",
+      "english": "busy (phone line)",
+      "part_of_speech": "adjective",
+      "example_sentence": "El teléfono está ocupado ahora."
+    },
+    {
+      "spanish": "dejar un mensaje",
+      "english": "to leave a message",
+      "part_of_speech": "verb phrase",
+      "example_sentence": "¿Puedo dejar un mensaje con mi número?"
+    },
+    {
+      "spanish": "el número de teléfono",
+      "english": "phone number",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es tu número de teléfono?"
+    },
+    {
+      "spanish": "confirmar",
+      "english": "to confirm",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesito confirmar mi cita para mañana."
+    },
+    {
+      "spanish": "la reserva",
+      "english": "reservation",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero hacer una reserva para cuatro personas."
+    },
+    {
+      "spanish": "disponible",
+      "english": "available",
+      "part_of_speech": "adjective",
+      "example_sentence": "¿Está disponible el médico a las dos?"
+    },
+    {
+      "spanish": "llamar atrás",
+      "english": "to call back",
+      "part_of_speech": "verb phrase",
+      "example_sentence": "Te llamo atrás en una hora, por favor."
+    },
+    {
+      "spanish": "urgente",
+      "english": "urgent",
+      "part_of_speech": "adjective",
+      "example_sentence": "Es urgente, tengo mucho dolor de cabeza."
+    },
+    {
+      "spanish": "el recado",
+      "english": "message (voicemail)",
+      "part_of_speech": "noun",
+      "example_sentence": "Dejé un recado en tu contestadora."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Necesito + infinitive verb",
+      "gloss": "I need to [action]",
+      "example_es": "Necesito llamar al médico.",
+      "cloze_template": "Necesito ___ una cita con el doctor.",
+      "cloze_answer": "hacer"
+    },
+    {
+      "pattern": "¿Está disponible + person + time?",
+      "gloss": "Is [person] available at [time]?",
+      "example_es": "¿Está disponible el médico a las tres?",
+      "cloze_template": "¿Está ___ la mesa para las ocho de la noche?",
+      "cloze_answer": "disponible"
+    },
+    {
+      "pattern": "Quiero + infinitive / noun (reservation, appointment, etc.)",
+      "gloss": "I want to [action] or I want a [thing]",
+      "example_es": "Quiero una reserva para dos personas.",
+      "cloze_template": "Quiero ___ una cita para mañana a las dos.",
+      "cloze_answer": "hacer"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Secretario/a de una clínica médica",
+    "role_en": "Secretary at a medical clinic",
+    "setting": "Una clínica médica en Madrid. Estás respondiendo llamadas telefónicas.",
+    "opening": "Buenos días, clínica del Dr. García. ¿En qué puedo ayudarte?",
+    "opening_en": "Good morning, Dr. García's clinic. How can I help you?",
+    "goal": "Call to schedule a doctor's appointment. State your name, explain your symptoms (using me duele/me duelen), confirm an available time, and confirm your phone number to receive a callback."
+  }
+}

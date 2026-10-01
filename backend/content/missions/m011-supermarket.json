@@ -1,0 +1,116 @@
+{
+  "id": "m011-supermarket",
+  "order_index": 11,
+  "title": "En el Supermercado: Comprando Comestibles",
+  "description": "Learn to navigate a Spanish-speaking supermarket, ask for products, understand prices, and make purchases. Master essential grocery shopping phrases at CEFR A2 level.",
+  "level": "A2",
+  "topics": [
+    "travel",
+    "relocation"
+  ],
+  "vocab": [
+    {
+      "spanish": "el supermercado",
+      "english": "supermarket",
+      "part_of_speech": "noun",
+      "example_sentence": "Voy al supermercado para comprar comida."
+    },
+    {
+      "spanish": "la lista de compras",
+      "english": "shopping list",
+      "part_of_speech": "noun phrase",
+      "example_sentence": "Tengo mi lista de compras aquí."
+    },
+    {
+      "spanish": "las frutas",
+      "english": "fruits",
+      "part_of_speech": "noun",
+      "example_sentence": "Las frutas son deliciosas y frescas en el supermercado."
+    },
+    {
+      "spanish": "las verduras",
+      "english": "vegetables",
+      "part_of_speech": "noun",
+      "example_sentence": "Compro verduras para la cena de hoy."
+    },
+    {
+      "spanish": "la carne",
+      "english": "meat",
+      "part_of_speech": "noun",
+      "example_sentence": "La carne roja es muy buena aquí."
+    },
+    {
+      "spanish": "el queso",
+      "english": "cheese",
+      "part_of_speech": "noun",
+      "example_sentence": "El queso blanco es mi favorito."
+    },
+    {
+      "spanish": "el huevo",
+      "english": "egg",
+      "part_of_speech": "noun",
+      "example_sentence": "Los huevos son buenos para el desayuno."
+    },
+    {
+      "spanish": "la caja",
+      "english": "checkout/cash register",
+      "part_of_speech": "noun",
+      "example_sentence": "Voy a la caja para pagar."
+    },
+    {
+      "spanish": "¿Cuánto cuesta?",
+      "english": "How much does it cost?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Cuánto cuesta el pan aquí?"
+    },
+    {
+      "spanish": "el carrito de compras",
+      "english": "shopping cart",
+      "part_of_speech": "noun phrase",
+      "example_sentence": "Mi carrito de compras está lleno."
+    },
+    {
+      "spanish": "necesito",
+      "english": "I need",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesito leche y pan para hoy."
+    },
+    {
+      "spanish": "fresco",
+      "english": "fresh",
+      "part_of_speech": "adjective",
+      "example_sentence": "El pan fresco es delicioso."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Necesito + noun (I need...)",
+      "gloss": "Direct expression of necessity in present tense",
+      "example_es": "Necesito pan, leche y queso para la cena.",
+      "cloze_template": "Necesito ___ y ___ para el desayuno.",
+      "cloze_answer": "huevos, café"
+    },
+    {
+      "pattern": "¿Cuánto cuesta + singular noun? / ¿Cuánto cuestan + plural noun? (How much does/do... cost?)",
+      "gloss": "Asking prices with verb agreement for singular/plural",
+      "example_es": "¿Cuánto cuesta la carne? ¿Cuánto cuestan los huevos?",
+      "cloze_template": "¿Cuánto ___ el queso? ¿Cuánto ___ las verduras?",
+      "cloze_answer": "cuesta, cuestan"
+    },
+    {
+      "pattern": "Voy a + infinitive (I'm going to...)",
+      "gloss": "Near future tense for planned actions",
+      "example_es": "Voy a comprar frutas en el supermercado.",
+      "cloze_template": "Voy a ___ la lista de compras al supermercado.",
+      "cloze_answer": "llevar"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Cliente (Customer)",
+    "role_en": "Customer",
+    "setting": "Un supermercado en Madrid - en la sección de frutas y verduras (A supermarket in Madrid - in the fruits and vegetables section)",
+    "opening": "¡Hola! Bienvenido al supermercado. ¿Qué desea comprar hoy?",
+    "opening_en": "Hello! Welcome to the supermarket. What would you like to buy today?",
+    "goal": "You need to: 1) Tell the cashier what items you need (at least 5 products from the vocab), 2) Ask the price of two items, 3) Pay and say goodbye. Use your shopping list to guide the conversation naturally."
+  }
+}

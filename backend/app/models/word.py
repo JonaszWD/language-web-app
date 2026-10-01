@@ -16,7 +16,7 @@ class Word(Base):
     category: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     cefr_level: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
     audio_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    # Cached Gemini enrichment (gender, synonyms, antonyms, collocations, chunks,
+    # Cached Mistral enrichment (gender, synonyms, antonyms, collocations, chunks,
     # frequency, pronunciation, common mistakes, example sentences). Generated
     # lazily on first vocab interaction; see services.enrich.
     enrichment: Mapped[dict | None] = mapped_column(JSON, nullable=True)

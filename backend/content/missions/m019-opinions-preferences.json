@@ -1,0 +1,116 @@
+{
+  "id": "m019-opinions-preferences",
+  "order_index": 19,
+  "title": "Expressing Opinions and Preferences on Everyday Topics",
+  "description": "Learn to confidently give opinions and preferences about food, activities, and lifestyle choices in Spanish. At B1 level, you'll use opinion phrases, preference structures, and reasons to discuss what you like and dislike, combining them with everyday vocabulary to have natural conversations.",
+  "level": "B1",
+  "topics": [
+    "social",
+    "academic"
+  ],
+  "vocab": [
+    {
+      "spanish": "me gusta",
+      "english": "I like (it)",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me gusta el café con leche por la mañana."
+    },
+    {
+      "spanish": "me encanta",
+      "english": "I love (it)",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me encanta el fútbol, es muy emocionante."
+    },
+    {
+      "spanish": "no me gusta",
+      "english": "I don't like (it)",
+      "part_of_speech": "phrase",
+      "example_sentence": "No me gusta el té frío, prefiero el café."
+    },
+    {
+      "spanish": "prefiero",
+      "english": "I prefer",
+      "part_of_speech": "verb",
+      "example_sentence": "Prefiero cenar a las siete en lugar de a las ocho."
+    },
+    {
+      "spanish": "creo que",
+      "english": "I think that",
+      "part_of_speech": "phrase",
+      "example_sentence": "Creo que el pollo es delicioso aquí."
+    },
+    {
+      "spanish": "en mi opinión",
+      "english": "in my opinion",
+      "part_of_speech": "phrase",
+      "example_sentence": "En mi opinión, el deporte es importante para la salud."
+    },
+    {
+      "spanish": "porque",
+      "english": "because",
+      "part_of_speech": "conjunction",
+      "example_sentence": "Me encanta nadar porque es fresco y emocionante."
+    },
+    {
+      "spanish": "es verdad",
+      "english": "it's true",
+      "part_of_speech": "phrase",
+      "example_sentence": "Es verdad, el salario aquí es muy bueno."
+    },
+    {
+      "spanish": "estoy de acuerdo",
+      "english": "I agree",
+      "part_of_speech": "phrase",
+      "example_sentence": "Estoy de acuerdo, la música es increíble."
+    },
+    {
+      "spanish": "no estoy de acuerdo",
+      "english": "I disagree",
+      "part_of_speech": "phrase",
+      "example_sentence": "No estoy de acuerdo, creo que el videojuego es aburrido."
+    },
+    {
+      "spanish": "además",
+      "english": "moreover; besides",
+      "part_of_speech": "adverb",
+      "example_sentence": "El apartamento es grande y tiene buena temperatura, además está cerca de la estación."
+    },
+    {
+      "spanish": "aunque",
+      "english": "although; even though",
+      "part_of_speech": "conjunction",
+      "example_sentence": "Aunque hace calor, me gusta trabajar en la empresa durante el día."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Me encanta/gusta [noun] porque [reason]",
+      "gloss": "I love/like [noun] because [reason]",
+      "example_es": "Me encanta el café porque es delicioso y me trae energía.",
+      "cloze_template": "Me encanta el fútbol _____ es muy emocionante.",
+      "cloze_answer": "porque"
+    },
+    {
+      "pattern": "Prefiero [option A] a [option B]",
+      "gloss": "I prefer [option A] to [option B]",
+      "example_es": "Prefiero almorzar en la plaza a comer en el supermercado.",
+      "cloze_template": "Prefiero el desayuno temprano _____ el desayuno tarde.",
+      "cloze_answer": "a"
+    },
+    {
+      "pattern": "Creo que [opinion], además [additional reason]",
+      "gloss": "I think [opinion], moreover [additional reason]",
+      "example_es": "Creo que la estancia aquí es increíble, además el salario es bueno.",
+      "cloze_template": "Creo que el baño es pequeño, _____ está cerca de la cocina.",
+      "cloze_answer": "además"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Tu amigo español",
+    "role_en": "Your Spanish friend",
+    "setting": "una cafetería en el centro de Madrid después del trabajo",
+    "opening": "Hola, ¿cómo estás? Hace buen tiempo hoy. ¿Qué prefieres hacer ahora? ¿Tomar un café aquí o prefieres ir a otro lugar? Cuéntame, ¿qué te gusta hacer después de trabajar?",
+    "opening_en": "Hi, how are you? It's nice weather today. What do you prefer to do now? Have a coffee here or would you prefer to go somewhere else? Tell me, what do you like to do after work?",
+    "goal": "Explain your preferences about where to eat/relax, what to drink, and what activities you enjoy, giving at least two reasons using 'porque' and 'además'. Agree or disagree with your friend's suggestions politely."
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "id": "c1-debate",
+  "scenario_tag": null,
+  "cefr_level": "C1",
+  "title": "¿Cómo estamos?",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Presentador",
+      "text_es": "Buenos días. Hoy, aquí. ¿Cómo estamos?",
+      "text_en": "Good morning. Today, here. How are we?"
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Debatiente A",
+      "text_es": "No estamos bien. Me duele la cabeza. Quiero descansar.",
+      "text_en": "We are not well. My head hurts. I want to rest."
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Debatiente B",
+      "text_es": "Desde hace mucho tiempo. No puedo tomar el café con leche. Quiero el agua.",
+      "text_en": "For a long time. I cannot have coffee with milk. I want water."
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Debatiente A",
+      "text_es": "No hay salida. El asiento no es bueno. ¿Dónde está la salida?",
+      "text_en": "There is no exit/solution. The seat is not good. Where is the exit/solution?"
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Debatiente B",
+      "text_es": "Es como tener fiebre. Me duele el estómago. Me duelen los oídos.",
+      "text_en": "It's like having a fever. My stomach hurts. My ears hurt."
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Debatiente A",
+      "text_es": "Sí, y el vuelo. ¿El vuelo para llevar? No, no hay vuelo.",
+      "text_en": "Yes, and the flight. The flight to go? No, there is no flight."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Debatiente B",
+      "text_es": "El aeropuerto está lejos. La puerta de embarque no es una salida.",
+      "text_en": "The airport is far. The boarding gate is not an exit/solution."
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Debatiente A",
+      "text_es": "La cuenta es alta. No hay billete para descansar.",
+      "text_en": "The bill is high. There is no ticket to rest."
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Presentador",
+      "text_es": "Gracias a los dos. Adiós.",
+      "text_en": "Thanks to both. Goodbye."
+    }
+  ],
+  "vocab_reused": [
+    "a",
+    "adios",
+    "aeropuerto",
+    "agua",
+    "alta",
+    "aqui",
+    "asiento",
+    "bien",
+    "billete",
+    "bueno",
+    "buenos",
+    "cabeza",
+    "cafe",
+    "como",
+    "con",
+    "cuenta",
+    "de",
+    "descansar",
+    "desde",
+    "dias",
+    "donde",
+    "dos",
+    "duele",
+    "duelen",
+    "el",
+    "embarque",
+    "es",
+    "esta",
+    "estamos",
+    "estomago",
+    "fiebre",
+    "gracias",
+    "hace",
+    "hay",
+    "hoy",
+    "la",
+    "leche",
+    "lejos",
+    "llevar",
+    "los",
+    "me",
+    "mucho",
+    "no",
+    "oidos",
+    "para",
+    "puedo",
+    "puerta",
+    "quiero",
+    "salida",
+    "si",
+    "tener",
+    "tiempo",
+    "tomar",
+    "una",
+    "vuelo",
+    "y"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 2,
+      "type": "comprehension",
+      "prompt": "Según el Debatiente B, ¿cuál es su problema principal?",
+      "options": [
+        "No tiene agua ni café",
+        "Le duele la cabeza",
+        "No puede descansar"
+      ],
+      "correct_answer": "No tiene agua ni café",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 3,
+      "type": "predict",
+      "prompt": "El Debatiente B dice que la situación es muy mala. ¿Qué podría decir después?",
+      "options": [
+        "Que tiene un billete para un vuelo",
+        "Que es como tener fiebre",
+        "Que el asiento es bueno"
+      ],
+      "correct_answer": "Que es como tener fiebre",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 5,
+      "type": "vocab_in_context",
+      "prompt": "En la frase 'El vuelo para llevar', ¿qué significa 'para llevar'?",
+      "options": [
+        "Para beber",
+        "Para irse",
+        "Para descansar"
+      ],
+      "correct_answer": "Para irse",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "para llevar",
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 7,
+      "type": "inference",
+      "prompt": "¿Qué implica el Debatiente A al decir 'La cuenta es alta'?",
+      "options": [
+        "Que el café es muy caro",
+        "Que la situación tiene un costo grande",
+        "Que necesita un médico"
+      ],
+      "correct_answer": "Que la situación tiene un costo grande",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "hard"
+    },
+    {
+      "after_sentence_id": 8,
+      "type": "delayed_recall",
+      "prompt": "¿Qué le dolía al Debatiente A al principio de la conversación?",
+      "options": [
+        "El estómago",
+        "La garganta",
+        "La cabeza"
+      ],
+      "correct_answer": "La cabeza",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    }
+  ]
+}

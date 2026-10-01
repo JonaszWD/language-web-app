@@ -1,0 +1,116 @@
+{
+  "id": "m025-cultural-differences",
+  "order_index": 25,
+  "title": "Explorando Diferencias Culturales",
+  "description": "Una misión para discutir tradiciones y diferencias culturales a nivel B2. Aprenderás a expresar perspectivas, comparar costumbres, y negociar puntos de vista sobre celebraciones, comidas y valores familiares.",
+  "level": "B2",
+  "topics": [
+    "heritage",
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "la costumbre",
+      "english": "custom, tradition",
+      "part_of_speech": "noun",
+      "example_sentence": "En mi familia, la costumbre es cenar juntos a las ocho de la noche."
+    },
+    {
+      "spanish": "la herencia",
+      "english": "heritage, inheritance",
+      "part_of_speech": "noun",
+      "example_sentence": "La herencia cultural de España es increíble y muy diversa."
+    },
+    {
+      "spanish": "la celebración",
+      "english": "celebration",
+      "part_of_speech": "noun",
+      "example_sentence": "La celebración del Año Nuevo es importante en mi país."
+    },
+    {
+      "spanish": "el valor",
+      "english": "value, worth",
+      "part_of_speech": "noun",
+      "example_sentence": "El valor de la familia es fundamental en muchas culturas."
+    },
+    {
+      "spanish": "la perspectiva",
+      "english": "perspective, viewpoint",
+      "part_of_speech": "noun",
+      "example_sentence": "Desde mi perspectiva, las tradiciones son muy importantes para la identidad."
+    },
+    {
+      "spanish": "respetar",
+      "english": "to respect",
+      "part_of_speech": "verb",
+      "example_sentence": "Es verdad que debemos respetar las costumbres de otros países."
+    },
+    {
+      "spanish": "la diferencia",
+      "english": "difference",
+      "part_of_speech": "noun",
+      "example_sentence": "Aunque hay diferencias entre nuestras culturas, nos entendemos bien."
+    },
+    {
+      "spanish": "compartir",
+      "english": "to share",
+      "part_of_speech": "verb",
+      "example_sentence": "Me encanta compartir tradiciones con mis amigos de diferentes países."
+    },
+    {
+      "spanish": "la influencia",
+      "english": "influence",
+      "part_of_speech": "noun",
+      "example_sentence": "La influencia de la música latina es muy grande en todo el mundo."
+    },
+    {
+      "spanish": "adaptarse",
+      "english": "to adapt",
+      "part_of_speech": "verb",
+      "example_sentence": "Es importante adaptarse a nuevas costumbres cuando viajas."
+    },
+    {
+      "spanish": "significativo/a",
+      "english": "significant, meaningful",
+      "part_of_speech": "adjective",
+      "example_sentence": "El día de muertos es una celebración muy significativa en México."
+    },
+    {
+      "spanish": "la brecha",
+      "english": "gap, divide",
+      "part_of_speech": "noun",
+      "example_sentence": "Aunque hay una brecha generacional, respetamos las opiniones de todos."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Desde mi perspectiva + opinion + porque + reason",
+      "gloss": "From my perspective + opinion + because + reason",
+      "example_es": "Desde mi perspectiva, es importante compartir tradiciones porque une a la familia.",
+      "cloze_template": "Desde mi perspectiva, es importante _____ tradiciones porque une a la familia.",
+      "cloze_answer": "compartir"
+    },
+    {
+      "pattern": "Aunque + contrast + subordinate clause, + main clause",
+      "gloss": "Although + contrast, + main clause (concession)",
+      "example_es": "Aunque hay diferencias culturales, podemos resolver desacuerdos con respeto.",
+      "cloze_template": "Aunque hay _____ culturales, podemos resolver desacuerdos con respeto.",
+      "cloze_answer": "diferencias"
+    },
+    {
+      "pattern": "La influencia de + noun + es + adjective + en + location",
+      "gloss": "The influence of + noun + is + adjective + in + location",
+      "example_es": "La influencia de las tradiciones españolas es significativa en América Latina.",
+      "cloze_template": "La influencia de las tradiciones españolas es _____ en América Latina.",
+      "cloze_answer": "significativa"
+    }
+  ],
+  "speaking_scene": {
+    "role": "un amigo/una amiga de otra cultura",
+    "role_en": "a friend from another culture",
+    "setting": "en una café cerca del centro de la ciudad, durante una conversación sobre celebraciones familiares",
+    "opening": "Hola, me encanta hablar contigo sobre nuestras culturas. Quiero entender mejor tus tradiciones y compartir las mías. ¿Cuál es una celebración muy importante en tu familia?",
+    "opening_en": "Hi, I love talking with you about our cultures. I want to understand your traditions better and share mine. What is a very important celebration in your family?",
+    "goal": "Explica una tradición importante de tu cultura, describe cómo es diferente de otras culturas, explora los valores detrás de la celebración, y resuelve un desacuerdo amistoso sobre qué tradición es más significativa. Usa al menos 5 palabras nuevas y demuestra respeto por las perspectivas diferentes."
+  }
+}

@@ -10,6 +10,12 @@ class SaveWordRequest(BaseModel):
     context: Optional[str] = None
 
 
+class TranslateResponse(BaseModel):
+    """Read-only Spanish→English lookup — does not touch the user's deck."""
+    spanish: str
+    english: str
+
+
 class SavedWordResponse(BaseModel):
     word_id: uuid.UUID
     spanish: str
@@ -80,7 +86,7 @@ class VocabAnswerResponse(BaseModel):
     level: int
     mastered: bool
     spanish: str
-    # Present only for level-5 Gemini grading: score, correct_usage, feedback, correction.
+    # Present only for level-5 Mistral grading: score, correct_usage, feedback, correction.
     feedback: Optional[dict[str, Any]] = None
     # Updated per-user performance for this word after recording the attempt.
     stats: Optional[CardStats] = None

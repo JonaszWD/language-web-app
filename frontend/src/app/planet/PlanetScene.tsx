@@ -1,12 +1,12 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Html, OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
-// Render toggles. Cylinder (3D city drum) and the mission step cards are hidden
-// per request, but their code is kept intact for future use.
+// Render toggles. Cylinder (3D city drum) is hidden per request, kept intact
+// for future use. Mission steps render as the zigzag checkpoint path.
 const SHOW_CYLINDER = false;
 const SHOW_MISSION_STEPS = true;
 
@@ -24,7 +24,9 @@ const MODELS = [
   "/kenney-buildings-3d/building-sample-tower-c.glb",
   "/kenney-buildings-3d/building-sample-tower-d.glb",
 ];
-MODELS.forEach((m) => useGLTF.preload(m));
+// Only fetch the building models when the city layer is actually shown — the
+// Kenney .glb files are not bundled in public/ while it is switched off.
+if (SHOW_CYLINDER) MODELS.forEach((m) => useGLTF.preload(m));
 
 // Real Madrid (Salamanca) OSM data, projected to u,v in [0,1].
 // u = lon fraction (0=W..1=E), v = lat fraction (0=S..1=N).
@@ -356,146 +358,243 @@ function NextLevelMarker({
   );
 }
 
-// Level progress bar — full-width row of dots at the top, one per level.
-function LevelProgress({ total, current }: { total: number; current: number }) {
-  return (
-    <div
-      style={{
-        position: "fixed", top: 64, left: 0, right: 0, zIndex: 6,
-        display: "flex", alignItems: "center",
-        padding: "12px 40px", pointerEvents: "none",
-      }}
-    >
-      {Array.from({ length: total }).map((_, i) => {
-        const done = i < current;
-        const active = i === current;
-        const size = active ? 26 : 18;
-        const color = done || active ? "#16140f" : "#d9d4cc";
-        return (
-          <div
-            key={i}
-            style={{
-              display: "flex", alignItems: "center",
-              flex: i === 0 ? "0 0 auto" : "1 1 0", // segments stretch to fill
-            }}
-          >
-            {i > 0 && (
-              <div
-                style={{
-                  flex: 1, height: 7, borderRadius: 4,
-                  background: i <= current ? "#16140f" : "#d9d4cc",
-                }}
-              />
-            )}
-            <div
-              style={{
-                flex: "0 0 auto",
-                width: size, height: size, borderRadius: "50%",
-                background: color,
-                boxShadow: active ? "0 0 0 4px rgba(99,27,8,.2)" : "none",
-              }}
-            />
-          </div>
-        );
-      })}
-    </div>
-  );
+// The mission's step-by-step levels, shown as a Duolingo-style zigzag
+// checkpoint path beneath the vocab. `current` is the active step index —
+// steps before it are done, the step at it is current (pulsing ring), steps
+// after it are locked. Clicking ANY node (done/current/locked) starts that
+// step's real practice via `onStep` — locked is a visual state only, not a
+// hard gate, matching this app's existing "practice in any order" behavior.
+const MP_ROW = 140;
+const MP_NODE_R = 44;
+const MP_RING_R = 52;
+const MP_AMPLITUDE = 104;
+// The final trophy node reads as the mission's payoff — much bigger than
+// every other step, ring included, and (being the last node) deliberately
+// left tall enough to bleed off the bottom of the screen rather than shrink
+// to fit.
+const MP_TROPHY_SCALE = 2.3;
+const MP_TROPHY_R = MP_NODE_R * MP_TROPHY_SCALE;
+const MP_TROPHY_RING_R = MP_RING_R * MP_TROPHY_SCALE;
+
+// The node radius connectors should route around: trophy > active ring >
+// a plain node, in that priority (a currently-active trophy uses the
+// (bigger) trophy ring, not the plain ring).
+function nodeOuterRadius(name: string, active: boolean): number {
+  const isTrophy = name === "Final Challenge";
+  if (active) return isTrophy ? MP_TROPHY_RING_R : MP_RING_R;
+  return isTrophy ? MP_TROPHY_R : MP_NODE_R;
+}
+// No label text under the nodes (the icon + title tooltip carry the
+// meaning) — the path only needs to clear the ring's outer edge.
+const MP_PATH_WIDTH = 2 * (MP_AMPLITUDE + MP_RING_R) + 24;
+
+// One glyph per step type — done steps always show a checkmark regardless of
+// type (progress signal beats "what kind of step was this"); the trophy
+// keeps its own icon in every state so Final Challenge stays identifiable at
+// a glance. Plain SVG paths, no emoji, per this app's icon convention.
+function stepIconPath(name: string, done: boolean): ReactNode {
+  const isTrophy = name === "Final Challenge";
+  if (done && !isTrophy) {
+    return <path d="m5 12 5 5L20 6" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />;
+  }
+  if (isTrophy) {
+    return (
+      <>
+        <path d="M12 2a4 4 0 0 0-4 4H6a1 1 0 0 0-1 1c0 2.8 1.9 5.1 4.4 5.8A4 4 0 0 0 11 15.9V18H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.1a4 4 0 0 0 1.6-3.1c2.5-.7 4.4-3 4.4-5.8a1 1 0 0 0-1-1h-2a4 4 0 0 0-4-4Z" />
+        <path d="M7 8H6a3 3 0 0 0 2 2.8A6 6 0 0 1 7 8Zm11 0h-1a6 6 0 0 1-1 2.8A3 3 0 0 0 18 8Z" />
+      </>
+    );
+  }
+  if (name === "Listening") {
+    return <path d="M4 13a8 8 0 0 1 16 0v5a2 2 0 0 1-2 2h-2v-7h2v0a6 6 0 1 0-12 0v0h2v7H6a2 2 0 0 1-2-2v-5Z" />;
+  }
+  if (name.startsWith("Vocabulary")) {
+    return (
+      <>
+        <rect x="6" y="3" width="13" height="15" rx="3" opacity=".4" />
+        <rect x="3" y="6" width="13" height="15" rx="3" />
+      </>
+    );
+  }
+  if (name === "Grammar") {
+    return (
+      <>
+        <path d="M11 5.5C9.5 4.4 7.6 4 5.5 4 4.4 4 3.3 4.2 2.5 4.5 2.2 4.6 2 4.9 2 5.2v12.3c0 .5.5.9 1 .7.7-.2 1.6-.4 2.5-.4 2.1 0 4 .5 5.5 1.6V5.5Z" />
+        <path d="M13 5.5C14.5 4.4 16.4 4 18.5 4c1.1 0 2.2.2 3 .5.3.1.5.4.5.7v12.3c0 .5-.5.9-1 .7-.7-.2-1.6-.4-2.5-.4-2.1 0-4 .5-5.5 1.6V5.5Z" />
+      </>
+    );
+  }
+  if (name === "Speaking") {
+    return (
+      <>
+        <path d="M12 15a4 4 0 0 0 4-4V6a4 4 0 0 0-8 0v5a4 4 0 0 0 4 4Z" />
+        <path d="M6 11a1 1 0 1 1 2 0 4 4 0 0 0 8 0 1 1 0 1 1 2 0 6 6 0 0 1-5 5.92V19h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2.08A6 6 0 0 1 6 11Z" />
+      </>
+    );
+  }
+  if (name === "Writing") {
+    return (
+      <>
+        <path d="M14.8 4.2 19.8 9.2 9 20H4v-5L14.8 4.2Z" />
+        <path d="M16.2 2.8a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8l-1 1-5-5 1-1Z" />
+      </>
+    );
+  }
+  return <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />;
 }
 
-// Mission vocabulary — little cards aligned across the screen under the
-// progress bar, mirroring the Vocabulary-tab grid (vo-card). Each shows the
-// word, its English translation and the user's current 1-5 training level.
-type VocabWord = { es: string; en: string; level?: number | null };
-
-const VOCAB_LEVEL_LABEL = ["", "Recognise", "Build", "Recall", "Context", "Produce", "Mastered"];
-
-// A circular progress ring that fills by level/5, coloured red (empty) → green
-// (full). Sits on the right of a card. Empty/new reads grey.
-function LevelRing({ level }: { level: number }) {
-  const r = 17;
-  const c = 2 * Math.PI * r;
-  const frac = Math.max(0, Math.min(level, 5)) / 5;
-  const mastered = level >= 5;
-  // Hue sweeps 0° (red) → 120° (green) with fill; level 0 is a neutral grey.
-  const stroke = level <= 0 ? "#b7afa1" : `hsl(${Math.round(frac * 120)}, 70%, 45%)`;
-  return (
-    <svg width="44" height="44" viewBox="0 0 44 44" style={{ flex: "0 0 auto" }}>
-      <circle cx="22" cy="22" r={r} fill="none" stroke="var(--surface-3, #e7e2da)" strokeWidth="4" />
-      <circle
-        cx="22" cy="22" r={r} fill="none" stroke={stroke} strokeWidth="4" strokeLinecap="round"
-        strokeDasharray={c} strokeDashoffset={c * (1 - frac)}
-        transform="rotate(-90 22 22)"
-        style={{ transition: "stroke-dashoffset .3s" }}
-      />
-      {mastered && (
-        <text x="22" y="22" dominantBaseline="central" textAnchor="middle"
-          style={{ font: "700 14px system-ui", fill: stroke }}>★</text>
-      )}
-    </svg>
-  );
+// Cheap string hash so the "random" horizontal offset is deterministic per
+// step (stable across re-renders/scroll — nodes don't jump around) without
+// needing a seed prop threaded in from outside.
+function hashStr(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return h;
 }
 
-// The mission's step-by-step levels, shown as a connected stepper beneath the
-// vocab. `current` is the active step index. Clicking a step starts its
-// practice via `onStep`.
-function MissionSteps({ steps, current, onStep }: {
-  steps: Level[]; current: number; onStep?: (i: number) => void;
+// Horizontal offset for node i, pseudo-randomized per step (name+index seed)
+// rather than a fixed 0/+A/-A cycle, so the path doesn't read as a uniform
+// repeating zigzag — except the very last node (the mission's final step),
+// which is always recentered so the path visually resolves back to the middle.
+function mpOffset(i: number, lastIndex: number, name: string, seed: string): number {
+  if (i === lastIndex) return 0;
+  const h = hashStr(`${seed}:${i}:${name}`);
+  return (h % 1000) / 1000 * MP_AMPLITUDE;
+}
+
+function MissionSteps({ steps, current, onStep, pathSeed = "" }: {
+  steps: Level[]; current: number; onStep?: (i: number) => void; pathSeed?: string;
 }) {
   if (!steps.length) return null;
+  const lastIndex = steps.length - 1;
+  const width = MP_PATH_WIDTH;
+  const center = width / 2;
+  const pathHeight = steps.length * MP_ROW;
+
+  let doneD = "";
+  let lockedD = "";
+  for (let i = 0; i < lastIndex; i++) {
+    const x1 = center + mpOffset(i, lastIndex, steps[i].name, pathSeed);
+    const x2 = center + mpOffset(i + 1, lastIndex, steps[i + 1].name, pathSeed);
+    const r1 = nodeOuterRadius(steps[i].name, i === current);
+    const r2 = nodeOuterRadius(steps[i + 1].name, i + 1 === current);
+    const rowCenter = MP_ROW / 2;
+    const y1 = i * MP_ROW + rowCenter + r1 + 3;
+    // Every node is vertically centered in its row (rowCenter ± radius) —
+    // except the trophy, which anchors to its row's TOP instead (so its much
+    // bigger circle only grows downward). Route the connector to its actual
+    // top edge rather than the generic centered formula.
+    const nextIsTrophy = steps[i + 1].name === "Final Challenge";
+    const y2 = nextIsTrophy
+      ? (i + 1) * MP_ROW - 3
+      : (i + 1) * MP_ROW + rowCenter - r2 - 3;
+    const midY = (y1 + y2) / 2;
+    const segment = `M ${x1} ${y1} C ${x1} ${midY} ${x2} ${midY} ${x2} ${y2} `;
+    if (i < current) doneD += segment; else lockedD += segment;
+  }
+
+  // The trophy is the mission's payoff, deliberately too big to fully fit —
+  // scrolling (and the content box itself) stops exactly at its vertical
+  // center rather than growing to reveal all of it. Only applies when the
+  // last step really is the trophy; any other mission shape keeps the old
+  // "show everything, scroll if it doesn't fit" sizing.
+  const lastIsTrophy = steps[lastIndex].name === "Final Challenge";
+  const innerHeight = lastIsTrophy
+    ? 16 + lastIndex * MP_ROW + MP_TROPHY_R
+    : 16 + pathHeight + 16;
+
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 14 }}>
       <div
         style={{
-          display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center",
-          alignItems: "flex-start", maxWidth: 900,
-          padding: "10px 14px", borderRadius: 14,
-          background: "rgba(255,255,255,.7)", backdropFilter: "blur(6px)",
-          boxShadow: "0 6px 24px rgba(0,0,0,.1)",
+          position: "relative", width, maxWidth: "100%",
+          height: innerHeight, overflow: lastIsTrophy ? "hidden" : "visible",
+          padding: "16px 0 0",
         }}
       >
+        <svg
+          width={width} height={pathHeight} viewBox={`0 0 ${width} ${pathHeight}`}
+          preserveAspectRatio="none" style={{ position: "absolute", left: 0, top: 16 }}
+        >
+          <path d={doneD} fill="none" stroke="var(--acc)" strokeWidth={4} strokeLinecap="round" strokeDasharray="2 14" />
+          <path d={lockedD} fill="none" stroke="var(--border)" strokeWidth={4} strokeLinecap="round" strokeDasharray="2 14" />
+        </svg>
         {steps.map((s, i) => {
           const done = i < current;
           const active = i === current;
-          const accent = done || active ? "#16140f" : "#b7afa1";
+          const isTrophy = s.name === "Final Challenge";
+
+          let bg: string, shadow: string, iconColor: string;
+          if (done || active) {
+            bg = isTrophy ? "#D9A441" : "var(--acc)";
+            shadow = `0 5px 0 ${isTrophy ? "#B98620" : "color-mix(in oklab, var(--acc) 70%, black)"}`;
+            iconColor = "#fff";
+          } else {
+            bg = "var(--surface-2)";
+            shadow = "0 5px 0 var(--border)";
+            iconColor = "var(--muted)";
+          }
+
           return (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div
+              key={i}
+              style={{
+                display: "flex", justifyContent: "center",
+                // Every other row centers its node vertically. The trophy row
+                // anchors to its own top instead, so the node's much bigger
+                // circle only grows downward — past the row, past the path's
+                // bottom edge — rather than overflowing evenly both ways.
+                alignItems: isTrophy ? "flex-start" : "center",
+                height: MP_ROW, position: "relative",
+              }}
+            >
               <button
                 type="button"
+                className="mp-node-btn"
                 onClick={() => onStep?.(i)}
                 title={`Practise: ${s.name}${s.minutes ? ` · ~${s.minutes} min` : ""}`}
+                aria-label={s.name}
                 style={{
-                  display: "flex", alignItems: "center", gap: 8,
+                  display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
                   border: "none", background: "transparent", cursor: "pointer",
-                  padding: "4px 8px", borderRadius: 999,
-                  transition: "background .14s",
+                  transform: `translateX(${mpOffset(i, lastIndex, s.name, pathSeed)}px)`,
+                  position: "relative", zIndex: 1,
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(99,27,8,.08)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
               >
+                {active && (
+                  <span
+                    style={{
+                      position: "absolute", top: -6,
+                      width: (isTrophy ? MP_TROPHY_RING_R : MP_RING_R) * 2 - 6,
+                      height: (isTrophy ? MP_TROPHY_RING_R : MP_RING_R) * 2 - 6,
+                      borderRadius: "50%",
+                      background: isTrophy ? "rgba(217,164,65,.4)" : "color-mix(in oklab, var(--acc) 40%, transparent)",
+                      animation: "mp-pulse-ring 2s ease-out 4",
+                      animationFillMode: "forwards",
+                    }}
+                  />
+                )}
                 <span
                   style={{
-                    width: 24, height: 24, borderRadius: "50%", flex: "0 0 auto",
-                    display: "grid", placeItems: "center",
-                    font: "700 12px system-ui", color: "#fff",
-                    background: accent,
-                    boxShadow: active ? "0 0 0 4px rgba(99,27,8,.18)" : "none",
+                    width: (isTrophy ? MP_TROPHY_R : MP_NODE_R) * 2,
+                    height: (isTrophy ? MP_TROPHY_R : MP_NODE_R) * 2,
+                    borderRadius: "50%",
+                    display: "flex",
+                    // A plain node centers its icon. The trophy circle is
+                    // much taller than it is visible (its bottom half bleeds
+                    // off-screen by design), so its icon sits near the top
+                    // instead — the part guaranteed to stay on-screen.
+                    alignItems: isTrophy ? "flex-start" : "center",
+                    justifyContent: "center",
+                    paddingTop: isTrophy ? 28 : 0,
+                    background: bg, boxShadow: shadow, position: "relative", zIndex: 1,
                   }}
                 >
-                  {done ? "✓" : i + 1}
-                </span>
-                <span
-                  style={{
-                    font: (active ? "700 " : "600 ") + "13px system-ui",
-                    color: done || active ? "#141210" : "#6b6459",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {s.name}
+                  <svg width={isTrophy ? 52 : 32} height={isTrophy ? 52 : 32} viewBox="0 0 24 24" fill="currentColor" style={{ color: iconColor }}>
+                    {stepIconPath(s.name, done)}
+                  </svg>
                 </span>
               </button>
-              {i < steps.length - 1 && (
-                <div style={{ width: 18, height: 2, borderRadius: 2, background: "#d9d4cc" }} />
-              )}
             </div>
           );
         })}
@@ -504,73 +603,66 @@ function MissionSteps({ steps, current, onStep }: {
   );
 }
 
-function MissionVocabList({ vocab, steps = [], current = 0, onStep }: {
-  vocab: VocabWord[]; steps?: Level[]; current?: number; onStep?: (i: number) => void;
+// Fixed-position frame for the checkpoint path, sitting under the title.
+// Width is pinned to half the viewport so the path reads as a focused column
+// rather than spanning the full screen.
+function MissionStepsFrame({ steps = [], current = 0, onStep, pathSeed = "" }: {
+  steps?: Level[]; current?: number; onStep?: (i: number) => void; pathSeed?: string;
 }) {
-  if (!vocab.length && !steps.length) return null;
+  if (!steps.length) return null;
   return (
+    // Full-width scroll container so the scrollbar sits at the actual window
+    // edge, not hugging the narrow content column — the centered inner div
+    // below is what's actually sized to the path's content.
     <div
       style={{
+        // Below the top nav (24-76px) and the mission title (92px, ~26px
+        // tall) with a little breathing room.
         position: "fixed", top: 150, left: 0, right: 0, zIndex: 6,
         maxHeight: "calc(100vh - 170px)", overflowY: "auto",
-        padding: "4px 40px 16px",
         pointerEvents: "auto",
       }}
     >
       <div
         style={{
-          display: "flex", flexWrap: "nowrap", gap: 8,
-          overflowX: "auto", overflowY: "hidden", paddingBottom: 6,
-          justifyContent: vocab.length > 4 ? "flex-start" : "center",
+          // The path's node/label geometry is a fixed pixel layout, not
+          // fluid — size this column to exactly what it needs so nothing
+          // clips or gets squeezed by maxWidth:100%.
+          width: MP_PATH_WIDTH, margin: "0 auto",
+          // Extra top padding (24px, vs the 4px elsewhere) so the first
+          // node's pulsing ring — which overhangs above the node itself —
+          // has clearance and isn't flush against the scroll area's top edge.
+          padding: "24px 0 16px",
         }}
       >
-        {vocab.map((w, i) => {
-          const lvl = w.level ?? 0;
-          return (
-            <div
-              className="sp-card vo-card"
-              key={i}
-              style={{ cursor: "default", flex: "0 0 210px", flexDirection: "row", alignItems: "center", gap: 10, padding: 10 }}
-            >
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-                <div className="vo-es" style={{ fontSize: 16 }}>{w.es}</div>
-                <div className="vo-en">{w.en}</div>
-                <span className="vo-level-label">
-                  {w.level == null ? "New" : lvl >= 5 ? "Mastered" : `Lvl ${lvl} · ${VOCAB_LEVEL_LABEL[lvl]}`}
-                </span>
-              </div>
-              <LevelRing level={lvl} />
-            </div>
-          );
-        })}
+        {SHOW_MISSION_STEPS && <MissionSteps steps={steps} current={current} onStep={onStep} pathSeed={pathSeed} />}
       </div>
-      {/* Mission step cards removed from the window per request. MissionSteps
-          kept above for future use. */}
-      {SHOW_MISSION_STEPS && <MissionSteps steps={steps} current={current} onStep={onStep} />}
     </div>
   );
 }
 
 export default function PlanetScene({
   title,
-  vocab = [],
   steps = [],
   level,
   nextLevel,
   levelIndex = 0,
-  levelCount = 7,
   onLevel,
   onStep,
+  pathSeed,
 }: {
   title?: string;
-  vocab?: VocabWord[];
   steps?: Level[];
   level?: Level;
   nextLevel?: Level;
   levelIndex?: number;
-  levelCount?: number;
   onLevel?: () => void;
   onStep?: (i: number) => void;
+  // Mission id (or similar) used to seed the checkpoint path's zigzag
+  // randomization, so each mission's layout differs from the next rather
+  // than every mission producing the identical pattern for the same step
+  // names ("Listening" is always step 0, etc).
+  pathSeed?: string;
 }) {
   const cardScale = 1.4; // locked
   const cityRef = useRef<THREE.Group>(null);
@@ -620,7 +712,10 @@ export default function PlanetScene({
       {title && (
         <div
           style={{
-            position: "fixed", top: 20, left: 0, right: 0, zIndex: 6,
+            // Below the persistent top nav (fixed, top:24, height:52, plus a
+            // little clearance) rather than under it — the nav now stays
+            // visible/clickable over this screen instead of being covered.
+            position: "fixed", top: 92, left: 0, right: 0, zIndex: 6,
             textAlign: "center", pointerEvents: "none",
             font: "600 26px var(--font-display, system-ui)",
             color: "var(--ink, #141210)",
@@ -629,8 +724,7 @@ export default function PlanetScene({
           {title}
         </div>
       )}
-      <LevelProgress total={levelCount} current={levelIndex} />
-      <MissionVocabList vocab={vocab} steps={steps} current={levelIndex} onStep={onStep} />
+      <MissionStepsFrame steps={steps} current={levelIndex} onStep={onStep} pathSeed={pathSeed} />
     </>
   );
 }

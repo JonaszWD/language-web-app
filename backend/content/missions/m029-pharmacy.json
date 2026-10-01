@@ -1,0 +1,116 @@
+{
+  "id": "m029-pharmacy",
+  "order_index": 29,
+  "title": "At the Pharmacy",
+  "description": "Describe your symptoms to a pharmacist, ask for the right medicine without a prescription, and understand how often and how much to take.",
+  "level": "A2",
+  "topics": [
+    "travel",
+    "relocation"
+  ],
+  "vocab": [
+    {
+      "spanish": "la farmacia",
+      "english": "the pharmacy",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Hay una farmacia cerca de aquí?"
+    },
+    {
+      "spanish": "el farmacéutico",
+      "english": "the pharmacist",
+      "part_of_speech": "noun",
+      "example_sentence": "El farmacéutico me recomienda un jarabe."
+    },
+    {
+      "spanish": "el resfriado",
+      "english": "the cold (illness)",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo un resfriado desde el lunes."
+    },
+    {
+      "spanish": "la alergia",
+      "english": "the allergy",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo alergia a la penicilina."
+    },
+    {
+      "spanish": "el jarabe",
+      "english": "the (cough) syrup",
+      "part_of_speech": "noun",
+      "example_sentence": "Este jarabe es para la tos."
+    },
+    {
+      "spanish": "la pastilla",
+      "english": "the pill / tablet",
+      "part_of_speech": "noun",
+      "example_sentence": "Tome una pastilla cada ocho horas."
+    },
+    {
+      "spanish": "la crema",
+      "english": "the cream / ointment",
+      "part_of_speech": "noun",
+      "example_sentence": "Ponga la crema dos veces al día."
+    },
+    {
+      "spanish": "sin receta",
+      "english": "without a prescription",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Puedo comprar esto sin receta?"
+    },
+    {
+      "spanish": "cada ocho horas",
+      "english": "every eight hours",
+      "part_of_speech": "phrase",
+      "example_sentence": "Tome el jarabe cada ocho horas."
+    },
+    {
+      "spanish": "antes de comer",
+      "english": "before eating",
+      "part_of_speech": "phrase",
+      "example_sentence": "Tome la pastilla antes de comer."
+    },
+    {
+      "spanish": "me pica",
+      "english": "it itches (me)",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me pica mucho el brazo."
+    },
+    {
+      "spanish": "¿qué me recomienda?",
+      "english": "what do you recommend (to me)?",
+      "part_of_speech": "phrase",
+      "example_sentence": "Tengo tos. ¿Qué me recomienda?"
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Tener + síntoma (tengo tos / tengo alergia)",
+      "gloss": "Use tener to say what symptom or condition you have",
+      "example_es": "Tengo tos. Tengo un resfriado. Tengo alergia al polen.",
+      "cloze_template": "_____ un resfriado desde ayer.",
+      "cloze_answer": "Tengo"
+    },
+    {
+      "pattern": "Me pica / me duele + parte del cuerpo",
+      "gloss": "Picar and doler work like gustar: the body part is the subject",
+      "example_es": "Me pica el brazo. Me duelen los ojos. ¿Te pica la piel?",
+      "cloze_template": "Me _____ mucho la piel.",
+      "cloze_answer": "pica"
+    },
+    {
+      "pattern": "Imperativo formal (usted): tome / ponga",
+      "gloss": "Formal commands the pharmacist uses to give instructions",
+      "example_es": "Tome una pastilla cada ocho horas. Ponga la crema por la noche.",
+      "cloze_template": "_____ el jarabe antes de comer.",
+      "cloze_answer": "Tome"
+    }
+  ],
+  "speaking_scene": {
+    "role": "una farmacéutica paciente",
+    "role_en": "a patient pharmacist",
+    "setting": "en una farmacia del centro, por la tarde",
+    "opening": "Buenas tardes. ¿En qué le puedo ayudar?",
+    "opening_en": "Good afternoon. How can I help you?",
+    "goal": "Describe your symptoms, mention any allergy, ask for a medicine you can buy without a prescription, and confirm how often to take it."
+  }
+}

@@ -4,8 +4,15 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.dependencies import get_current_user, get_db
 from app.models.user import User
-from app.schemas.auth import LoginRequest, RegisterRequest, UserResponse
+from app.schemas.auth import (
+    CefrLevelUpdate,
+    LoginRequest,
+    OnboardingPreferencesUpdate,
+    RegisterRequest,
+    UserResponse,
+)
 from app.services.auth import create_access_token, hash_password, verify_password
+from app.services.missions import sync_user_goal_from_motivation
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -61,4 +68,42 @@ def me(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    return current_user
+
+
+@router.patch("/me/cefr-level", response_model=UserResponse)
+def update_cefr_level(
+    body: CefrLevelUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    current_user.cefr_level = body.cefr_level
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+@router.patch("/me/onboarding", response_model=UserResponse)
+def update_onboarding_preferences(
+    body: OnboardingPreferencesUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Set the learner's skill-priority/motivation onboarding answers.
+
+    Called once per screen as the /register flow progresses (see
+    frontend/src/app/register/page.tsx's handlePriorityPick/handleMotivationPick),
+    so each request only ever carries one of the two fields — only fields
+    actually present on the request are updated.
+    """
+    if body.skill_priority is not None:
+        current_user.skill_priority = body.skill_priority
+    if body.motivation is not None:
+        current_user.motivation = body.motivation
+        # Bridge: mirror the single-select motivation into a UserGoal(priority=1)
+        # row so goal-based scoring/example-sentence flavor works without any
+        # frontend change (see services.missions.sync_user_goal_from_motivation).
+        sync_user_goal_from_motivation(db, current_user)
+    db.commit()
+    db.refresh(current_user)
     return current_user

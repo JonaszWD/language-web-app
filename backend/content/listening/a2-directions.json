@@ -1,0 +1,172 @@
+{
+  "id": "a2-directions",
+  "scenario_tag": null,
+  "cefr_level": "A2",
+  "title": "La Salida para el Aeropuerto",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Ana",
+      "text_es": "Buenos días, por favor.",
+      "text_en": "Good morning, please."
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Señor López",
+      "text_es": "Buenos días.",
+      "text_en": "Good morning."
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Ana",
+      "text_es": "Soy Ana. ¿Cómo estás?",
+      "text_en": "I am Ana. How are you?"
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Señor López",
+      "text_es": "Bien, gracias. Me llamo Señor López.",
+      "text_en": "Well, thank you. My name is Mr. Lopez."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Ana",
+      "text_es": "Mucho gusto, Señor López. Quiero la salida para el aeropuerto.",
+      "text_en": "Nice to meet you, Mr. Lopez. I want the exit for the airport."
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Señor López",
+      "text_es": "El aeropuerto está aquí.",
+      "text_en": "The airport is here."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Ana",
+      "text_es": "Ah, ¿aquí? Gracias.",
+      "text_en": "Ah, here? Thank you."
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Señor López",
+      "text_es": "¿Tiene un billete para el vuelo?",
+      "text_en": "Do you have a ticket for the flight?"
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Ana",
+      "text_es": "Sí, tengo el billete.",
+      "text_en": "Yes, I have the ticket."
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Señor López",
+      "text_es": "Bien. La salida para el vuelo está aquí.",
+      "text_en": "Good. The exit for the flight is here."
+    },
+    {
+      "sentence_id": 10,
+      "speaker": "Ana",
+      "text_es": "Gracias, Señor López. Adiós.",
+      "text_en": "Thank you, Mr. Lopez. Goodbye."
+    },
+    {
+      "sentence_id": 11,
+      "speaker": "Señor López",
+      "text_es": "Adiós, Ana.",
+      "text_en": "Goodbye, Ana."
+    }
+  ],
+  "vocab_reused": [
+    "adios",
+    "aeropuerto",
+    "ah",
+    "ana",
+    "aqui",
+    "bien",
+    "billete",
+    "buenos",
+    "como",
+    "dias",
+    "el",
+    "esta",
+    "estas",
+    "favor",
+    "gracias",
+    "gusto",
+    "la",
+    "llamo",
+    "lopez",
+    "me",
+    "mucho",
+    "para",
+    "por",
+    "quiero",
+    "salida",
+    "senor",
+    "si",
+    "soy",
+    "tengo",
+    "tiene",
+    "un",
+    "vuelo"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 3,
+      "type": "predict",
+      "prompt": "What will Ana say next?",
+      "options": [
+        "¿De dónde eres?",
+        "Mucho gusto, Señor López.",
+        "Quiero beber agua."
+      ],
+      "correct_answer": "Mucho gusto, Señor López.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 6,
+      "type": "comprehension",
+      "prompt": "What does Ana want?",
+      "options": [
+        "Ella quiere beber café.",
+        "Ella quiere la salida para el aeropuerto.",
+        "Ella quiere descansar."
+      ],
+      "correct_answer": "Ella quiere la salida para el aeropuerto.",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "la salida",
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 8,
+      "type": "inference",
+      "prompt": "If Ana has a ticket for the flight, what does it mean for her?",
+      "options": [
+        "Ella tiene un café.",
+        "Ella tiene un vuelo.",
+        "Ella tiene la tos."
+      ],
+      "correct_answer": "Ella tiene un vuelo.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 11,
+      "type": "delayed_recall",
+      "prompt": "What did Ana say when she first greeted Señor López?",
+      "options": [
+        "Hola, ¿cómo estás?",
+        "Buenos días, por favor.",
+        "Quiero un café."
+      ],
+      "correct_answer": "Buenos días, por favor.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    }
+  ]
+}

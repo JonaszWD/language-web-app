@@ -1,0 +1,115 @@
+{
+  "id": "m007-directions",
+  "order_index": 7,
+  "title": "Pidiendo Direcciones en la Ciudad",
+  "description": "A1-level mission where you learn to ask for and give directions in a Spanish-speaking city. Master 12 essential phrases to navigate streets, find locations, and understand directions from locals.",
+  "level": "A1",
+  "topics": [
+    "travel"
+  ],
+  "vocab": [
+    {
+      "spanish": "¿Dónde está?",
+      "english": "Where is?",
+      "part_of_speech": "question phrase",
+      "example_sentence": "¿Dónde está el aeropuerto?"
+    },
+    {
+      "spanish": "la calle",
+      "english": "street",
+      "part_of_speech": "noun",
+      "example_sentence": "La calle es grande."
+    },
+    {
+      "spanish": "la derecha",
+      "english": "right (direction)",
+      "part_of_speech": "noun",
+      "example_sentence": "La derecha está aquí."
+    },
+    {
+      "spanish": "la izquierda",
+      "english": "left (direction)",
+      "part_of_speech": "noun",
+      "example_sentence": "La izquierda está allá."
+    },
+    {
+      "spanish": "cerca de",
+      "english": "near",
+      "part_of_speech": "preposition",
+      "example_sentence": "El café está cerca de la puerta."
+    },
+    {
+      "spanish": "lejos de",
+      "english": "far from",
+      "part_of_speech": "preposition",
+      "example_sentence": "El aeropuerto está lejos de aquí."
+    },
+    {
+      "spanish": "dobla",
+      "english": "turn (imperative)",
+      "part_of_speech": "verb",
+      "example_sentence": "Dobla a la derecha en la calle."
+    },
+    {
+      "spanish": "sigue",
+      "english": "keep going / continue (imperative)",
+      "part_of_speech": "verb",
+      "example_sentence": "Sigue recto por la calle."
+    },
+    {
+      "spanish": "recto",
+      "english": "straight",
+      "part_of_speech": "adverb",
+      "example_sentence": "Sigue recto y llegas al café."
+    },
+    {
+      "spanish": "la plaza",
+      "english": "plaza / square",
+      "part_of_speech": "noun",
+      "example_sentence": "La plaza está en el centro."
+    },
+    {
+      "spanish": "aquí",
+      "english": "here",
+      "part_of_speech": "adverb",
+      "example_sentence": "El billete está aquí."
+    },
+    {
+      "spanish": "allá",
+      "english": "there (over there)",
+      "part_of_speech": "adverb",
+      "example_sentence": "El vuelo sale allá."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "¿Dónde está + [lugar]?",
+      "gloss": "Where is [place]?",
+      "example_es": "¿Dónde está el café?",
+      "cloze_template": "¿Dónde _____ el aeropuerto?",
+      "cloze_answer": "está"
+    },
+    {
+      "pattern": "[Lugar] + está + [preposición de ubicación]",
+      "gloss": "[Place] is [location description]",
+      "example_es": "El café está cerca de la plaza.",
+      "cloze_template": "El aeropuerto _____ lejos de aquí.",
+      "cloze_answer": "está"
+    },
+    {
+      "pattern": "[Verbo imperativo] + a/por + [dirección/calle]",
+      "gloss": "[Turn/Go] [direction/street]",
+      "example_es": "Dobla a la derecha en la calle principal.",
+      "cloze_template": "_____ recto por la calle y llegas al café.",
+      "cloze_answer": "Sigue"
+    }
+  ],
+  "speaking_scene": {
+    "role": "un turista perdido",
+    "role_en": "a lost tourist",
+    "setting": "en una plaza en Madrid, cerca de la puerta de embarque del aeropuerto",
+    "opening": "Hola, buenos días. ¿Dónde está el café con leche? Me llamo Luis.",
+    "opening_en": "Hello, good morning. Where is the café with milk? My name is Luis.",
+    "goal": "Ask the tourist where they need to go, give them clear directions using 'dobla', 'sigue recto', 'a la derecha', 'a la izquierda', and locations like 'plaza', 'calle', and distance words like 'cerca de' or 'lejos de'. Help them reach the café."
+  }
+}

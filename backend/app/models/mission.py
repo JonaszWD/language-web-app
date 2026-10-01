@@ -1,20 +1,28 @@
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
+if TYPE_CHECKING:
+    from app.models.grammar_pattern import GrammarPattern
+
 # user_mission.status values
 MISSION_LOCKED = "locked"
 MISSION_AVAILABLE = "available"
 MISSION_COMPLETED = "completed"
 
-# mission.enrichment_status values — the Gemini pipeline runs once per mission
+# mission.enrichment_status values — the Mistral pipeline runs once per mission
 ENRICH_PENDING = "pending"        # never run
 ENRICH_PROCESSING = "processing"  # running now
 ENRICH_READY = "ready"            # all words enriched
+
+# mission.mission_type values
+MISSION_TYPE_CORE = "core"    # the CEFR spine
+MISSION_TYPE_BONUS = "bonus"  # goal-specific optional content, see GET /missions/bonus
 
 
 class Mission(Base):
@@ -31,7 +39,7 @@ class Mission(Base):
     order_index: Mapped[int] = mapped_column(Integer, nullable=False, unique=True, index=True)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    # Gemini enrichment lifecycle — pending → processing → ready. Gated so the
+    # Mistral enrichment lifecycle — pending → processing → ready. Gated so the
     # pipeline only runs on the first open (see services.missions).
     enrichment_status: Mapped[str] = mapped_column(
         String(20), default=ENRICH_PENDING, server_default=ENRICH_PENDING, nullable=False
@@ -40,6 +48,25 @@ class Mission(Base):
     # during enrichment (see services.missions._generate_speaking). Shape:
     # {role, role_en, setting, stages: [{n, type, ...}]}. Null until generated.
     speaking: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    # The Context Preview stage (situation blurb + key phrases), generated once
+    # by the LLM during enrichment (see services.missions._generate_context_preview).
+    # Shape: {situation, situation_en, key_phrases: [{es, en}]}. Null until generated.
+    context_preview: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    # Small fixed topic vocabulary (e.g. "travel", "social") mapped 1:1 to the
+    # onboarding motivation options — drives the "recommended for you" nudge
+    # in GET /missions (see services.missions.MOTIVATION_TOPIC_MAP). Superseded
+    # by mission_goals for scoring; kept as the seed source for that table.
+    topics: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)
+    # CEFR level this mission targets (A1/A2/B1/B2/…), editorial — set by whoever
+    # authors/generates the mission (see scripts/generate_mission.py --level).
+    # Display-only label; does not gate access or affect ordering.
+    level: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    # 'core' (the CEFR spine, default) or 'bonus' (goal-specific optional
+    # content, tagged via mission_goals, surfaced only via GET /missions/bonus —
+    # never mixed into the core progression).
+    mission_type: Mapped[str] = mapped_column(
+        String(20), default="core", server_default="core", nullable=False
+    )
 
     vocab: Mapped[list["MissionVocab"]] = relationship(
         back_populates="mission",
@@ -73,7 +100,7 @@ class MissionVocab(Base):
     english: Mapped[str] = mapped_column(String(255), nullable=False)
     example_sentence: Mapped[str | None] = mapped_column(Text, nullable=True)
     part_of_speech: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    # Cached Gemini enrichment (same shape as words.enrichment: gender, synonyms,
+    # Cached Mistral enrichment (same shape as words.enrichment: gender, synonyms,
     # collocations, chunks, example sentences, …). Generated in the background the
     # first time the mission is opened; see services.missions.
     enrichment: Mapped[dict | None] = mapped_column(JSON, nullable=True)
@@ -101,3 +128,7 @@ class UserMission(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+    # Bumped every time /missions/{id}/start fires (idempotent, called on every
+    # open) — lets the dashboard show "current mission" as the most recently
+    # opened, non-completed one, without a separate pointer on User.
+    last_opened_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

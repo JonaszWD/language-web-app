@@ -37,6 +37,9 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file: .env
+    # Migrate + seed on every boot (both idempotent) so a fresh clone works
+    # with a single `make dev`; --reload keeps Python edits hot.
+    command: sh -c "alembic upgrade head && python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     ports:
       - "8000:8000"
     depends_on:
@@ -47,6 +50,7 @@ services:
     volumes:
       - ./backend:/app
       - podcastdata:/data/podcasts
+      - ttsdata:/data/tts
     networks:
       - app-net
 
@@ -69,6 +73,7 @@ services:
 volumes:
   pgdata:
   podcastdata:
+  ttsdata:
 
 networks:
   app-net:

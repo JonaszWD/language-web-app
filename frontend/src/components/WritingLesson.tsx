@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SpeakButton from "@/components/SpeakButton";
 import { useBlockQueue } from "@/components/lessonQueue";
 import { writingApi } from "@/lib/api";
+import { generatedWriting } from "@/content/generated";
+import { recordMistake } from "@/lib/missionMistakes";
 import type { WritingCoach, WritingFeedback } from "@/types";
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -52,19 +54,9 @@ export interface WritingLessonScript {
   cards: WritingCard[];
 }
 
-const STAGE_LABELS: Record<number, string> = {
-  1: "Copy",
-  2: "Build",
-  3: "Prompt",
-  4: "Context",
-  5: "Functional",
-  6: "Message",
-  7: "Free writing",
-};
-
 // Per-mission writing scripts, keyed by mission id. A mission with no script
 // falls back to the vocabulary trainer for its Writing step.
-export const WRITING_LESSONS: Record<string, WritingLessonScript> = {
+const BASE_WRITING_LESSONS: Record<string, WritingLessonScript> = {
   "m001-coffee-shop": {
     title: "Write at a café",
     cards: [
@@ -183,6 +175,12 @@ export const WRITING_LESSONS: Record<string, WritingLessonScript> = {
   },
 };
 
+// Hand-authored scripts, with generated missions merged in.
+export const WRITING_LESSONS: Record<string, WritingLessonScript> = {
+  ...generatedWriting,
+  ...BASE_WRITING_LESSONS,
+};
+
 // Accent/case/punctuation-insensitive compare, matching the grammar + listening
 // trainers so "quisiera un cafe" ≈ "Quisiera un café."
 function norm(s: string): string {
@@ -200,61 +198,41 @@ function matchesAny(value: string, answers: string[]): boolean {
   return answers.some((a) => norm(a) === v);
 }
 
-function ChevronIcon() {
-  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 6 6 6-6 6" /></svg>;
-}
-
 export default function WritingLesson({
   script,
   onExit,
   onDone,
-  backLabel = "Mission",
+  missionId,
 }: {
   script: WritingLessonScript;
   onExit: () => void;
   onDone?: () => void;
-  backLabel?: string;
+  // Feeds the Feedback/Correction step's mistake round-up (see
+  // lib/missionMistakes) — omitted, mistakes just aren't recorded.
+  missionId?: string;
 }) {
-  const { cardIndex, pos, isLast, next, requeue } = useBlockQueue(script.cards.length, onDone ?? onExit);
-  const card = script.cards[cardIndex];
+  const cards = useMemo(() => script.cards.filter((c) => c.kind !== "intro"), [script]);
+  const { cardIndex, pos, isLast, next, requeue } = useBlockQueue(cards.length, onDone ?? onExit);
+  const card = cards[cardIndex];
   const wrong = requeue; // a wrong answer requeues the card before the block's finale
+  const wrongWith = (es: string, en?: string) => () => {
+    if (missionId) recordMistake(missionId, { step: "Writing", es, en });
+    wrong();
+  };
 
   return (
     <div className="vt-wrap">
-      <div className="vt-topbar" style={{ width: "100%" }}>
-        <button className="vt-back" onClick={onExit}><ChevronIcon /> {backLabel}</button>
-        <span className="vt-level">
-          Writing{card.kind !== "intro" ? ` · Stage ${card.stage} · ${STAGE_LABELS[card.stage]}` : ` · ${script.title}`}
-        </span>
+      <div className="vt-progress">
+        <div className="vt-progress-fill" style={{ width: `${((pos + 1) / cards.length) * 100}%` }} />
       </div>
 
-      <div className="vt-dots">
-        {script.cards.map((_, n) => <span key={n} className={"vt-dot" + (n <= pos ? " on" : "")} />)}
-      </div>
-
-      {card.kind === "intro" && <IntroCard key={pos} card={card} onNext={next} />}
       {card.kind === "copy" && <CopyCard key={pos} card={card} onNext={next} />}
-      {card.kind === "build" && <BuildCard key={pos} card={card} onNext={next} onWrong={wrong} />}
-      {card.kind === "prompt" && <PromptCard key={pos} card={card} onNext={next} onWrong={wrong} />}
-      {card.kind === "context" && <SequenceCard key={pos} intro={card.scenario} hint={card.hint} prompts={card.prompts} onNext={next} onWrong={wrong} />}
-      {card.kind === "functional" && <SequenceCard key={pos} prompts={card.prompts} onNext={next} onWrong={wrong} />}
-      {card.kind === "message" && <MessageCard key={pos} card={card} onNext={next} onWrong={wrong} />}
+      {card.kind === "build" && <BuildCard key={pos} card={card} onNext={next} onWrong={wrongWith(card.answer)} />}
+      {card.kind === "prompt" && <PromptCard key={pos} card={card} onNext={next} onWrong={wrongWith(card.answer)} />}
+      {card.kind === "context" && <SequenceCard key={pos} intro={card.scenario} hint={card.hint} prompts={card.prompts} onNext={next} onWrong={wrongWith(card.prompts[card.prompts.length - 1].answer)} />}
+      {card.kind === "functional" && <SequenceCard key={pos} prompts={card.prompts} onNext={next} onWrong={wrongWith(card.prompts[card.prompts.length - 1].answer)} />}
+      {card.kind === "message" && <MessageCard key={pos} card={card} onNext={next} onWrong={wrongWith(card.target)} />}
       {card.kind === "free" && <FreeCard key={pos} card={card} onNext={next} lastLabel={isLast ? "Finish" : "Continue"} />}
-    </div>
-  );
-}
-
-// ── Intro: the goal. Why we're writing. ──
-function IntroCard({ card, onNext }: { card: Extract<WritingCard, { kind: "intro" }>; onNext: () => void }) {
-  return (
-    <div className="sp-card vt-card gl-mission">
-      <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Mission</p>
-      <p className="vt-es" style={{ marginBottom: 14 }}>{card.mission}</p>
-      <p className="sp-sub" style={{ marginBottom: 8 }}>By the end you&apos;ll be able to:</p>
-      <ul className="gl-goals">
-        {card.goals.map((g, i) => <li key={i}>{g}</li>)}
-      </ul>
-      <button className="sp-btn sp-btn-primary" style={{ marginTop: 16 }} onClick={onNext}>Start writing</button>
     </div>
   );
 }
@@ -262,10 +240,10 @@ function IntroCard({ card, onNext }: { card: Extract<WritingCard, { kind: "intro
 // Shared success reveal — celebrates, offers a more natural phrasing to listen to.
 function SuccessReveal({ model, onNext, nextLabel = "Continue" }: { model: string; onNext: () => void; nextLabel?: string }) {
   return (
-    <div style={{ marginTop: 8 }}>
-      <p className="sp-h2" style={{ marginBottom: 6 }}>¡Bien escrito!</p>
-      <p className="sp-sub" style={{ marginBottom: 10 }}>A natural way to write it: <b style={{ color: "var(--ink)" }}>{model}</b></p>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+    <div className="vt-stack">
+      <p className="sp-h2">¡Bien escrito!</p>
+      <p className="sp-sub">A natural way to write it: <b style={{ color: "var(--ink)" }}>{model}</b></p>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <SpeakButton text={model} label="Listen" />
       </div>
       <button className="sp-btn sp-btn-primary" onClick={onNext}>{nextLabel}</button>
@@ -281,7 +259,6 @@ function CopyCard({ card, onNext }: { card: Extract<WritingCard, { kind: "copy" 
   const ok = matchesAny(value, [card.model]) || value.trim().split(/\s+/).length >= 2;
   return (
     <form className="sp-card vt-card" onSubmit={(e) => { e.preventDefault(); if (ok) setDone(true); }}>
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>Copy & adapt</p>
       <p className="vt-prompt">{card.prompt}</p>
       <div className="wr-model">
         <span>{card.model}</span>
@@ -309,7 +286,6 @@ function BuildCard({ card, onNext, onWrong }: { card: Extract<WritingCard, { kin
   const reset = () => { setPicked([]); setChecked(false); };
   return (
     <div className="sp-card vt-card">
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>Build the sentence</p>
       <p className="vt-prompt">{card.prompt}</p>
       <div className="wr-slot">{sentence || <span className="wr-slot-empty">Tap the words in order…</span>}</div>
       <div className="wr-bank">
@@ -326,10 +302,10 @@ function BuildCard({ card, onNext, onWrong }: { card: Extract<WritingCard, { kin
       ) : correct ? (
         <SuccessReveal model={card.answer} onNext={onNext} />
       ) : (
-        <div style={{ marginTop: 8 }}>
-          <p className="sp-h2" style={{ marginBottom: 6 }}>Not quite</p>
-          <p className="sp-sub" style={{ marginBottom: 10 }}>The right order is <b style={{ color: "var(--ink)" }}>{card.answer}</b>. You&apos;ll build this one again shortly.</p>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}><SpeakButton text={card.answer} label="Listen" /></div>
+        <div className="vt-stack">
+          <p className="sp-h2">Not quite</p>
+          <p className="sp-sub">The right order is <b style={{ color: "var(--ink)" }}>{card.answer}</b>.</p>
+          <div style={{ display: "flex", justifyContent: "center" }}><SpeakButton text={card.answer} label="Listen" /></div>
           <button className="sp-btn sp-btn-primary" onClick={onWrong}>Continue</button>
         </div>
       )}
@@ -341,7 +317,6 @@ function BuildCard({ card, onNext, onWrong }: { card: Extract<WritingCard, { kin
 function PromptCard({ card, onNext, onWrong }: { card: Extract<WritingCard, { kind: "prompt" }>; onNext: () => void; onWrong: () => void }) {
   return (
     <div className="sp-card vt-card">
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>Write it in Spanish</p>
       <ProduceInput promptEn={card.prompt} display={card.prompt} hint={card.hint} answer={card.answer} accept={card.accept}
         onDone={(wasWrong) => (wasWrong ? onWrong() : onNext())} />
     </div>
@@ -366,7 +341,7 @@ function SequenceCard({ intro, hint, prompts, onNext, onWrong }: {
   return (
     <div className="sp-card vt-card">
       {intro && <p className="wr-scenario">{intro}</p>}
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>{intro ? "Task" : "Functional task"} · {idx + 1}/{prompts.length}</p>
+      <p className="sp-eyebrow">{idx + 1}/{prompts.length}</p>
       <ProduceInput key={idx} promptEn={p.cue} display={p.cue} hint={p.hint ?? hint} answer={p.answer} accept={p.accept}
         onDone={done} nextLabel={last ? "Continue" : "Next"} />
     </div>
@@ -406,7 +381,7 @@ function ProduceInput({ promptEn, display, hint, answer, accept, onDone, nextLab
   };
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); void check(); }}>
+    <form className="vt-stack" onSubmit={(e) => { e.preventDefault(); void check(); }}>
       <p className="vt-prompt">{display}</p>
       {hint && !solved && !wrongDone && <p className="wr-hint">Hint: {hint}</p>}
       {solved ? (
@@ -414,15 +389,14 @@ function ProduceInput({ promptEn, display, hint, answer, accept, onDone, nextLab
       ) : wrongDone ? (
         // One wrong attempt: tell the learner, show the natural version, then
         // requeue (they'll write it again later in the block).
-        <div style={{ marginTop: 4 }}>
-          <p className="sp-h2" style={{ marginBottom: 6 }}>Not quite</p>
-          <p className="sp-sub" style={{ marginBottom: 6 }}>A more natural way is:</p>
+        <div className="vt-stack">
+          <p className="sp-h2">Not quite</p>
+          <p className="sp-sub">A more natural way is:</p>
           <p className="wr-coach-natural">{coach!.natural}</p>
-          {coach!.why && <p className="wr-hint" style={{ marginTop: 6 }}>{coach!.why}</p>}
-          <div style={{ display: "flex", justifyContent: "center", margin: "8px 0 4px" }}>
+          {coach!.why && <p className="wr-hint">{coach!.why}</p>}
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <SpeakButton text={coach!.natural} label="Listen" />
           </div>
-          <p className="wr-hint" style={{ marginBottom: 10 }}>You&apos;ll write this one again shortly.</p>
           <button type="button" className="sp-btn sp-btn-primary" onClick={() => onDone(true)}>Continue</button>
         </div>
       ) : (
@@ -457,27 +431,25 @@ function MessageCard({ card, onNext, onWrong }: { card: Extract<WritingCard, { k
 
   return (
     <form className="sp-card vt-card" onSubmit={(e) => { e.preventDefault(); void check(); }}>
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>Write a short message</p>
       <p className="vt-prompt">{card.prompt}</p>
       {card.hint && !coach && <p className="wr-hint">Hint: {card.hint}</p>}
       <textarea autoFocus value={value} onChange={(e) => setValue(e.target.value)} placeholder="Write your message…" className="gr-input wr-textarea" rows={3} disabled={checking} />
       {coach && (
-        <div className="wr-coach">
-          <p className="sp-h2" style={{ marginBottom: 6 }}>{coach.correct ? "Nice message!" : "Good attempt"}</p>
-          <p className="sp-sub" style={{ marginBottom: 6 }}>{coach.correct ? "Clear and natural." : "A more natural way is:"}</p>
+        <div className="wr-coach vt-stack">
+          <p className="sp-h2">{coach.correct ? "Nice message!" : "Good attempt"}</p>
+          <p className="sp-sub">{coach.correct ? "Clear and natural." : "A more natural way is:"}</p>
           <p className="wr-coach-natural">{coach.natural}</p>
-          {coach.why && <p className="wr-hint" style={{ marginTop: 6 }}>{coach.why}</p>}
+          {coach.why && <p className="wr-hint">{coach.why}</p>}
         </div>
       )}
       {showExamples && (
         <div className="wr-examples">
-          <p className="sp-eyebrow" style={{ margin: "10px 0 6px" }}>Other natural messages</p>
+          <p className="sp-eyebrow">Other natural messages</p>
           {card.examples.map((ex, i) => (
             <div key={i} className="wr-example"><span>{ex}</span><SpeakButton text={ex} label="Listen" /></div>
           ))}
         </div>
       )}
-      {coach && !coach.correct && <p className="wr-hint" style={{ textAlign: "center" }}>You&apos;ll write this one again shortly.</p>}
       <div className="vt-rates">
         {!coach ? (
           <button type="submit" className="sp-btn sp-btn-primary" disabled={!value.trim() || checking}>{checking ? "Checking…" : "Check"}</button>
@@ -513,15 +485,14 @@ function FreeCard({ card, onNext, lastLabel }: {
 
   return (
     <form className="sp-card vt-card" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
-      <p className="sp-eyebrow" style={{ marginBottom: 8 }}>Free writing</p>
       <p className="wr-scenario">{card.scenario}</p>
       {card.hint && !fb && <p className="wr-hint">You could use: {card.hint}</p>}
       <textarea autoFocus value={value} onChange={(e) => setValue(e.target.value)} placeholder="Write freely in Spanish…" className="gr-input wr-textarea" rows={5} disabled={checking} />
       {error && <p className="wr-hint" style={{ color: "var(--ink)" }}>{error}</p>}
       {fb && (
-        <div className="wr-coach" style={{ textAlign: "left" }}>
+        <div className="wr-coach vt-stack" style={{ textAlign: "left" }}>
           <div className="wr-score">Score <b>{fb.score}</b>/100</div>
-          {fb.feedback && <p className="sp-sub" style={{ margin: "8px 0" }}>{fb.feedback}</p>}
+          {fb.feedback && <p className="sp-sub">{fb.feedback}</p>}
           {fb.corrections.length > 0 && (
             <div className="wr-fb-block">
               <p className="sp-eyebrow" style={{ marginBottom: 6 }}>Corrections</p>

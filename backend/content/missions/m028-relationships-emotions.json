@@ -1,0 +1,116 @@
+{
+  "id": "m028-relationships-emotions",
+  "order_index": 28,
+  "title": "Navigating Emotions and Relationships",
+  "description": "B2-level mission focused on expressing emotions, managing conflict, and deepening personal connections. Learners will acquire essential vocabulary and structures for discussing feelings, resolving misunderstandings, and building stronger relationships in Spanish-speaking contexts.",
+  "level": "B2",
+  "topics": [
+    "dating",
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "la emoción",
+      "english": "emotion",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo una emoción muy fuerte cuando veo a mi familia después de años."
+    },
+    {
+      "spanish": "sentirse",
+      "english": "to feel",
+      "part_of_speech": "verb",
+      "example_sentence": "Me siento mal cuando hay un conflicto con mi esposa."
+    },
+    {
+      "spanish": "estar triste",
+      "english": "to be sad",
+      "part_of_speech": "verb phrase",
+      "example_sentence": "Estoy triste porque mi hermano desapareció hace años."
+    },
+    {
+      "spanish": "estar feliz",
+      "english": "to be happy",
+      "part_of_speech": "verb phrase",
+      "example_sentence": "Estoy feliz de pasar tiempo con mis hijos."
+    },
+    {
+      "spanish": "la tristeza",
+      "english": "sadness",
+      "part_of_speech": "noun",
+      "example_sentence": "La tristeza desapareció cuando recibí una noticia increíble."
+    },
+    {
+      "spanish": "la alegría",
+      "english": "joy",
+      "part_of_speech": "noun",
+      "example_sentence": "Siento alegría cuando celebro con mi familia."
+    },
+    {
+      "spanish": "el miedo",
+      "english": "fear",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo miedo de resolver este conflicto."
+    },
+    {
+      "spanish": "la rabia",
+      "english": "anger",
+      "part_of_speech": "noun",
+      "example_sentence": "La rabia surge cuando hay un desacuerdo significativo."
+    },
+    {
+      "spanish": "perdonar",
+      "english": "to forgive",
+      "part_of_speech": "verb",
+      "example_sentence": "Debo perdonar a mi padre aunque argumenta constantemente."
+    },
+    {
+      "spanish": "reconciliarse",
+      "english": "to reconcile",
+      "part_of_speech": "verb",
+      "example_sentence": "Espero reconciliarme con mi hermana después del malentendido."
+    },
+    {
+      "spanish": "la confianza",
+      "english": "trust",
+      "part_of_speech": "noun",
+      "example_sentence": "La confianza es confiable en una relación fuerte."
+    },
+    {
+      "spanish": "vulnerable",
+      "english": "vulnerable",
+      "part_of_speech": "adjective",
+      "example_sentence": "Me siento vulnerable cuando comparto mis emociones con mi esposo."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Sentirse + adjective (emotional state)",
+      "gloss": "to feel + emotional state",
+      "example_es": "Me siento mal cuando hay tensión con mi familia.",
+      "cloze_template": "Mi hermana ___ [sentirse] feliz cuando está con sus hijos.",
+      "cloze_answer": "se siente"
+    },
+    {
+      "pattern": "Tener miedo de + infinitive (expressing fear)",
+      "gloss": "to be afraid of + verb",
+      "example_es": "Tengo miedo de perder la confianza de mi esposo.",
+      "cloze_template": "Ella ___ [tener] miedo de resolver el conflicto con su padre.",
+      "cloze_answer": "tiene"
+    },
+    {
+      "pattern": "Es importante + infinitive (expressing necessity about emotions)",
+      "gloss": "it is important to + verb",
+      "example_es": "Es importante perdonar aunque hay desacuerdo.",
+      "cloze_template": "___ [ser] importante reconciliarse después del malentendido.",
+      "cloze_answer": "Es"
+    }
+  ],
+  "speaking_scene": {
+    "role": "tu hermano/a",
+    "role_en": "your sibling",
+    "setting": "la sala de tu apartamento en Madrid, después de un desacuerdo significativo hace varios días",
+    "opening": "Hola, quería hablar contigo. He estado triste desde el conflicto del otro día, y creo que debemos resolver esto. ¿Podemos debatir lo que sucedió?",
+    "opening_en": "Hi, I wanted to talk to you. I've been sad since our disagreement the other day, and I think we need to resolve this. Can we discuss what happened?",
+    "goal": "Expresar tus emociones honestamente, escuchar la perspectiva de tu hermano/a, y reconciliarse mediante el perdón y la comprensión mutua."
+  }
+}

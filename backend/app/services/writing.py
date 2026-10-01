@@ -1,4 +1,4 @@
-"""Gemini writing coach: feedback + style rewrites for the Writing tab.
+"""Mistral writing coach: feedback + style rewrites for the Writing tab.
 
 Two jobs:
   * feedback()  — grades free writing (translation / guided / journal) and returns

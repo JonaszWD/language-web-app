@@ -1,0 +1,116 @@
+{
+  "id": "m008-shopping-clothes",
+  "order_index": 8,
+  "title": "Shopping for Clothes",
+  "description": "Learn essential vocabulary and phrases for shopping at a clothing store in a Spanish-speaking city. Master asking about sizes, colors, and prices while practicing polite requests and comparisons.",
+  "level": "A1",
+  "topics": [
+    "travel",
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "la tienda de ropa",
+      "english": "clothing store",
+      "part_of_speech": "noun",
+      "example_sentence": "La tienda de ropa está cerca de aquí."
+    },
+    {
+      "spanish": "la camisa",
+      "english": "shirt",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero una camisa azul."
+    },
+    {
+      "spanish": "los pantalones",
+      "english": "pants",
+      "part_of_speech": "noun",
+      "example_sentence": "Los pantalones son buenos."
+    },
+    {
+      "spanish": "el precio",
+      "english": "price",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es el precio de la camisa?"
+    },
+    {
+      "spanish": "la talla",
+      "english": "size (clothing)",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Qué talla usas?"
+    },
+    {
+      "spanish": "rojo",
+      "english": "red",
+      "part_of_speech": "adjective",
+      "example_sentence": "Quiero la camisa roja."
+    },
+    {
+      "spanish": "blanco",
+      "english": "white",
+      "part_of_speech": "adjective",
+      "example_sentence": "Los pantalones blancos son bonitos."
+    },
+    {
+      "spanish": "negro",
+      "english": "black",
+      "part_of_speech": "adjective",
+      "example_sentence": "La camisa negra es muy bonita."
+    },
+    {
+      "spanish": "grande",
+      "english": "large",
+      "part_of_speech": "adjective",
+      "example_sentence": "¿Tienen una talla grande?"
+    },
+    {
+      "spanish": "pequeño",
+      "english": "small",
+      "part_of_speech": "adjective",
+      "example_sentence": "Quiero una talla pequeña."
+    },
+    {
+      "spanish": "el dinero",
+      "english": "money",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo dinero para la camisa."
+    },
+    {
+      "spanish": "pagar",
+      "english": "to pay",
+      "part_of_speech": "verb",
+      "example_sentence": "Quiero pagar por la camisa, por favor."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Quiero + article + noun + color adjective",
+      "gloss": "I want a [colored] [noun]",
+      "example_es": "Quiero la camisa roja.",
+      "cloze_template": "Quiero [BLANK] camisa roja.",
+      "cloze_answer": "la"
+    },
+    {
+      "pattern": "¿Qué talla + verb (tienes/usas)?",
+      "gloss": "What size do you wear/have?",
+      "example_es": "¿Qué talla usas?",
+      "cloze_template": "[BLANK] talla usas?",
+      "cloze_answer": "¿Qué"
+    },
+    {
+      "pattern": "¿Cuál es el precio de + noun?",
+      "gloss": "What is the price of [noun]?",
+      "example_es": "¿Cuál es el precio de los pantalones?",
+      "cloze_template": "¿Cuál es [BLANK] precio de los pantalones?",
+      "cloze_answer": "el"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Dependiente de tienda de ropa",
+    "role_en": "Clothing store clerk",
+    "setting": "Una tienda de ropa en Madrid",
+    "opening": "Hola, bienvenido a nuestra tienda. ¿Qué buscas hoy?",
+    "opening_en": "Hello, welcome to our store. What are you looking for today?",
+    "goal": "Ask for a shirt in red, find out the size and price, and agree to pay for it."
+  }
+}

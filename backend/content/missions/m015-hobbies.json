@@ -1,0 +1,117 @@
+{
+  "id": "m015-hobbies",
+  "order_index": 15,
+  "title": "Hobbies, Interests and Video Games",
+  "description": "Learn to talk about hobbies, gaming preferences, and interests at an A2 level. Master essential vocabulary for discussing sports, games, entertainment, and favorite activities in Spanish-speaking contexts.",
+  "level": "A2",
+  "topics": [
+    "social",
+    "gaming",
+    "media"
+  ],
+  "vocab": [
+    {
+      "spanish": "el videojuego",
+      "english": "video game",
+      "part_of_speech": "noun",
+      "example_sentence": "Me gusta jugar al videojuego todos los días."
+    },
+    {
+      "spanish": "jugar",
+      "english": "to play",
+      "part_of_speech": "verb",
+      "example_sentence": "¿Quieres jugar al fútbol esta tarde?"
+    },
+    {
+      "spanish": "el fútbol",
+      "english": "soccer",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi hermano juega al fútbol en el parque."
+    },
+    {
+      "spanish": "el deporte",
+      "english": "sport",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es tu deporte favorito?"
+    },
+    {
+      "spanish": "la música",
+      "english": "music",
+      "part_of_speech": "noun",
+      "example_sentence": "Me encanta la música desde hace años."
+    },
+    {
+      "spanish": "leer",
+      "english": "to read",
+      "part_of_speech": "verb",
+      "example_sentence": "Mi hermana lee libros todas las noches."
+    },
+    {
+      "spanish": "el libro",
+      "english": "book",
+      "part_of_speech": "noun",
+      "example_sentence": "Tengo un libro muy delicioso para leer."
+    },
+    {
+      "spanish": "ver",
+      "english": "to watch",
+      "part_of_speech": "verb",
+      "example_sentence": "¿Quieres ver una película esta noche?"
+    },
+    {
+      "spanish": "la película",
+      "english": "movie",
+      "part_of_speech": "noun",
+      "example_sentence": "La película es muy buena y emocionante."
+    },
+    {
+      "spanish": "me encanta",
+      "english": "I love it",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me encanta jugar al videojuego con mis amigos."
+    },
+    {
+      "spanish": "favorito",
+      "english": "favorite",
+      "part_of_speech": "adjective",
+      "example_sentence": "Mi deporte favorito es el fútbol."
+    },
+    {
+      "spanish": "emocionante",
+      "english": "exciting",
+      "part_of_speech": "adjective",
+      "example_sentence": "El videojuego es muy emocionante y divertido."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Me encanta + infinitive verb",
+      "gloss": "I love to [verb]",
+      "example_es": "Me encanta jugar al fútbol después de desayunar.",
+      "cloze_template": "Me _____ jugar al videojuego todos los días.",
+      "cloze_answer": "encanta"
+    },
+    {
+      "pattern": "¿Te gustaría + infinitive verb?",
+      "gloss": "Would you like to [verb]?",
+      "example_es": "¿Te gustaría leer un libro conmigo esta tarde?",
+      "cloze_template": "¿Te gustaría _____ una película después de cenar?",
+      "cloze_answer": "ver"
+    },
+    {
+      "pattern": "Jugar al + sport/game",
+      "gloss": "To play [sport/game]",
+      "example_es": "Quiero jugar al fútbol con mi hermano en la plaza.",
+      "cloze_template": "Mi hijo siempre juega _____ videojuego por la tarde.",
+      "cloze_answer": "al"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Un amigo que ama los videojuegos",
+    "role_en": "A friend who loves video games",
+    "setting": "Una cafetería moderna en Madrid donde jóvenes se reúnen para hablar de hobbies",
+    "opening": "¡Hola! ¿Qué tal? Veo que estás aquí solo. ¿Te gustaría hablar de videojuegos y deportes? Tengo mucho que contar sobre mis hobbies favoritos.",
+    "opening_en": "Hi! What's up? I see you're here alone. Would you like to talk about video games and sports? I have a lot to tell you about my favorite hobbies.",
+    "goal": "Engages the friend in a conversation about your favorite hobbies and video games, using new vocabulary and grammar structures. Ask what they like to play, share your favorite activities, and suggest doing something together."
+  }
+}

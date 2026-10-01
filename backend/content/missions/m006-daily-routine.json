@@ -1,0 +1,115 @@
+{
+  "id": "m006-daily-routine",
+  "order_index": 6,
+  "title": "Mi Día: Rutina y Hora",
+  "description": "Learn to talk about your daily routine and tell time in Spanish.",
+  "level": "A1",
+  "topics": [
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "levantarse",
+      "english": "to get up",
+      "part_of_speech": "verb",
+      "example_sentence": "Mi padre quiere levantarse temprano."
+    },
+    {
+      "spanish": "desayunar",
+      "english": "to have breakfast",
+      "part_of_speech": "verb",
+      "example_sentence": "Quiero desayunar café con leche."
+    },
+    {
+      "spanish": "almorzar",
+      "english": "to have lunch",
+      "part_of_speech": "verb",
+      "example_sentence": "Mi familia quiere almorzar bien."
+    },
+    {
+      "spanish": "cenar",
+      "english": "to have dinner",
+      "part_of_speech": "verb",
+      "example_sentence": "Mi esposo y yo queremos cenar tarde."
+    },
+    {
+      "spanish": "ducharse",
+      "english": "to shower",
+      "part_of_speech": "verb",
+      "example_sentence": "Después de levantarme, quiero ducharme."
+    },
+    {
+      "spanish": "acostarse",
+      "english": "to go to bed",
+      "part_of_speech": "verb",
+      "example_sentence": "No quiero acostarme tarde."
+    },
+    {
+      "spanish": "la hora",
+      "english": "the hour / time",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Qué hora es, por favor?"
+    },
+    {
+      "spanish": "¿Qué hora es?",
+      "english": "What time is it?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Qué hora es? Es la una."
+    },
+    {
+      "spanish": "a las",
+      "english": "at (time)",
+      "part_of_speech": "prepositional phrase",
+      "example_sentence": "Quiero desayunar a las ocho."
+    },
+    {
+      "spanish": "temprano",
+      "english": "early",
+      "part_of_speech": "adverb",
+      "example_sentence": "Mi hija quiere levantarse temprano."
+    },
+    {
+      "spanish": "tarde",
+      "english": "late",
+      "part_of_speech": "adverb",
+      "example_sentence": "No quiero acostarme tarde."
+    },
+    {
+      "spanish": "siempre",
+      "english": "always",
+      "part_of_speech": "adverb",
+      "example_sentence": "Siempre tomo café con leche."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Me / Te / Se + verbo reflexivo conjugado",
+      "gloss": "To express actions done to oneself, use reflexive verbs with a reflexive pronoun (me, te, se).",
+      "example_es": "Yo me levanto temprano.",
+      "cloze_template": "Mi madre ___ levanta a las siete.",
+      "cloze_answer": "se"
+    },
+    {
+      "pattern": "¿Qué hora es? / Es la una. / Son las dos.",
+      "gloss": "Use '¿Qué hora es?' to ask the time. Use 'Es la una' for 1 o'clock and 'Son las + number' for other hours.",
+      "example_es": "¿Qué hora es? Son las nueve.",
+      "cloze_template": "___ las diez.",
+      "cloze_answer": "Son"
+    },
+    {
+      "pattern": "a las + hora",
+      "gloss": "Use 'a las' to say 'at' a specific hour.",
+      "example_es": "Quiero cenar a las ocho.",
+      "cloze_template": "Mi padre quiere desayunar ___ las siete.",
+      "cloze_answer": "a"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Recepcionista del hotel",
+    "role_en": "Hotel receptionist",
+    "setting": "La recepción de un hotel en Madrid.",
+    "opening": "Buenos días. ¿Cómo estás? ¿Qué hora es? ¿Necesitas algo?",
+    "opening_en": "Good morning. How are you? What time is it? Do you need anything?",
+    "goal": "Tell the receptionist your daily routine and what time you do things, using the new vocabulary and grammar."
+  }
+}

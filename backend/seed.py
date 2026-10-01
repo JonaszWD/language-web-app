@@ -8,9 +8,11 @@ os.environ.setdefault("DATABASE_URL", os.getenv("DATABASE_URL", ""))
 from sqlalchemy.orm import Session
 
 from app.database import engine
+from app.models.goal import Goal, MissionGoal
 from app.models.grammar_pattern import GrammarPattern
 from app.models.mission import ENRICH_PENDING, Mission, MissionVocab
 from app.models.word import Word
+from scripts.seed_listening_items import seed_listening_items
 
 # Canonical mission content lives as version-controlled JSON here, one file per
 # mission. Same files seed local and prod, so the two never drift.
@@ -532,6 +534,7 @@ def seed_missions(session: Session) -> None:
     replaces its vocab, so it is safe to run on every boot (prod does).
     """
     files = sorted(MISSIONS_DIR.glob("*.json"))
+    goal_id_by_key = {g.key: g.id for g in session.query(Goal).all()}
     for path in files:
         data = json.loads(path.read_text(encoding="utf-8"))
 
@@ -542,11 +545,13 @@ def seed_missions(session: Session) -> None:
         mission.order_index = data["order_index"]
         mission.title = data["title"]
         mission.description = data.get("description")
+        mission.topics = data.get("topics")
+        mission.level = data.get("level")
 
         # Replace vocab wholesale. delete-orphan removes the old rows on flush,
         # before the new ones insert, so the (mission_id, order_index) unique
         # constraint never collides. Reset enrichment so the new word set is
-        # re-run through the Gemini pipeline on next open (it's gated on status).
+        # re-run through the Mistral pipeline on next open (it's gated on status).
         mission.vocab.clear()
         mission.enrichment_status = ENRICH_PENDING
         session.flush()
@@ -579,6 +584,16 @@ def seed_missions(session: Session) -> None:
                 )
             )
 
+        # Keep mission -> goal relevance in sync with the JSON topics. Migration
+        # 0025 only backfilled missions that already existed when it ran, so a
+        # fresh database (migrate, then seed) would otherwise have no weights
+        # and mission recommendations would never fire.
+        session.query(MissionGoal).filter(MissionGoal.mission_id == mission.id).delete()
+        for topic in data.get("topics") or []:
+            goal_id = goal_id_by_key.get(topic)
+            if goal_id is not None:
+                session.add(MissionGoal(mission_id=mission.id, goal_id=goal_id, relevance_weight=1.0))
+
     session.commit()
     print(f"Seeded {len(files)} missions from {MISSIONS_DIR}.")
 
@@ -586,6 +601,7 @@ def seed_missions(session: Session) -> None:
 def main() -> None:
     with Session(engine) as session:
         seed_missions(session)
+        seed_listening_items(session)
 
     # Word seeding is disabled — the Word table is intentionally kept empty.
     # Remove this early return (and the guard below) to re-enable seeding.

@@ -1,0 +1,115 @@
+{
+  "id": "m010-weather-plans",
+  "order_index": 10,
+  "title": "¿Qué tiempo hace? Planes para mañana",
+  "description": "Learn to discuss weather conditions and make plans in Spanish. This A2 mission teaches you how to talk about rain, sunshine, temperature, and coordinate activities with native speakers.",
+  "level": "A2",
+  "topics": [
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "hace buen tiempo",
+      "english": "the weather is good",
+      "part_of_speech": "phrase",
+      "example_sentence": "Mañana hace buen tiempo, queremos almorzar en la plaza."
+    },
+    {
+      "spanish": "hace mal tiempo",
+      "english": "the weather is bad",
+      "part_of_speech": "phrase",
+      "example_sentence": "Hoy hace mal tiempo, prefiero descansar en casa."
+    },
+    {
+      "spanish": "lluvia",
+      "english": "rain",
+      "part_of_speech": "noun",
+      "example_sentence": "Hay mucha lluvia cerca de aquí, necesito mi paraguas."
+    },
+    {
+      "spanish": "el sol",
+      "english": "sun",
+      "part_of_speech": "noun",
+      "example_sentence": "El sol brilla hoy, vamos a la plaza."
+    },
+    {
+      "spanish": "nublado",
+      "english": "cloudy",
+      "part_of_speech": "adjective",
+      "example_sentence": "El día está nublado, pero es bueno para descansar."
+    },
+    {
+      "spanish": "frío",
+      "english": "cold",
+      "part_of_speech": "adjective",
+      "example_sentence": "Hace frío temprano, necesito mi camisa grande."
+    },
+    {
+      "spanish": "calor",
+      "english": "hot",
+      "part_of_speech": "noun",
+      "example_sentence": "Hace calor a las doce, voy a beber agua."
+    },
+    {
+      "spanish": "el viento",
+      "english": "wind",
+      "part_of_speech": "noun",
+      "example_sentence": "Hay mucho viento, mis pantalones negros se mueven."
+    },
+    {
+      "spanish": "la temperatura",
+      "english": "temperature",
+      "part_of_speech": "noun",
+      "example_sentence": "La temperatura es buena para caminar por la calle."
+    },
+    {
+      "spanish": "¿Te gustaría...?",
+      "english": "Would you like...?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Te gustaría cenar conmigo mañana a las siete?"
+    },
+    {
+      "spanish": "me gustaría",
+      "english": "I would like",
+      "part_of_speech": "phrase",
+      "example_sentence": "Me gustaría desayunar con la familia temprano."
+    },
+    {
+      "spanish": "podemos",
+      "english": "we can",
+      "part_of_speech": "verb",
+      "example_sentence": "Podemos beber café en la tienda de ropa si hace frío."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Hace + weather condition",
+      "gloss": "It is + adjective (weather)",
+      "example_es": "Mañana hace buen tiempo. Hace frío temprano.",
+      "cloze_template": "El sábado _____ calor, podemos almorzar en la plaza.",
+      "cloze_answer": "hace"
+    },
+    {
+      "pattern": "Me gustaría + infinitive",
+      "gloss": "I would like to + verb",
+      "example_es": "Me gustaría descansar mañana. Me gustaría cenar con mi familia.",
+      "cloze_template": "_____ desayunar con mi hermano a las ocho.",
+      "cloze_answer": "Me gustaría"
+    },
+    {
+      "pattern": "¿Te gustaría + infinitive?",
+      "gloss": "Would you like to + verb?",
+      "example_es": "¿Te gustaría tomar café? ¿Te gustaría ir a la plaza?",
+      "cloze_template": "¿_____ caminar por la calle si hace buen tiempo?",
+      "cloze_answer": "Te gustaría"
+    }
+  ],
+  "speaking_scene": {
+    "role": "un amigo",
+    "role_en": "a friend",
+    "setting": "en la calle cerca de la plaza",
+    "opening": "¡Hola! ¿Qué tal? Mañana hace buen tiempo. ¿Te gustaría hacer algo conmigo?",
+    "opening_en": "Hi! How are you? The weather will be good tomorrow. Would you like to do something with me?",
+    "goal": "Respond to your friend about the weather, suggest an activity (desayunar, almorzar, cenar, o descansar), and confirm the time using 'a las' and weather-related language."
+  }
+}

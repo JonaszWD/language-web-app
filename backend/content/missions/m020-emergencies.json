@@ -1,0 +1,115 @@
+{
+  "id": "m020-emergencies",
+  "order_index": 20,
+  "title": "¡SOS! Manejando Emergencias",
+  "description": "Aprende a comunicar emergencias, reportar accidentes y pedir ayuda en español. En este escenario B1, dominarás frases críticas para situaciones de crisis mientras refuerzas vocabulario cotidiano que ya conoces.",
+  "level": "B1",
+  "topics": [
+    "relocation"
+  ],
+  "vocab": [
+    {
+      "spanish": "la ambulancia",
+      "english": "ambulance",
+      "part_of_speech": "noun",
+      "example_sentence": "Necesito llamar a la ambulancia porque me duele mucho la cabeza."
+    },
+    {
+      "spanish": "el accidente",
+      "english": "accident",
+      "part_of_speech": "noun",
+      "example_sentence": "De repente sucedió un accidente en la calle cerca de aquí."
+    },
+    {
+      "spanish": "la policía",
+      "english": "police",
+      "part_of_speech": "noun",
+      "example_sentence": "Por favor, llamar a la policía ahora porque hay un problema urgente."
+    },
+    {
+      "spanish": "herido/a",
+      "english": "injured",
+      "part_of_speech": "adjective",
+      "example_sentence": "El hombre está herido después del accidente."
+    },
+    {
+      "spanish": "perdido/a",
+      "english": "lost",
+      "part_of_speech": "adjective",
+      "example_sentence": "Mi pasaporte está perdido y es urgente encontrarlo."
+    },
+    {
+      "spanish": "el número de emergencia",
+      "english": "emergency number",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es el número de emergencia en España?"
+    },
+    {
+      "spanish": "describir",
+      "english": "to describe",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesito describir lo que sucedió en el accidente."
+    },
+    {
+      "spanish": "avisar",
+      "english": "to warn/notify",
+      "part_of_speech": "verb",
+      "example_sentence": "Debo avisar al propietario que tengo un problema en el apartamento."
+    },
+    {
+      "spanish": "desaparecer",
+      "english": "to disappear/go missing",
+      "part_of_speech": "verb",
+      "example_sentence": "Mi tarjeta de débito desapareció durante el vuelo."
+    },
+    {
+      "spanish": "sangrar",
+      "english": "to bleed",
+      "part_of_speech": "verb",
+      "example_sentence": "Tengo un corte en la mano y está sangrando."
+    },
+    {
+      "spanish": "el médico de urgencia",
+      "english": "emergency doctor",
+      "part_of_speech": "noun",
+      "example_sentence": "El médico de urgencia me ayudó después del accidente."
+    },
+    {
+      "spanish": "estar en peligro",
+      "english": "to be in danger",
+      "part_of_speech": "phrase",
+      "example_sentence": "Creo que mi hijo está en peligro en la calle ahora."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Necesito + infinitivo (I need to + verb)",
+      "gloss": "Expressing urgent necessity",
+      "example_es": "Necesito llamar a la ambulancia ahora mismo.",
+      "cloze_template": "Necesito _____ a la policía porque tengo un problema urgente.",
+      "cloze_answer": "llamar"
+    },
+    {
+      "pattern": "De repente + pasado simple (Suddenly + past tense)",
+      "gloss": "Describing unexpected events",
+      "example_es": "De repente sucedió un accidente en la calle y el hombre está herido.",
+      "cloze_template": "De repente _____ un accidente mientras yo bajaba del autobús.",
+      "cloze_answer": "sucedió"
+    },
+    {
+      "pattern": "Deber + infinitivo (Should/Must + verb) for obligations",
+      "gloss": "Expressing necessity or duty in emergencies",
+      "example_es": "Debo avisar al médico porque me duele mucho el estómago.",
+      "cloze_template": "Cuando una persona está herida, debemos _____ a la ambulancia.",
+      "cloze_answer": "llamar"
+    }
+  ],
+  "speaking_scene": {
+    "role": "El operador de emergencias",
+    "role_en": "Emergency operator",
+    "setting": "Una línea de teléfono de emergencias en Madrid",
+    "opening": "¡Dígame! ¿Cuál es el problema? ¿Qué sucedió?",
+    "opening_en": "Tell me! What is the problem? What happened?",
+    "goal": "Describe tu emergencia (un accidente, una lesión grave, o un artículo perdido urgente) con detalles suficientes para que el operador entienda la situación y pueda enviar ayuda: incluye dónde estás, qué sucedió, quién está afectado, y qué síntomas tiene la persona. Usa al menos 5 palabras nuevas y frases como 'de repente', 'necesito', 'está herido', y 'es urgente'."
+  }
+}

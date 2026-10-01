@@ -1,0 +1,116 @@
+{
+  "id": "m022-debate-environment",
+  "order_index": 22,
+  "title": "Debatiendo temas ambientales y sostenibilidad",
+  "description": "En esta misión B2, participarás en debates sobre problemas ambientales y soluciones sostenibles. Aprenderás vocabulario especializado para discutir la contaminación, el cambio climático, la energía renovable y las prácticas ecológicas. Combinarás expresiones de opinión con argumentos complejos para defender posiciones ambientales en conversaciones profesionales.",
+  "level": "B2",
+  "topics": [
+    "academic",
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "el cambio climático",
+      "english": "climate change",
+      "part_of_speech": "noun",
+      "example_sentence": "El cambio climático es un objetivo importante para muchas empresas modernas."
+    },
+    {
+      "spanish": "la contaminación",
+      "english": "pollution",
+      "part_of_speech": "noun",
+      "example_sentence": "La contaminación del agua afecta la salud de las familias cerca de las ciudades."
+    },
+    {
+      "spanish": "la energía renovable",
+      "english": "renewable energy",
+      "part_of_speech": "noun",
+      "example_sentence": "Creo que la energía renovable es el futuro para ahorrar recursos."
+    },
+    {
+      "spanish": "sostenible",
+      "english": "sustainable",
+      "part_of_speech": "adjective",
+      "example_sentence": "Un desarrollo sostenible es responsable para las generaciones futuras."
+    },
+    {
+      "spanish": "reducir",
+      "english": "to reduce",
+      "part_of_speech": "verb",
+      "example_sentence": "Debemos reducir la contaminación durante los próximos años."
+    },
+    {
+      "spanish": "reciclar",
+      "english": "to recycle",
+      "part_of_speech": "verb",
+      "example_sentence": "Es importante reciclar el papel y el plástico en la empresa."
+    },
+    {
+      "spanish": "el consumo",
+      "english": "consumption",
+      "part_of_speech": "noun",
+      "example_sentence": "El consumo de energía en los supermercados es muy grande."
+    },
+    {
+      "spanish": "el impacto",
+      "english": "impact",
+      "part_of_speech": "noun",
+      "example_sentence": "El impacto ambiental del transporte es increíble y preocupante."
+    },
+    {
+      "spanish": "la emisión",
+      "english": "emission",
+      "part_of_speech": "noun",
+      "example_sentence": "Las emisiones del carbono afectan el clima desde hace años."
+    },
+    {
+      "spanish": "eco-amigable",
+      "english": "eco-friendly",
+      "part_of_speech": "adjective",
+      "example_sentence": "Las bolsas eco-amigables son disponibles ahora en la tienda de la plaza."
+    },
+    {
+      "spanish": "proteger",
+      "english": "to protect",
+      "part_of_speech": "verb",
+      "example_sentence": "Es necesario proteger los bosques y el agua para el futuro."
+    },
+    {
+      "spanish": "la solución",
+      "english": "solution",
+      "part_of_speech": "noun",
+      "example_sentence": "Creo que la solución es desarrollar tecnología nueva y responsable."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Subjuntivo con expresiones de necesidad/recomendación: Es necesario/importante que + subjuntivo",
+      "gloss": "It is necessary/important that (something happen)",
+      "example_es": "Es importante que reduzcamos la contaminación en nuestras ciudades.",
+      "cloze_template": "Es importante que _______ (proteger) el agua durante estos años.",
+      "cloze_answer": "protejamos"
+    },
+    {
+      "pattern": "Estructura argumentativa: Aunque + indicativo, creo que + indicativo",
+      "gloss": "Although (concession), I believe that (position)",
+      "example_es": "Aunque el consumo es grande, creo que la solución es posible para todos.",
+      "cloze_template": "Aunque _______ (ser) difícil, creo que debemos reciclar desde ahora.",
+      "cloze_answer": "sea"
+    },
+    {
+      "pattern": "Comparación con cambio: Es más/menos sostenible que + sustantivo/infinitivo",
+      "gloss": "It is more/less sustainable than (noun/infinitive)",
+      "example_es": "La energía renovable es más eco-amigable que el transporte tradicional.",
+      "cloze_template": "Reciclar es _______ (importante) que ahorrar en la empresa.",
+      "cloze_answer": "más importante"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Especialista en sostenibilidad ambiental",
+    "role_en": "Environmental Sustainability Specialist",
+    "setting": "Una conferencia sobre desarrollo sostenible en Madrid; tú eres un participante en el debate sobre soluciones ambientales",
+    "opening": "Hola, buenos días. He escuchado que tienes ideas interesantes sobre el cambio climático y la energía renovable. Me gustaría debatir contigo: ¿crees que es responsabilidad de las empresas reducir la contaminación, o es un objetivo del gobierno? ¿Cuál es tu posición sobre el desarrollo sostenible?",
+    "opening_en": "Hello, good morning. I've heard that you have interesting ideas about climate change and renewable energy. I'd like to debate with you: do you think it's the responsibility of companies to reduce pollution, or is it a government objective? What is your position on sustainable development?",
+    "goal": "Defiende tu posición sobre el cambio climático y la sostenibilidad usando al menos tres argumentos con expresiones de opinión, estructuras de subjuntivo y comparaciones. Propón soluciones concretas (reducir consumo, reciclar, usar energía renovable) y refuta los contraargumentos del especialista con evidencia lógica."
+  }
+}

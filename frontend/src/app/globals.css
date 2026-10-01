@@ -24,22 +24,22 @@
    SPANISHUP ONBOARDING DESIGN SYSTEM
    ───────────────────────────────────────────────────────────────── */
 .su-root {
-  --bg: #f4f6f7;
+  --bg: #faf8f3;
   --surface: #ffffff;
-  --surface-2: #f9fafb;
-  --ink: #0f1722;
-  --muted: #647082;
-  --border: #e7eaee;
-  --accent: #FF8FA3;
-  --accent-2: #5CE6D5;
-  --accent-ink: #0f1722;
+  --surface-2: #f4f1e9;
+  --ink: #2d2d2d;
+  --muted: #6e6a5d;
+  --border: #e3dfd1;
+  --accent: #E8805C;
+  --accent-2: #9C9481;
+  --accent-ink: #2d2d2d;
   --accent-soft: color-mix(in oklab, var(--accent) 14%, var(--surface));
   --accent-line: color-mix(in oklab, var(--accent) 40%, var(--surface));
   --radius-card: 22px;
   --radius-ctrl: 14px;
   --radius-pill: 999px;
-  --shadow-card: 0 1px 2px rgba(15,23,34,.05), 0 24px 48px -28px rgba(15,23,34,.28);
-  --shadow-btn: 0 1px 2px rgba(240,128,144,.25);
+  --shadow-card: 0 1px 2px rgba(45,45,45,.05), 0 24px 48px -28px rgba(45,45,45,.28);
+  --shadow-btn: 0 1px 2px rgba(232,128,92,.25);
   --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --display-weight: 800;

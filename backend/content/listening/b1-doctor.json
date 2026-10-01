@@ -1,0 +1,192 @@
+{
+  "id": "b1-doctor",
+  "scenario_tag": null,
+  "cefr_level": "B1",
+  "title": "En la consulta del médico",
+  "sentences": [
+    {
+      "sentence_id": 0,
+      "speaker": "Doctor",
+      "text_es": "Buenos días. ¿Cómo estás?",
+      "text_en": "Good morning. How are you?"
+    },
+    {
+      "sentence_id": 1,
+      "speaker": "Paciente",
+      "text_es": "Buenos días, médico. No estoy bien.",
+      "text_en": "Good morning, doctor. I am not well."
+    },
+    {
+      "sentence_id": 2,
+      "speaker": "Paciente",
+      "text_es": "Me duele la cabeza. Tengo tos.",
+      "text_en": "My head hurts. I have a cough."
+    },
+    {
+      "sentence_id": 3,
+      "speaker": "Paciente",
+      "text_es": "Y me duele la garganta.",
+      "text_en": "And my throat hurts."
+    },
+    {
+      "sentence_id": 4,
+      "speaker": "Doctor",
+      "text_es": "¿Desde hace cuánto tiempo?",
+      "text_en": "Since when?"
+    },
+    {
+      "sentence_id": 5,
+      "speaker": "Paciente",
+      "text_es": "Desde hace tres días.",
+      "text_en": "For three days."
+    },
+    {
+      "sentence_id": 6,
+      "speaker": "Paciente",
+      "text_es": "También estoy mareado.",
+      "text_en": "I am also dizzy."
+    },
+    {
+      "sentence_id": 7,
+      "speaker": "Doctor",
+      "text_es": "¿Tienes fiebre?",
+      "text_en": "Do you have a fever?"
+    },
+    {
+      "sentence_id": 8,
+      "speaker": "Paciente",
+      "text_es": "Sí, tengo fiebre.",
+      "text_en": "Yes, I have a fever."
+    },
+    {
+      "sentence_id": 9,
+      "speaker": "Doctor",
+      "text_es": "Necesitas descansar y beber agua.",
+      "text_en": "You need to rest and drink water."
+    },
+    {
+      "sentence_id": 10,
+      "speaker": "Doctor",
+      "text_es": "¿Puedes tomar este medicamento?",
+      "text_en": "Can you take this medicine?"
+    },
+    {
+      "sentence_id": 11,
+      "speaker": "Paciente",
+      "text_es": "Sí, puedo tomar el medicamento.",
+      "text_en": "Yes, I can take the medicine."
+    },
+    {
+      "sentence_id": 12,
+      "speaker": "Doctor",
+      "text_es": "Aquí tienes la receta.",
+      "text_en": "Here is the prescription."
+    },
+    {
+      "sentence_id": 13,
+      "speaker": "Paciente",
+      "text_es": "Gracias, médico. Adiós.",
+      "text_en": "Thank you, doctor. Goodbye."
+    }
+  ],
+  "vocab_reused": [
+    "adios",
+    "agua",
+    "aqui",
+    "beber",
+    "bien",
+    "buenos",
+    "cabeza",
+    "como",
+    "cuanto",
+    "descansar",
+    "desde",
+    "dias",
+    "duele",
+    "el",
+    "estas",
+    "este",
+    "estoy",
+    "fiebre",
+    "garganta",
+    "gracias",
+    "hace",
+    "la",
+    "mareado",
+    "me",
+    "medicamento",
+    "medico",
+    "necesitas",
+    "no",
+    "puedes",
+    "puedo",
+    "receta",
+    "si",
+    "tambien",
+    "tengo",
+    "tiempo",
+    "tienes",
+    "tomar",
+    "tos",
+    "tres",
+    "y"
+  ],
+  "checkpoints": [
+    {
+      "after_sentence_id": 3,
+      "type": "comprehension",
+      "prompt": "¿Qué le duele al paciente?",
+      "options": [
+        "La cabeza y la garganta",
+        "El estómago y el oído",
+        "Los pies y las manos"
+      ],
+      "correct_answer": "La cabeza y la garganta",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 7,
+      "type": "predict",
+      "prompt": "¿Qué crees que dirá el paciente?",
+      "options": [
+        "No, no tengo fiebre.",
+        "Sí, tengo fiebre.",
+        "No sé, no tengo termómetro."
+      ],
+      "correct_answer": "Sí, tengo fiebre.",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    },
+    {
+      "after_sentence_id": 10,
+      "type": "vocab_in_context",
+      "prompt": "En esta conversación, ¿qué significa \"tomar\"?",
+      "options": [
+        "To drink",
+        "To take (medicine)",
+        "To grab"
+      ],
+      "correct_answer": "To take (medicine)",
+      "linked_concept_type": "vocab",
+      "linked_concept_id": "tomar",
+      "difficulty_tag": "easy"
+    },
+    {
+      "after_sentence_id": 13,
+      "type": "delayed_recall",
+      "prompt": "Al principio de la conversación, ¿cómo se sentía el paciente?",
+      "options": [
+        "Bien",
+        "No bien",
+        "Mareado"
+      ],
+      "correct_answer": "No bien",
+      "linked_concept_type": null,
+      "linked_concept_id": null,
+      "difficulty_tag": "medium"
+    }
+  ]
+}

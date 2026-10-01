@@ -3,6 +3,10 @@
   "order_index": 2,
   "title": "At the Airport",
   "description": "Check in, find your gate and board your flight. The essential Spanish for getting through an airport without missing your plane.",
+  "level": "A1",
+  "topics": [
+    "travel"
+  ],
   "vocab": [
     {
       "spanish": "el aeropuerto",

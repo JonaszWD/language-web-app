@@ -1,0 +1,115 @@
+{
+  "id": "m014-public-transport",
+  "order_index": 14,
+  "title": "¡En Movimiento! Navigating Public Transport",
+  "description": "Master essential vocabulary and phrases for using buses, metros, and taxis in Spanish-speaking cities. This A2 mission teaches you how to ask for directions, buy tickets, understand transit information, and communicate with drivers and fellow passengers.",
+  "level": "A2",
+  "topics": [
+    "travel"
+  ],
+  "vocab": [
+    {
+      "spanish": "la estación",
+      "english": "station",
+      "part_of_speech": "noun",
+      "example_sentence": "La estación de metro está cerca de aquí."
+    },
+    {
+      "spanish": "la parada",
+      "english": "bus stop",
+      "part_of_speech": "noun",
+      "example_sentence": "Hay una parada de autobús en la plaza."
+    },
+    {
+      "spanish": "el autobús",
+      "english": "bus",
+      "part_of_speech": "noun",
+      "example_sentence": "El autobús sale a las dos de la tarde."
+    },
+    {
+      "spanish": "el metro",
+      "english": "subway/metro",
+      "part_of_speech": "noun",
+      "example_sentence": "El metro es rápido y cerca de aquí."
+    },
+    {
+      "spanish": "el taxi",
+      "english": "taxi",
+      "part_of_speech": "noun",
+      "example_sentence": "El taxi cuesta más dinero que el autobús."
+    },
+    {
+      "spanish": "¿Cuál es la parada para...?",
+      "english": "Which is the stop for...?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Cuál es la parada para el aeropuerto?"
+    },
+    {
+      "spanish": "bajar",
+      "english": "to get off/exit",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesito bajar en la próxima parada."
+    },
+    {
+      "spanish": "subir",
+      "english": "to get on/board",
+      "part_of_speech": "verb",
+      "example_sentence": "Sube al autobús rápido, por favor."
+    },
+    {
+      "spanish": "el destino",
+      "english": "destination",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es tu destino? El mío es el aeropuerto."
+    },
+    {
+      "spanish": "la línea",
+      "english": "line/route",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Qué línea de metro va al aeropuerto?"
+    },
+    {
+      "spanish": "la tarjeta de transporte",
+      "english": "transit card",
+      "part_of_speech": "noun",
+      "example_sentence": "Necesito una tarjeta de transporte para el metro."
+    },
+    {
+      "spanish": "¿Cuánto tiempo?",
+      "english": "How long?",
+      "part_of_speech": "phrase",
+      "example_sentence": "¿Cuánto tiempo para llegar al destino?"
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Presente simple: ir + a + destination",
+      "gloss": "Simple present: to go + to + destination (expressing immediate future or habitual action)",
+      "example_es": "Voy a la estación de metro. Ella va al aeropuerto. Nosotros vamos al supermercado.",
+      "cloze_template": "Yo _____ a la parada de autobús.",
+      "cloze_answer": "voy"
+    },
+    {
+      "pattern": "Imperativo: subir/bajar + direction",
+      "gloss": "Imperative: board/exit + direction (giving commands)",
+      "example_es": "¡Sube al taxi! ¡Baja en la próxima parada! ¡Suban al metro, por favor!",
+      "cloze_template": "¡_____ del autobús aquí, por favor!",
+      "cloze_answer": "Baja"
+    },
+    {
+      "pattern": "Pregunta con ¿Dónde + estar? para ubicación",
+      "gloss": "Question with Where + to be? for location (asking about places)",
+      "example_es": "¿Dónde está la estación? ¿Dónde está la parada? ¿Dónde está el taxi?",
+      "cloze_template": "¿_____ está la línea de metro para el aeropuerto?",
+      "cloze_answer": "Dónde"
+    }
+  ],
+  "speaking_scene": {
+    "role": "un taxista amable",
+    "role_en": "a friendly taxi driver",
+    "setting": "en un taxi, en la calle principal de la ciudad",
+    "opening": "¡Hola! Bienvenido al taxi. ¿Cuál es tu destino? ¿Dónde quieres ir?",
+    "opening_en": "Hello! Welcome to the taxi. What is your destination? Where do you want to go?",
+    "goal": "Tell the driver your destination, ask how much it costs, confirm the price, and ask how long it will take to get there."
+  }
+}

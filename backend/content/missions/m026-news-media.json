@@ -1,0 +1,115 @@
+{
+  "id": "m026-news-media",
+  "order_index": 26,
+  "title": "En las Noticias: Debatiendo Actualidad",
+  "description": "Master discussing current events and news topics at B2 level. Learn to express opinions about media, explain current situations, debate issues, and discuss social/political topics using appropriate structures and vocabulary.",
+  "level": "B2",
+  "topics": [
+    "media"
+  ],
+  "vocab": [
+    {
+      "spanish": "la noticia",
+      "english": "news item; news story",
+      "part_of_speech": "noun",
+      "example_sentence": "Vi la noticia sobre el cambio climático en la televisión esta mañana."
+    },
+    {
+      "spanish": "el titular",
+      "english": "headline",
+      "part_of_speech": "noun",
+      "example_sentence": "El titular del periódico describe el conflicto de manera alarmante."
+    },
+    {
+      "spanish": "reportar",
+      "english": "to report",
+      "part_of_speech": "verb",
+      "example_sentence": "Los periodistas reportan los eventos importantes cada día."
+    },
+    {
+      "spanish": "la fuente",
+      "english": "source",
+      "part_of_speech": "noun",
+      "example_sentence": "Es importante verificar la información desde una fuente confiable."
+    },
+    {
+      "spanish": "confiable",
+      "english": "reliable; trustworthy",
+      "part_of_speech": "adjective",
+      "example_sentence": "Este periódico es confiable y reporta noticias exactas."
+    },
+    {
+      "spanish": "debatir",
+      "english": "to debate",
+      "part_of_speech": "verb",
+      "example_sentence": "Queremos debatir la solución al cambio climático."
+    },
+    {
+      "spanish": "el debate",
+      "english": "debate; discussion",
+      "part_of_speech": "noun",
+      "example_sentence": "El debate sobre la energía renovable fue interesante y emocionante."
+    },
+    {
+      "spanish": "la opinión pública",
+      "english": "public opinion",
+      "part_of_speech": "noun",
+      "example_sentence": "La opinión pública está dividida sobre este tema significativo."
+    },
+    {
+      "spanish": "argumentar",
+      "english": "to argue; to present arguments",
+      "part_of_speech": "verb",
+      "example_sentence": "Puedo argumentar que la solución sostenible es la mejor opción."
+    },
+    {
+      "spanish": "la polémica",
+      "english": "controversy",
+      "part_of_speech": "noun",
+      "example_sentence": "Existe una polémica sobre el impacto ambiental del proyecto."
+    },
+    {
+      "spanish": "imparcial",
+      "english": "impartial; unbiased",
+      "part_of_speech": "adjective",
+      "example_sentence": "Un reportero imparcial presenta los dos lados del conflicto."
+    },
+    {
+      "spanish": "el medio de comunicación",
+      "english": "media outlet; medium of communication",
+      "part_of_speech": "noun",
+      "example_sentence": "El medio de comunicación tiene responsabilidad de reportar la verdad."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Según + [fuente], [afirmación]",
+      "gloss": "According to [source], [statement]",
+      "example_es": "Según el periódico, el proyecto tiene un impacto negativo en el medio ambiente.",
+      "cloze_template": "Según _____, la solución más sostenible es la energía renovable.",
+      "cloze_answer": "el medio de comunicación (o: el experto, la fuente)"
+    },
+    {
+      "pattern": "En mi opinión, [sujeto] + [verbo en subjuntivo después de dudar/negar]",
+      "gloss": "In my opinion, [subject should/shouldn't/might]",
+      "example_es": "En mi opinión, es importante que el gobierno desarrolle energía renovable.",
+      "cloze_template": "En mi opinión, es urgente que todos _____ el consumo de energía.",
+      "cloze_answer": "reduzcan"
+    },
+    {
+      "pattern": "[Sujeto] + argumenta que + [afirmación] + porque + [razón]",
+      "gloss": "[Subject] argues that [statement] because [reason]",
+      "example_es": "El experto argumenta que debemos resolver el conflicto porque el futuro depende de ello.",
+      "cloze_template": "Los periodistas argumentan que es necesario reportar la verdad porque _____ de la democracia.",
+      "cloze_answer": "es la base (o: es fundamental)"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Un reportero de televisión",
+    "role_en": "A TV news reporter",
+    "setting": "En un estudio de televisión durante un debate sobre sostenibilidad y el futuro del planeta",
+    "opening": "Buenas tardes. Soy el reportero principal. Hoy debatimos un tema muy importante: ¿cómo podemos proteger el medio ambiente y desarrollar una economía sostenible? Quiero escuchar tu opinión sobre este conflicto. ¿Cuál es tu perspectiva sobre la energía renovable?",
+    "opening_en": "Good afternoon. I'm the lead reporter. Today we're debating a very important topic: how can we protect the environment and develop a sustainable economy? I want to hear your opinion on this conflict. What's your perspective on renewable energy?",
+    "goal": "Defend your position on environmental sustainability by presenting arguments supported by evidence, citing reliable sources, and engaging in a sophisticated debate about current events and media perspectives."
+  }
+}

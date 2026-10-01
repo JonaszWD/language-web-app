@@ -1,0 +1,115 @@
+{
+  "id": "m017-banking",
+  "order_index": 17,
+  "title": "En el banco: Abriendo una cuenta y transferencias",
+  "description": "B1-level banking scenario where learners practice opening a bank account and making transfers. Master essential financial vocabulary and conditional structures to handle real banking situations in Spanish-speaking countries.",
+  "level": "B1",
+  "topics": [
+    "relocation"
+  ],
+  "vocab": [
+    {
+      "spanish": "la cuenta bancaria",
+      "english": "bank account",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero abrir una cuenta bancaria en este banco."
+    },
+    {
+      "spanish": "la transferencia",
+      "english": "transfer",
+      "part_of_speech": "noun",
+      "example_sentence": "Necesito hacer una transferencia de dinero a mi hermano."
+    },
+    {
+      "spanish": "el saldo",
+      "english": "balance",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es el saldo de mi cuenta bancaria?"
+    },
+    {
+      "spanish": "el depósito",
+      "english": "deposit",
+      "part_of_speech": "noun",
+      "example_sentence": "Puedo hacer un depósito de dinero aquí."
+    },
+    {
+      "spanish": "el cajero automático",
+      "english": "ATM",
+      "part_of_speech": "noun",
+      "example_sentence": "El cajero automático está cerca de la puerta."
+    },
+    {
+      "spanish": "la tarjeta de débito",
+      "english": "debit card",
+      "part_of_speech": "noun",
+      "example_sentence": "Necesito una tarjeta de débito para pagar."
+    },
+    {
+      "spanish": "el interés",
+      "english": "interest",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuál es el interés de esta cuenta?"
+    },
+    {
+      "spanish": "el documento de identidad",
+      "english": "identification document",
+      "part_of_speech": "noun",
+      "example_sentence": "Necesito mi documento de identidad para abrir la cuenta."
+    },
+    {
+      "spanish": "firmar",
+      "english": "to sign",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesito firmar los documentos."
+    },
+    {
+      "spanish": "verificar",
+      "english": "to verify",
+      "part_of_speech": "verb",
+      "example_sentence": "El banco necesita verificar mi información."
+    },
+    {
+      "spanish": "los requisitos",
+      "english": "requirements",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Cuáles son los requisitos para abrir una cuenta?"
+    },
+    {
+      "spanish": "la comisión",
+      "english": "fee/commission",
+      "part_of_speech": "noun",
+      "example_sentence": "¿Hay comisión por las transferencias?"
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Condicional: Si + presente, condicional",
+      "gloss": "If + present tense, conditional form (expressing hypothetical banking scenarios)",
+      "example_es": "Si tengo más dinero, podría hacer una transferencia mayor.",
+      "cloze_template": "Si tengo dinero, _____ (poder) hacer un depósito.",
+      "cloze_answer": "podría"
+    },
+    {
+      "pattern": "Presente perfecto: He/Has + participio",
+      "gloss": "Present perfect (what you have already done regarding banking)",
+      "example_es": "He abierto una cuenta bancaria recientemente.",
+      "cloze_template": "Yo _____ (abrir) una cuenta bancaria hace dos semanas.",
+      "cloze_answer": "he abierto"
+    },
+    {
+      "pattern": "Necesito + infinitivo / Necesito que + subjuntivo",
+      "gloss": "I need to/I need that (expressing banking requirements and procedures)",
+      "example_es": "Necesito verificar mi saldo. / Necesito que el banco verifique mis documentos.",
+      "cloze_template": "Necesito _____ (firmar) todos los documentos para abrir la cuenta.",
+      "cloze_answer": "firmar"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Gerente de banco",
+    "role_en": "Bank Manager",
+    "setting": "Una sucursal bancaria en Madrid con escritorios, un mostrador y el cajero automático cerca de la puerta",
+    "opening": "Buenos días. Me llamo María. ¿Cómo puedo ayudarte hoy? ¿Quieres abrir una cuenta bancaria o hacer una transferencia?",
+    "opening_en": "Good morning. My name is María. How can I help you today? Do you want to open a bank account or make a transfer?",
+    "goal": "Successfully open a bank account or make a transfer by understanding requirements, providing identification, asking about fees and interest, and completing the necessary steps with the bank manager."
+  }
+}

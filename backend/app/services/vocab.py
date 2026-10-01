@@ -5,7 +5,7 @@ Levels (stored on UserCard.level):
   2  guided typing — Pexels image + scrambled letters, type the word
   3  recall        — English prompt, type the ES word (no help)
   4  cloze         — ES sentence with a blank, type the word
-  5  production    — write a sentence; Gemini grades it
+  5  production    — write a sentence; Mistral grades it
 
 A correct answer advances the card one level (5 = mastered). Scheduling still
 flows through FSRS so cards reappear on sensible intervals. Level 1 used to be
@@ -20,7 +20,9 @@ import logging
 import random
 import unicodedata
 import uuid
+from collections.abc import Sequence
 from datetime import date, datetime, time, timedelta, timezone
+from typing import Any
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -36,7 +38,7 @@ from app.services import srs as srs_service
 logger = logging.getLogger("vocab")
 
 MASTERED_LEVEL = 5
-PASS_SCORE = 60  # level-5 Gemini score needed to count as correct
+PASS_SCORE = 60  # level-5 Mistral score needed to count as correct
 
 # A mission's Vocabulary step (or a burst within it) is considered "ready to
 # advance" once every word reaches this level — not full mastery. Full mastery
@@ -73,7 +75,7 @@ def _strip_article(s: str) -> str:
 
 
 def ensure_enrichment(db: Session, word: Word) -> Word:
-    """Populate word.enrichment (Gemini) and word.image_url (Pexels) on first use.
+    """Populate word.enrichment (Mistral) and word.image_url (Pexels) on first use.
 
     Best-effort: failures are logged and leave the field None so the UI degrades
     gracefully rather than blocking the exercise.
@@ -144,17 +146,23 @@ def scrambled_letters(spanish: str) -> list[str]:
     return letters
 
 
-def apply_word_signal(db: Session, user_id: uuid.UUID, spanish: str, rating: int) -> UserCard | None:
+def apply_word_signal(
+    db: Session, user_id: uuid.UUID, spanish: str, rating: int, *, create_if_missing: bool = False
+) -> UserCard | None:
     """Feed an FSRS rating from OUTSIDE the formal vocab trainer — e.g. a word
     the learner correctly produced unprompted during a Speaking/Final Challenge
-    free conversation. That's a stronger mastery signal than a scripted answer
-    and should push the review interval out (or pull it in on a miss) the same
-    as any other review; ignoring it would waste the most ecologically valid
-    signal the app has.
+    free conversation, or a word a Listening checkpoint just tested. That's a
+    stronger mastery signal than a scripted answer and should push the review
+    interval out (or pull it in on a miss) the same as any other review;
+    ignoring it would waste the most ecologically valid signal the app has.
 
     Deliberately does not touch UserCard.level — leveling is a vocab-trainer
     concept; this only advances the shared FSRS schedule. No-ops (returns None)
-    when the word isn't in the user's deck.
+    when the word isn't in the global dictionary at all — that would need a
+    translation/example we don't have from a bare Spanish string. When the word
+    exists but this user has no UserCard for it yet, `create_if_missing` decides
+    whether to mint one (default False, preserving prior callers' behaviour of
+    only ever advancing a card already in the user's deck).
     """
     word = db.query(Word).filter(func.lower(Word.spanish) == spanish.strip().lower()).first()
     if word is None:
@@ -165,7 +173,11 @@ def apply_word_signal(db: Session, user_id: uuid.UUID, spanish: str, rating: int
         .first()
     )
     if card is None:
-        return None
+        if not create_if_missing:
+            return None
+        card = UserCard(user_id=user_id, word_id=word.id, due_date=date.today(), state="new")
+        db.add(card)
+        db.flush()
 
     update = srs_service.schedule(
         stability=card.stability,
@@ -190,6 +202,104 @@ def apply_word_signal(db: Session, user_id: uuid.UUID, spanish: str, rating: int
     return card
 
 
+def weakest_words(db: Session, user_id: uuid.UUID, *, limit: int = 6) -> list[UserCard]:
+    """This user's worst-performing words — lowest accuracy first, most FSRS
+    lapses as the tiebreak — for the weakness-targeted Review lesson.
+
+    Only considers cards with at least one attempt (accuracy is meaningless at
+    zero). A learner too new to have any scored attempts falls back to their
+    lowest-level, earliest-due cards instead of an empty weak-spot list — new
+    words are the closest available proxy for "needs the most work" until real
+    signal exists.
+    """
+    attempted = db.query(UserCard).filter(UserCard.user_id == user_id, UserCard.attempts > 0).all()
+    if attempted:
+        attempted.sort(key=lambda c: (c.correct_count / c.attempts, -c.lapses))
+        return attempted[:limit]
+    return (
+        db.query(UserCard)
+        .filter(UserCard.user_id == user_id)
+        .order_by(UserCard.level.asc(), UserCard.due_date.asc())
+        .limit(limit)
+        .all()
+    )
+
+
+# FSRS has no distinct "mature" state (only new/learning/review/relearning —
+# see services.srs) — this is the standard spaced-repetition convention for
+# promoting a "review" card to "mature": stability of 21+ days.
+MATURE_STABILITY_DAYS = 21
+
+
+def vocab_dashboard_summary(db: Session, user_id: uuid.UUID) -> dict:
+    """Deck-wide aggregates for the Home tab's Data section — due tomorrow,
+    the new/learning/mature split, average card stability, lapse rate, top
+    lapsed words, and average response time. All pure aggregate queries over
+    UserCard; no schema beyond what vocab training already writes."""
+    tomorrow = date.today() + timedelta(days=1)
+    due_tomorrow = (
+        db.query(func.count(UserCard.id))
+        .filter(UserCard.user_id == user_id, UserCard.due_date == tomorrow)
+        .scalar()
+        or 0
+    )
+
+    state_counts: dict[str, int] = {
+        state: count
+        for state, count in db.query(UserCard.state, func.count(UserCard.id))
+        .filter(UserCard.user_id == user_id)
+        .group_by(UserCard.state)
+        .all()
+    }
+    mature_count = (
+        db.query(func.count(UserCard.id))
+        .filter(
+            UserCard.user_id == user_id,
+            UserCard.state == "review",
+            UserCard.stability >= MATURE_STABILITY_DAYS,
+        )
+        .scalar()
+        or 0
+    )
+    review_count = state_counts.get("review", 0)
+
+    totals = (
+        db.query(
+            func.avg(UserCard.stability),
+            func.sum(UserCard.lapses),
+            func.sum(UserCard.reps),
+            func.sum(UserCard.response_ms_total),
+            func.sum(UserCard.attempts),
+        )
+        .filter(UserCard.user_id == user_id)
+        .first()
+    )
+    avg_stability, lapses_sum, reps_sum, response_ms_sum, attempts_sum = totals or (None, 0, 0, 0, 0)
+
+    hardest = (
+        db.query(Word.spanish)
+        .join(UserCard, UserCard.word_id == Word.id)
+        .filter(UserCard.user_id == user_id, UserCard.lapses > 0)
+        .order_by(UserCard.lapses.desc())
+        .limit(5)
+        .all()
+    )
+
+    return {
+        "due_tomorrow": due_tomorrow,
+        "new_count": state_counts.get("new", 0),
+        "learning_count": state_counts.get("learning", 0) + state_counts.get("relearning", 0),
+        # "review" cards below the maturity threshold are still "learning" in
+        # spirit — mature is the subset that's earned a long interval.
+        "mature_count": mature_count,
+        "reviewing_count": review_count - mature_count,
+        "avg_stability": float(avg_stability) if avg_stability is not None else None,
+        "lapse_rate": (lapses_sum / reps_sum) if reps_sum else None,
+        "hardest_words": [w for (w,) in hardest],
+        "avg_response_ms": (response_ms_sum / attempts_sum) if attempts_sum else None,
+    }
+
+
 def _distractor_options(db: Session, word: Word, mission_id: str | None, n: int = 3) -> list[str]:
     """English distractors for the level-1 recognition MCQ. Prefers the same
     mission's other words (thematically close — a harder, better test) and
@@ -198,7 +308,7 @@ def _distractor_options(db: Session, word: Word, mission_id: str | None, n: int 
     seen = {word.english.strip().lower()}
     picks: list[str] = []
 
-    def _add(rows: list[tuple[str]]) -> None:
+    def _add(rows: Sequence[Any]) -> None:
         pool = list(rows)
         random.shuffle(pool)
         for (en,) in pool:
@@ -280,7 +390,7 @@ def grade(
     (accuracy/response time/confidence/hints/attempts/last success).
 
     Returns a result dict the router serializes (correct flag, new level,
-    optional Gemini feedback for level 5, updated stats).
+    optional Mistral feedback for level 5, updated stats).
     """
     level = card.level
     correct = False
@@ -295,7 +405,7 @@ def grade(
         targets = {normalize(word.spanish), normalize(_strip_article(word.spanish))}
         correct = normalize(answer or "") in targets
         fsrs_rating = 3 if correct else 1
-    else:  # level 5 — Gemini evaluation
+    else:  # level 5 — Mistral evaluation
         try:
             feedback = enrich_service.evaluate_sentence(word.spanish, word.english, answer or "")
             correct = bool(feedback.get("correct_usage")) and feedback.get("score", 0) >= PASS_SCORE
@@ -351,7 +461,7 @@ def grade(
     db.commit()
 
     # Same attempt, tagged into the cross-cutting per-skill dashboard rollup.
-    # Level 1 = recognition (MCQ), 2-4 = recall (typed), 5 = writing (Gemini-graded).
+    # Level 1 = recognition (MCQ), 2-4 = recall (typed), 5 = writing (Mistral-graded).
     if level == 1:
         skill = skill_stats_service.SKILL_RECOGNITION
     elif level in (2, 3, 4):

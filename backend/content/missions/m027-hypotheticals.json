@@ -1,0 +1,116 @@
+{
+  "id": "m027-hypotheticals",
+  "order_index": 27,
+  "title": "¿Qué harías? Situaciones hipotéticas",
+  "description": "Master conditional language for discussing what you would do in hypothetical situations. Learn to express preferences, possibilities, and imaginary scenarios at B2 level.",
+  "level": "B2",
+  "topics": [
+    "social",
+    "academic"
+  ],
+  "vocab": [
+    {
+      "spanish": "haría",
+      "english": "would do (conditional)",
+      "part_of_speech": "verb",
+      "example_sentence": "Si tuviera dinero, haría un viaje al extranjero."
+    },
+    {
+      "spanish": "sería",
+      "english": "would be (conditional)",
+      "part_of_speech": "verb",
+      "example_sentence": "Sería fantástico trabajar en una empresa eco-amigable."
+    },
+    {
+      "spanish": "tendría",
+      "english": "would have (conditional)",
+      "part_of_speech": "verb",
+      "example_sentence": "Si aceptara el puesto, tendría un salario mejor."
+    },
+    {
+      "spanish": "podría",
+      "english": "could/would be able to (conditional)",
+      "part_of_speech": "verb",
+      "example_sentence": "Con la experiencia, podría lograr mis objetivos."
+    },
+    {
+      "spanish": "iría",
+      "english": "would go (conditional)",
+      "part_of_speech": "verb",
+      "example_sentence": "Si me invitaran, iría a la celebración."
+    },
+    {
+      "spanish": "si tuviera",
+      "english": "if I had (subjunctive past)",
+      "part_of_speech": "verb phrase",
+      "example_sentence": "Si tuviera más tiempo, estudiaría más."
+    },
+    {
+      "spanish": "aunque",
+      "english": "although/even if",
+      "part_of_speech": "conjunction",
+      "example_sentence": "Aunque fuera difícil, lo intentaría."
+    },
+    {
+      "spanish": "en tu lugar",
+      "english": "in your place",
+      "part_of_speech": "phrase",
+      "example_sentence": "En tu lugar, rechazaría esa oferta."
+    },
+    {
+      "spanish": "me gustaría",
+      "english": "I would like (conditional)",
+      "part_of_speech": "verb",
+      "example_sentence": "Me gustaría conocer otras perspectivas."
+    },
+    {
+      "spanish": "es probable que",
+      "english": "it is likely that",
+      "part_of_speech": "phrase",
+      "example_sentence": "Es probable que acepte el compromiso."
+    },
+    {
+      "spanish": "imagina que",
+      "english": "imagine that",
+      "part_of_speech": "phrase",
+      "example_sentence": "Imagina que tienes el control del futuro."
+    },
+    {
+      "spanish": "en ese caso",
+      "english": "in that case",
+      "part_of_speech": "phrase",
+      "example_sentence": "En ese caso, propongo una solución diferente."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Conditional: subject + conditional verb form",
+      "gloss": "The conditional tense expresses hypothetical actions and possibilities in the future",
+      "example_es": "Si tuviera dinero, compraría un apartamento eco-amigable.",
+      "cloze_template": "Si tuviera dinero, ________ un apartamento eco-amigable.",
+      "cloze_answer": "compraría"
+    },
+    {
+      "pattern": "Si + subjunctive past, + conditional main clause",
+      "gloss": "This structure expresses contrary-to-fact conditions: if X were true, then Y would happen",
+      "example_es": "Si aceptara el puesto en la empresa, tendría más responsabilidades.",
+      "cloze_template": "Si ________ el puesto en la empresa, tendría más responsabilidades.",
+      "cloze_answer": "aceptara"
+    },
+    {
+      "pattern": "me/te/le gustaría + infinitive (polite conditional request/preference)",
+      "gloss": "Express polite desires and hypothetical preferences using conditional gustar",
+      "example_es": "Me gustaría resolver este conflicto sin debate, aunque sea difícil.",
+      "cloze_template": "Me ________ resolver este conflicto sin debate, aunque sea difícil.",
+      "cloze_answer": "gustaría"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Un consejero de carrera (Career advisor)",
+    "role_en": "A career advisor",
+    "setting": "Una oficina de orientación profesional en Madrid",
+    "opening": "Hola, me llamo Roberto. Hoy quiero ayudarte a pensar en tu futuro. Imagina que tienes varias oportunidades laborales diferentes. ¿Qué harías en cada situación?",
+    "opening_en": "Hello, my name is Roberto. Today I want to help you think about your future. Imagine you have several different job opportunities. What would you do in each situation?",
+    "goal": "Discuss three hypothetical career scenarios using conditional forms and justify your choices based on your values, lifestyle, and goals."
+  }
+}

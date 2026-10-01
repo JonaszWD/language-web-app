@@ -14,7 +14,21 @@ from app.models.podcast import (
     TRANSCRIPT_PENDING,
     PodcastEpisode,
 )
-from app.routers import auth, grammar, missions, podcasts, stats, study, tts, vocab, words, writing
+from app.routers import (
+    auth,
+    goals,
+    grammar,
+    listening,
+    missions,
+    podcasts,
+    speaking,
+    stats,
+    study,
+    tts,
+    vocab,
+    words,
+    writing,
+)
 from app.services.podcast import audio_path, queue_download, start_scheduler, stop_scheduler
 
 logger = logging.getLogger("startup")
@@ -83,7 +97,10 @@ app.include_router(vocab.router)
 app.include_router(grammar.router)
 app.include_router(writing.router)
 app.include_router(missions.router)
+app.include_router(goals.router)
+app.include_router(speaking.router)
 app.include_router(tts.router)
+app.include_router(listening.router)
 
 
 @app.get("/health")

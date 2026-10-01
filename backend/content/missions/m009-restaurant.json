@@ -1,0 +1,116 @@
+{
+  "id": "m009-restaurant",
+  "order_index": 9,
+  "title": "¡Bienvenido al Restaurante!",
+  "description": "Learn to order a complete meal at a Spanish restaurant. Master essential phrases for requesting food, specifying preferences, and paying the bill. This A1 mission teaches you how to confidently navigate a real dining experience.",
+  "level": "A1",
+  "topics": [
+    "travel",
+    "social"
+  ],
+  "vocab": [
+    {
+      "spanish": "me trae",
+      "english": "bring me",
+      "part_of_speech": "verb phrase",
+      "example_sentence": "Me trae un café con leche, por favor."
+    },
+    {
+      "spanish": "para mi",
+      "english": "for me",
+      "part_of_speech": "preposition phrase",
+      "example_sentence": "Para mi, el agua, por favor."
+    },
+    {
+      "spanish": "el plato",
+      "english": "the dish/plate",
+      "part_of_speech": "noun",
+      "example_sentence": "El plato es grande."
+    },
+    {
+      "spanish": "el menú",
+      "english": "the menu",
+      "part_of_speech": "noun",
+      "example_sentence": "Me trae el menú, por favor."
+    },
+    {
+      "spanish": "la sopa",
+      "english": "the soup",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero la sopa para mi."
+    },
+    {
+      "spanish": "el pollo",
+      "english": "the chicken",
+      "part_of_speech": "noun",
+      "example_sentence": "El pollo es muy bueno."
+    },
+    {
+      "spanish": "con",
+      "english": "with",
+      "part_of_speech": "preposition",
+      "example_sentence": "El café con leche es delicioso."
+    },
+    {
+      "spanish": "el pan",
+      "english": "the bread",
+      "part_of_speech": "noun",
+      "example_sentence": "El pan blanco, por favor."
+    },
+    {
+      "spanish": "listo",
+      "english": "ready",
+      "part_of_speech": "adjective",
+      "example_sentence": "Estoy listo para comer."
+    },
+    {
+      "spanish": "la mesa",
+      "english": "the table",
+      "part_of_speech": "noun",
+      "example_sentence": "La mesa está aquí."
+    },
+    {
+      "spanish": "delicioso",
+      "english": "delicious",
+      "part_of_speech": "adjective",
+      "example_sentence": "El plato es muy delicioso."
+    },
+    {
+      "spanish": "¿Qué desea?",
+      "english": "What would you like?",
+      "part_of_speech": "verb phrase",
+      "example_sentence": "Camarero: ¿Qué desea usted?"
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Quiero + el/la [dish]",
+      "gloss": "I want the [dish]",
+      "example_es": "Quiero el pollo con pan.",
+      "cloze_template": "Quiero ___ sopa para mi.",
+      "cloze_answer": "la"
+    },
+    {
+      "pattern": "Me trae + el/la [item] + por favor",
+      "gloss": "Bring me [item] please",
+      "example_es": "Me trae el café con leche, por favor.",
+      "cloze_template": "Me trae ___ menú, por favor.",
+      "cloze_answer": "el"
+    },
+    {
+      "pattern": "[Item] + con + [ingredient/modifier]",
+      "gloss": "[Item] with [ingredient/modifier]",
+      "example_es": "Café con leche es delicioso.",
+      "cloze_template": "El pan ___ agua es bueno.",
+      "cloze_answer": "con"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Camarero",
+    "role_en": "Waiter",
+    "setting": "Un restaurante en Madrid - you are seated at a table with the menu in front of you",
+    "opening": "Buenas tardes, bienvenido. ¿Qué desea?",
+    "opening_en": "Good afternoon, welcome. What would you like?",
+    "goal": "Order a complete meal (soup, chicken dish with bread, and a beverage), confirm you are ready to eat, and ask for the bill"
+  }
+}

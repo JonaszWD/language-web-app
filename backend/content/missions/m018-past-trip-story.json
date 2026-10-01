@@ -1,0 +1,115 @@
+{
+  "id": "m018-past-trip-story",
+  "order_index": 18,
+  "title": "Describing a Past Trip: Preterite and Imperfect Storytelling",
+  "description": "Master the art of telling stories about past trips using Spanish preterite and imperfect tenses. Learn to combine narrative techniques by describing ongoing situations, interrupted actions, and completed events from your travels. This B1 lesson equips you with natural storytelling vocabulary and grammatical structures to recount memorable experiences vividly.",
+  "level": "B1",
+  "topics": [
+    "travel"
+  ],
+  "vocab": [
+    {
+      "spanish": "pasado",
+      "english": "past",
+      "part_of_speech": "adjective/noun",
+      "example_sentence": "Mi viaje pasado fue increíble."
+    },
+    {
+      "spanish": "increíble",
+      "english": "incredible",
+      "part_of_speech": "adjective",
+      "example_sentence": "La experiencia fue increíble y nunca la olvidaré."
+    },
+    {
+      "spanish": "olvidar",
+      "english": "to forget",
+      "part_of_speech": "verb",
+      "example_sentence": "Nunca olvidaré el viaje que hice hace tres años."
+    },
+    {
+      "spanish": "recuerdo",
+      "english": "I remember / memory",
+      "part_of_speech": "verb/noun",
+      "example_sentence": "Recuerdo que hacía mucho calor cuando llegué al destino."
+    },
+    {
+      "spanish": "exactamente",
+      "english": "exactly",
+      "part_of_speech": "adverb",
+      "example_sentence": "Era exactamente lo que quería ver en mi viaje."
+    },
+    {
+      "spanish": "mientras",
+      "english": "while",
+      "part_of_speech": "conjunction",
+      "example_sentence": "Mientras comía en el restaurante, vio a un amigo."
+    },
+    {
+      "spanish": "de repente",
+      "english": "suddenly",
+      "part_of_speech": "adverbial phrase",
+      "example_sentence": "De repente, empezó a llover cuando estábamos en la plaza."
+    },
+    {
+      "spanish": "durante",
+      "english": "during",
+      "part_of_speech": "preposition",
+      "example_sentence": "Durante el vuelo, tomé mucho café con leche."
+    },
+    {
+      "spanish": "sucedió",
+      "english": "it happened",
+      "part_of_speech": "verb",
+      "example_sentence": "Sucedió algo increíble durante mi estancia allá."
+    },
+    {
+      "spanish": "estancia",
+      "english": "stay",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi estancia en el apartamento fue deliciosa."
+    },
+    {
+      "spanish": "fue",
+      "english": "was/went",
+      "part_of_speech": "verb",
+      "example_sentence": "El viaje fue el mejor de mi vida."
+    },
+    {
+      "spanish": "conocer",
+      "english": "to meet / to know",
+      "part_of_speech": "verb",
+      "example_sentence": "Conocí a personas muy interesantes en mi viaje pasado."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Imperfect: Estaba/Eran + verb description of background",
+      "gloss": "I was [doing] / They were [doing] - describes what was happening in the past",
+      "example_es": "Mientras viajaba en el avión, leía un libro. El camarero era muy amable durante toda mi estancia.",
+      "cloze_template": "_____ viajando cuando sucedió algo increíble.",
+      "cloze_answer": "Estaba"
+    },
+    {
+      "pattern": "Preterite: Fue/Sucedió + completed action or event",
+      "gloss": "It was / It happened - marks a specific completed event in the past",
+      "example_es": "Fue increíble. De repente, empezó a llover. Conocí a mi esposo durante el vuelo.",
+      "cloze_template": "De repente, _____ a llover mientras estábamos en la plaza.",
+      "cloze_answer": "empezó"
+    },
+    {
+      "pattern": "Imperfect + Preterite: Mientras + imperfect, preterite (or vice versa)",
+      "gloss": "While [something ongoing], [something happened] - contrasts background action with specific interrupting event",
+      "example_es": "Mientras dormía en el apartamento, sonó el teléfono. Cuando llegué al destino, hacía mucho calor. Durante mi estancia, visité muchos lugares pero un día me dolía la cabeza.",
+      "cloze_template": "Mientras _____ en el restaurante, de repente vino el camarero con un plato delicioso.",
+      "cloze_answer": "comía"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Un viajero experimentado en una reunión familiar",
+    "role_en": "An experienced traveler at a family gathering",
+    "setting": "La sala de una casa, después de cenar, donde la familia espera escuchar historias del viaje reciente",
+    "opening": "¡Hola! Cuéntame, ¿cómo fue tu viaje pasado? Recuerdo que viajaste hace algunos años a un lugar increíble. ¿Qué sucedió durante tu estancia? ¿Qué hacías mientras estabas allá?",
+    "opening_en": "Hi! Tell me, how was your past trip? I remember you traveled a few years ago to an incredible place. What happened during your stay? What were you doing while you were there?",
+    "goal": "Describe your entire past trip using both imperfect (what was happening, what things were like) and preterite (what happened, what you did). Include at least three specific events that interrupted ongoing actions. Use the connecting words 'mientras,' 'de repente,' 'durante,' and 'exactamente' naturally in your storytelling."
+  }
+}

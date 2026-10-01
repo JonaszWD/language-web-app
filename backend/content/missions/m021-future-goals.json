@@ -1,0 +1,116 @@
+{
+  "id": "m021-future-goals",
+  "order_index": 21,
+  "title": "Future Plans and Long-Term Goals",
+  "description": "Learn to discuss aspirations, career objectives, and life plans in Spanish. Master B1-level vocabulary and grammar for talking about future intentions, desired achievements, and personal development goals.",
+  "level": "B1",
+  "topics": [
+    "work",
+    "academic"
+  ],
+  "vocab": [
+    {
+      "spanish": "el objetivo",
+      "english": "the goal/objective",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi objetivo es trabajar en una empresa grande en cinco años."
+    },
+    {
+      "spanish": "la carrera",
+      "english": "the career",
+      "part_of_speech": "noun",
+      "example_sentence": "Quiero desarrollar una carrera en el deporte."
+    },
+    {
+      "spanish": "la meta",
+      "english": "the goal/target",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi meta es ahorrar dinero para comprar un apartamento."
+    },
+    {
+      "spanish": "el sueño",
+      "english": "the dream",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi sueño es viajar a muchos países desde aquí."
+    },
+    {
+      "spanish": "ahorrar",
+      "english": "to save (money)",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesito ahorrar dinero durante cinco años."
+    },
+    {
+      "spanish": "lograr",
+      "english": "to achieve/accomplish",
+      "part_of_speech": "verb",
+      "example_sentence": "Quiero lograr mis objetivos antes de los treinta años."
+    },
+    {
+      "spanish": "estudiar",
+      "english": "to study",
+      "part_of_speech": "verb",
+      "example_sentence": "Planeo estudiar en una universidad buena."
+    },
+    {
+      "spanish": "viajar",
+      "english": "to travel",
+      "part_of_speech": "verb",
+      "example_sentence": "Me encanta viajar y conocer nuevos lugares allá."
+    },
+    {
+      "spanish": "el futuro",
+      "english": "the future",
+      "part_of_speech": "noun",
+      "example_sentence": "En el futuro, quiero ser responsable de una empresa."
+    },
+    {
+      "spanish": "la habilidad",
+      "english": "the skill/ability",
+      "part_of_speech": "noun",
+      "example_sentence": "Necesito desarrollar la habilidad de hablar español bien."
+    },
+    {
+      "spanish": "el éxito",
+      "english": "the success",
+      "part_of_speech": "noun",
+      "example_sentence": "Mi objetivo es tener éxito en mi carrera."
+    },
+    {
+      "spanish": "planificar",
+      "english": "to plan",
+      "part_of_speech": "verb",
+      "example_sentence": "Planeo planificar mi futuro con cuidado."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Quiero + infinitive (expressing desire/intention)",
+      "gloss": "I want to [do something]",
+      "example_es": "Quiero lograr mis objetivos en cinco años.",
+      "cloze_template": "Quiero _____ una carrera emocionante en el futuro.",
+      "cloze_answer": "desarrollar"
+    },
+    {
+      "pattern": "Planeo/Pienso + infinitive (expressing plans)",
+      "gloss": "I plan/intend to [do something]",
+      "example_es": "Pienso estudiar y ahorrar dinero durante años.",
+      "cloze_template": "Planeo _____ en una universidad buena cerca de aquí.",
+      "cloze_answer": "estudiar"
+    },
+    {
+      "pattern": "En el futuro + clause (talking about the future)",
+      "gloss": "In the future [something will happen/I will do something]",
+      "example_es": "En el futuro, quiero ser responsable de una empresa grande.",
+      "cloze_template": "En el futuro, pienso _____ y conocer muchos lugares allá.",
+      "cloze_answer": "viajar"
+    }
+  ],
+  "speaking_scene": {
+    "role": "un consejero de carrera",
+    "role_en": "a career counselor",
+    "setting": "una oficina en una empresa grande en Madrid",
+    "opening": "Hola, me llamo Carlos. Soy consejero de carrera. ¿Cuál es tu objetivo principal en el futuro? ¿Cuáles son tus metas?",
+    "opening_en": "Hello, my name is Carlos. I'm a career counselor. What is your main objective for the future? What are your goals?",
+    "goal": "Explain your career dreams, the skills you want to develop, your timeline for achieving goals, and how you plan to save money or study to make your dreams a reality."
+  }
+}

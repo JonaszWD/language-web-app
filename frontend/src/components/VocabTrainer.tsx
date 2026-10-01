@@ -39,6 +39,7 @@ export default function VocabTrainer({
   onBack,
   onDone,
   backLabel = "Back",
+  hideBack = false,
   emptyTitle = "Nothing due!",
   onAuthError,
 }: {
@@ -57,6 +58,8 @@ export default function VocabTrainer({
   /** Shown as the empty-state action when set (e.g. advance the mission step). */
   onDone?: () => void;
   backLabel?: string;
+  /** Set when a caller already renders its own persistent back button (e.g. the mission hub). */
+  hideBack?: boolean;
   emptyTitle?: string;
   onAuthError?: () => void;
 }) {
@@ -159,8 +162,8 @@ export default function VocabTrainer({
   return (
     <div className={"vt-wrap" + (card && !error && !empty && result && card.level >= 1 && card.level <= 4 ? " wide" : "")}>
       <div className="vt-topbar" style={{ width: "100%" }}>
-        <button className="vt-back" onClick={onBack}><ChevronIcon /> {backLabel}</button>
-        {card && !error && !empty && <span className="vt-level">Level {card.level} · {LEVEL_LABELS[card.level]}</span>}
+        {!hideBack && <button className="vt-back" onClick={onBack}><ChevronIcon /> {backLabel}</button>}
+        {!hideBack && card && !error && !empty && <span className="vt-level">Level {card.level} · {LEVEL_LABELS[card.level]}</span>}
       </div>
 
       {error ? (
@@ -182,12 +185,12 @@ export default function VocabTrainer({
         </div>
       ) : (
         <>
-          <div className="vt-dots">
-            {[1, 2, 3, 4, 5].map((n) => <span key={n} className={"vt-dot" + (n <= card.level ? " on" : "")} />)}
+          <div className="vt-progress">
+            <div className="vt-progress-fill" style={{ width: `${(card.level / 5) * 100}%` }} />
           </div>
           {result ? (
             // Levels 1-4 flank the result card with tip boxes (left/right),
-            // examples underneath. Level 5 (Gemini feedback): plain panel.
+            // examples underneath. Level 5 (AI feedback): plain panel.
             card.level >= 1 && card.level <= 4
               ? <LevelTwoReveal result={result} tips={card.tips} userAnswer={lastAnswer} onNext={handleNext} />
               : <ResultPanel result={result} onNext={handleNext} />

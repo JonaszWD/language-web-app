@@ -23,10 +23,13 @@ export interface GeneratedOverlay {
 }
 
 interface GeneratedMission {
-  overlay: GeneratedOverlay;
-  grammar: GrammarLessonScript;
-  listening: ListeningLessonScript;
-  writing: WritingLessonScript;
+  // overlay is absent for "lessons-only" entries (a hand-authored overlay in
+  // AppShell supplies icon/coords/levels); decks are absent only if generation
+  // was skipped. Every field is therefore optional here.
+  overlay?: GeneratedOverlay;
+  grammar?: GrammarLessonScript;
+  listening?: ListeningLessonScript;
+  writing?: WritingLessonScript;
 }
 
 // The JSON is authored by the generator against the same schemas; trust its
@@ -34,8 +37,14 @@ interface GeneratedMission {
 // error, since JSON carries no type).
 const generated = raw as unknown as Record<string, GeneratedMission>;
 
-function slice<K extends keyof GeneratedMission>(key: K): Record<string, GeneratedMission[K]> {
-  return Object.fromEntries(Object.entries(generated).map(([id, m]) => [id, m[key]]));
+// Drop entries missing this slice, so lessons-only missions don't inject an
+// undefined overlay (and vice-versa).
+function slice<K extends keyof GeneratedMission>(key: K): Record<string, NonNullable<GeneratedMission[K]>> {
+  return Object.fromEntries(
+    Object.entries(generated)
+      .filter(([, m]) => m[key] != null)
+      .map(([id, m]) => [id, m[key] as NonNullable<GeneratedMission[K]>]),
+  );
 }
 
 export const generatedGrammar = slice("grammar");

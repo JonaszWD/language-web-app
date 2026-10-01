@@ -14,8 +14,8 @@ const dmSerifDisplay = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: "SpanishUp — Learn Spanish with Spaced Repetition",
-  description: "Master Spanish vocabulary with FSRS flashcards",
+  title: "Plauda — Learn Spanish through real-life missions",
+  description: "Scenario-based Spanish missions with FSRS-scheduled vocabulary, grammar, listening, speaking and writing practice.",
 };
 
 export default function RootLayout({

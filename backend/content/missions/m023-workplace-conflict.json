@@ -1,0 +1,115 @@
+{
+  "id": "m023-workplace-conflict",
+  "order_index": 23,
+  "title": "Resolving Workplace Conflict",
+  "description": "Navigate disagreements with colleagues and find constructive solutions in a professional environment. Learn to express concerns, negotiate, and reach compromises while maintaining professional relationships.",
+  "level": "B2",
+  "topics": [
+    "work"
+  ],
+  "vocab": [
+    {
+      "spanish": "el conflicto",
+      "english": "conflict",
+      "part_of_speech": "noun",
+      "example_sentence": "El conflicto entre colegas es común en la empresa."
+    },
+    {
+      "spanish": "el desacuerdo",
+      "english": "disagreement",
+      "part_of_speech": "noun",
+      "example_sentence": "Tenemos un desacuerdo sobre el objetivo del proyecto."
+    },
+    {
+      "spanish": "resolver",
+      "english": "to resolve",
+      "part_of_speech": "verb",
+      "example_sentence": "Necesitamos resolver este problema rápidamente."
+    },
+    {
+      "spanish": "la perspectiva",
+      "english": "perspective",
+      "part_of_speech": "noun",
+      "example_sentence": "Desde mi perspectiva, debemos cambiar el enfoque."
+    },
+    {
+      "spanish": "el malentendido",
+      "english": "misunderstanding",
+      "part_of_speech": "noun",
+      "example_sentence": "Creo que hay un malentendido entre nosotros."
+    },
+    {
+      "spanish": "negociar",
+      "english": "to negotiate",
+      "part_of_speech": "verb",
+      "example_sentence": "Vamos a negociar una solución aceptable para todos."
+    },
+    {
+      "spanish": "la crítica constructiva",
+      "english": "constructive criticism",
+      "part_of_speech": "noun",
+      "example_sentence": "La crítica constructiva nos ayuda a mejorar."
+    },
+    {
+      "spanish": "el compromiso",
+      "english": "compromise",
+      "part_of_speech": "noun",
+      "example_sentence": "Un compromiso beneficia a ambos lados."
+    },
+    {
+      "spanish": "abordar",
+      "english": "to address",
+      "part_of_speech": "verb",
+      "example_sentence": "Debemos abordar el problema en la reunión."
+    },
+    {
+      "spanish": "la tensión",
+      "english": "tension",
+      "part_of_speech": "noun",
+      "example_sentence": "Hay mucha tensión en el equipo ahora."
+    },
+    {
+      "spanish": "colaborar",
+      "english": "to collaborate",
+      "part_of_speech": "verb",
+      "example_sentence": "Podemos colaborar para lograr el éxito."
+    },
+    {
+      "spanish": "la comunicación",
+      "english": "communication",
+      "part_of_speech": "noun",
+      "example_sentence": "La buena comunicación resuelve muchos conflictos."
+    }
+  ],
+  "grammar": [
+    {
+      "pattern": "Creo que deberíamos + infinitive",
+      "gloss": "I think we should + verb",
+      "example_es": "Creo que deberíamos resolver este conflicto ahora.",
+      "cloze_template": "Creo que deberíamos ___ este desacuerdo.",
+      "cloze_answer": "resolver"
+    },
+    {
+      "pattern": "Desde mi perspectiva, + clause",
+      "gloss": "From my perspective, + statement",
+      "example_es": "Desde mi perspectiva, la solución es colaborar más.",
+      "cloze_template": "Desde mi perspectiva, ___ es cambiar el enfoque del proyecto.",
+      "cloze_answer": "la mejor solución"
+    },
+    {
+      "pattern": "Podemos + infinitive + si + clause",
+      "gloss": "We can + verb + if + condition",
+      "example_es": "Podemos lograr el objetivo si trabajamos juntos.",
+      "cloze_template": "Podemos resolver el conflicto ___ comunicamos mejor.",
+      "cloze_answer": "si"
+    }
+  ],
+  "speaking_scene": {
+    "role": "Colega en desacuerdo",
+    "role_en": "Colleague with a disagreement",
+    "setting": "Una sala de reuniones en la empresa durante la tarde",
+    "opening": "Hola, necesitamos hablar sobre el proyecto. Creo que tu enfoque no es el correcto y tenemos un desacuerdo importante.",
+    "opening_en": "Hi, we need to talk about the project. I think your approach is wrong and we have a serious disagreement.",
+    "goal": "Escucha la perspectiva del colega, entiende el malentendido, propone un compromiso y resuelve el conflicto mediante la negociación y la comunicación constructiva."
+  }
+}

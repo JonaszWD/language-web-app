@@ -1,8 +1,8 @@
-"""Gemini grammar coaching: grades free-form production at the final stage.
+"""Mistral grammar coaching: grades free-form production at the final stage.
 
 Used by the Grammar flow's "Produce" step — the learner writes a few sentences
 following an instruction (e.g. "describe your morning, use 5 present-tense verbs")
-and Gemini returns a score, the target verbs it found, and inline corrections.
+and Mistral returns a score, the target verbs it found, and inline corrections.
 """
 from __future__ import annotations
 
