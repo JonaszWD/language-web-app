@@ -100,7 +100,10 @@ function similarity(a: string, b: string): number {
 type WordScore = { word: string; good: boolean };
 type Result = { words: WordScore[]; heard: string; score: number };
 
-const GOOD_THRESHOLD = 0.75;
+// One wrong letter in a short word (pero vs perro = 0.8) must count as a
+// miss — those minimal pairs are exactly the sounds being trained — while
+// longer words still tolerate a single recogniser slip (8 letters, 1 edit = 0.875).
+const GOOD_THRESHOLD = 0.85;
 
 function scoreAttempt(target: string, alternatives: string[]): Result {
   const targetWords = target.split(/\s+/).filter(Boolean);

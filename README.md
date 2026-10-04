@@ -1,32 +1,59 @@
 # Plauda
 
-**Learn Spanish by living through real situations.** Plauda (developed under the working name *SpanishUp*) is a full-stack language-learning app. Every unit is a *mission*, such as ordering coffee, checking into a hotel or negotiating a contract. Inside a mission you listen, learn the words, practise the grammar, talk to an AI character, write, and finish with an unscripted conversation. Spaced repetition (FSRS-4.5) brings the words and grammar back at the right time.
+**A Spanish tutor you talk to.** Plauda (developed under the working name *SpanishUp*) is a full-stack language-learning app built around **spoken conversation**. Learners talk out loud with AI characters in real situations, such as ordering at a café, checking into a hotel or negotiating a contract. They get grammar corrections on what they said, translations of words they don't know, and feedback on their pronunciation, one word at a time. Vocabulary, grammar, listening and writing practice all feed into those conversations, and FSRS-4.5 spaced repetition brings the material back at the right time.
 
-> **Project status: archived.** Development has finished and the repository is kept as a portfolio piece. The app is complete and runs locally with one command, but no hosted version is maintained. Issues and PRs are not monitored.
+> **Project status: archived.** Development has finished and the repository is kept as a portfolio piece. The app is complete and runs locally with one command, but no hosted version is maintained.
 
-![Missions](.github/assets/missions.png)
+![Hands-free voice conversation with an AI waiter](.github/assets/speaking-conversation.png)
 
-| | |
+*A real session: the learner speaks hands-free, the mic sends each turn automatically when they pause, and the waiter's reply streams in. The mistake in "La tortilla es muy rico" is corrected inline, the scene's goals tick off on the right, and hovering any unknown word shows its translation.*
+
+## Speech: the core of the app
+
+### Hands-free voice conversation
+
+- The learner taps the mic once and then simply talks. The Web Speech API (`es-ES`) transcribes continuously, a pause of about 1.4 seconds counts as end of turn, and the turn is sent with no button press.
+- The mic is muted while the AI character speaks, so the app never transcribes its own voice. It re-arms when the reply finishes. Chrome's forced session restarts and its ~60-second session limit are absorbed without losing what the learner already said.
+- Replies are streamed token by token over Server-Sent Events, so the character starts answering immediately. They are spoken with ElevenLabs voices when a key is set, and with the browser's own voice otherwise.
+- Every turn is evaluated as structured output alongside the reply: whether the learner was understood, a corrected version of what they said, an English translation, and which of the scene's goals have now been met.
+- Words in the character's replies that aren't in the learner's deck are underlined. Hovering one shows its translation.
+
+### A 7-stage speaking ladder in every mission
+
+Each mission generates its own role-play. It moves from fully supported to unscripted: *repeat → choose → fill the gaps → say it from an English cue → short live exchange → branching conversation → free conversation*. At the end comes the **Final Challenge**, a native-speed conversation with no hints. Early stages accept only the target line. Later stages accept any correct way of saying it, because the goal is to communicate rather than recite.
+
+### Pronunciation practice
+
+![Per-word pronunciation feedback](.github/assets/pronunciation.png)
+
+- Each attempt is scored word by word against the target phrase, using the closest of up to five recogniser hypotheses. Short-word near-misses such as *pero* for *perro* are deliberately counted as errors, because those minimal pairs are the sounds being trained.
+- Misses are charged to the sounds they contain (rolled R, tapped R, J/soft G, Ñ, LL/Y, Z/soft C, B/V, soft D, pure vowels). That builds a running "sounds to work on" profile, and the drills that come up next are steered toward the weakest one.
+- Every score is logged to the backend's skill statistics, so pronunciation shows up on the learner's dashboard.
+
+### How a spoken turn flows
+
+```
+mic ─► Web Speech API (es-ES, continuous) ─► ~1.4 s silence ─► POST /api/speaking/turn
+                                                                  │
+          FastAPI ─► LLM (Claude Haiku / Mistral) ◄────────────────┘
+             │  streams reply tokens over SSE, then a final JSON event:
+             │  { understood, correction, npc_reply_en, objectives_met }
+             ▼
+browser renders tokens live ─► TTS (ElevenLabs, or browser voice) ─► mic re-arms
+             └─► record_attempt() ─► user_skill_stats ─► dashboard
+```
+
+## Everything around it
+
+| Missions | A mission's path |
 |---|---|
-| ![Home dashboard](.github/assets/home.png) | ![Mission path](.github/assets/mission-detail.png) |
-| ![Grammar syllabus](.github/assets/grammar.png) | ![Listening](.github/assets/listening.png) |
-| ![Pronunciation practice](.github/assets/pronunciation.png) | |
+| ![Missions](.github/assets/missions.png) | ![Mission path](.github/assets/mission-detail.png) |
 
-## Features
-
-**Missions (the core loop)**
-- 30 scenario missions, A1 to B2 (café, airport, doctor, pharmacy, hotel, job interview, banking, debates, hypotheticals…), each with 12 target words, 3 grammar patterns and an AI speaking scene.
-- Each mission is a ladder: *Context Preview → Listening → Vocabulary I → Grammar → Vocabulary II → Speaking → Writing → Feedback → Vocabulary Recap → Final Challenge*. The learner's onboarding skill priority moves their preferred step to the front.
-- When a mission is first opened, an LLM pipeline fills in its vocabulary (chunks, synonyms, gender, IPA, example sentences), a 7-stage speaking script and a context preview. Mistral is tried first and Claude Haiku is the fallback. The results are cached in Postgres.
-- Missions are recommended from the learner's ranked goals (travel, work, academic…).
-
-**Skills**
-- **Vocabulary**: a 5-level trainer (recognition → picture + scrambled letters → recall → cloze → free sentence graded by AI), scheduled with FSRS.
-- **Grammar**: a 44-topic syllabus from A1 to C1. Every topic is a 7-stage lesson: notice, rule, structured input, controlled practice, mixed practice, AI-graded free production, and spaced review on days 1/3/7/14.
-- **Listening**: checkpointed narrative stories (A1 to C1, including a 10-minute two-voice B1 story) that pause to ask comprehension questions. There is also a **podcast player**: import a YouTube playlist, episodes download in the background, transcribe on demand with faster-whisper, follow along in a timestamped transcript, and tap any word to translate it and save it to your deck.
-- **Speaking**: free AI conversation with scenario goals, streamed token by token over SSE, with optional ElevenLabs voice. **Pronunciation practice** scores each word through the Web Speech API and keeps a per-sound record (rr, j, ñ, ll, z/c…) that steers which drills come up next.
-- **Writing**: guided writing lessons and an AI writing coach.
-- **Dashboard**: streaks, XP trend, retention rate, consistency, study time of day, per-skill accuracy, weakest grammar structure, problem sounds and more.
+- **30 missions from A1 to B2.** Each has 12 target words, 3 grammar patterns and an AI speaking scene, and walks through *Context Preview → Listening → Vocabulary → Grammar → Vocabulary → Speaking → Writing → Feedback → Recap → Final Challenge*. When a mission is first opened, an LLM pipeline enriches its vocabulary and writes its speaking script and context preview. Mistral is tried first and Claude Haiku is the fallback, and the results are cached in Postgres.
+- **Vocabulary.** A 5-level trainer (recognition → picture + scrambled letters → recall → cloze → free sentence graded by AI), scheduled with FSRS.
+- **Grammar.** A 44-topic syllabus from A1 to C1. Every topic is a 7-stage lesson that ends in AI-graded free production and spaced review.
+- **Listening.** Checkpointed stories that pause to ask comprehension questions, plus a podcast player: import a YouTube playlist, transcribe episodes with faster-whisper, follow along in a timestamped transcript, and tap any word to save it to your deck.
+- **Writing and dashboard.** Guided writing with an AI coach, and a dashboard covering streaks, retention, XP trend, per-skill accuracy and problem sounds.
 
 ## Architecture
 
@@ -146,7 +173,7 @@ The `CD` GitHub workflow is manual-only now. It builds images to GHCR and can ro
 
 ## Known limitations
 
-- Pronunciation scoring uses the browser's speech recogniser, so it works in Chrome, Edge and Safari but not Firefox. It measures intelligibility, not phoneme-level accuracy.
+- Voice input relies on the browser's speech recogniser, so the voice features work in Chrome, Edge and Safari. Other browsers fall back to a text box. Pronunciation scoring checks whether each word came through clearly, not phoneme-level accuracy.
 - Per-sound pronunciation history and grammar-lesson progress are kept in `localStorage`, so they don't follow a learner across devices.
 - The globe view's optional 3D city layer is switched off because the Kenney building models it uses are not bundled.
 - There is no automated test suite. Quality checks are lint and type checks in CI, plus manual end-to-end runs.
