@@ -117,7 +117,7 @@ make clean     # down + drop volumes (wipes the database and downloaded audio)
 Checks (the same ones CI runs on every push):
 
 ```bash
-cd backend  && uv sync --dev && uv run ruff check . && uv run mypy app/
+cd backend  && uv sync --dev && uv run ruff check . && uv run mypy app/ && uv run pytest
 cd frontend && npm install && npm run lint && npx tsc --noEmit
 ```
 
@@ -176,7 +176,7 @@ The `CD` GitHub workflow is manual-only now. It builds images to GHCR and can ro
 - Voice input relies on the browser's speech recogniser, so the voice features work in Chrome, Edge and Safari. Other browsers fall back to a text box. Pronunciation scoring checks whether each word came through clearly, not phoneme-level accuracy.
 - Per-sound pronunciation history and grammar-lesson progress are kept in `localStorage`, so they don't follow a learner across devices.
 - The globe view's optional 3D city layer is switched off because the Kenney building models it uses are not bundled.
-- There is no automated test suite. Quality checks are lint and type checks in CI, plus manual end-to-end runs.
+- Automated tests cover only the pure logic (FSRS scheduler, answer normalisation). There are no API or UI tests yet; those paths are checked by lint, type checks in CI and manual end-to-end runs.
 
 ## License
 
