@@ -91,6 +91,7 @@ def schedule(
     state: str,
     rating: int,
     now: date,
+    elapsed_days: float | None = None,
 ) -> CardUpdate:
     """Compute next card state after a review.
 
@@ -102,6 +103,10 @@ def schedule(
         state: Current state ('new', 'learning', 'review', 'relearning').
         rating: User rating 1=Again, 2=Hard, 3=Good, 4=Easy.
         now: Date of the review.
+        elapsed_days: Days since the previous review. When unknown (callers
+            don't track it), the card is assumed to be reviewed on its due
+            date, i.e. at the target retention, so a successful review grows
+            stability instead of leaving it unchanged.
 
     Returns:
         CardUpdate with new field values.
@@ -147,10 +152,8 @@ def schedule(
             new_reps = reps + 1
 
     else:  # review
-        r = _forgetting_curve(
-            (now - now).days if reps == 0 else 0,
-            stability,
-        )
+        t = elapsed_days if elapsed_days is not None else stability
+        r = _forgetting_curve(t, stability)
         r = max(r, REQUEST_RETENTION * 0.5)
         new_difficulty = _difficulty_update(difficulty if difficulty > 0 else 5.0, rating)
 

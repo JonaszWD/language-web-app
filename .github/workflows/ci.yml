@@ -9,7 +9,7 @@ on:
 jobs:
   # ── Backend ────────────────────────────────────────────────────────
   backend:
-    name: Backend lint & typecheck
+    name: Backend lint, typecheck & tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,6 +31,9 @@ jobs:
 
       - name: Type check (mypy)
         run: uv run mypy app/
+
+      - name: Unit tests (pytest)
+        run: uv run pytest -q
 
   # ── Frontend ───────────────────────────────────────────────────────
   frontend:
